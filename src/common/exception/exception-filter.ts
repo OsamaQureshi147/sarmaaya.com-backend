@@ -15,7 +15,7 @@ export class CommonExceptionFilter implements ExceptionFilter {
 
     const message = exception.getResponse() as {
       key: string;
-      args: Record<string, any>;
+      args: Record<string, unknown>;
     };
 
     response.status(statusCode).json({
