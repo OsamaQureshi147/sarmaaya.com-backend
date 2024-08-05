@@ -25,9 +25,9 @@ export class AssetEssentialsRealTimeEntity extends CustomBaseEntity {
   @Column()
   volume: number;
 
-  @Column({ name: 'change_password' })
+  @Column({ name: 'change_percent' })
   changePercent: number;
 
-  @Column({ name: 'martket_cap' })
+  @Column({ name: 'market_cap' })
   marketCap: number;
 }

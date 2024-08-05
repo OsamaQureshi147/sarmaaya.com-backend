@@ -2,7 +2,7 @@ import { IsNotEmpty, IsNumber, Matches, Min } from 'class-validator';
 
 export class AssetEssentialsDto {
   @IsNotEmpty()
-  @Matches(/^(PK|SA)/, {
+  @Matches(/^(SA|PK)\d+/, {
     message: 'The ISIN must start with either "PK" or "SA".',
   })
   isin: string;
