@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { getOrmConfig } from './config/ormConfig';
 import { AssetDetailsModule } from './modules/asset-details/asset-details.module';
 import { AssetEssentialsModule } from './modules/asset-essentials/asset-essentials.module';
+import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AssetEssentialsModule } from './modules/asset-essentials/asset-essentia
     }),
     AssetEssentialsModule,
     AssetDetailsModule,
+    AssetSegmentsModule,
   ],
   controllers: [AppController],
 })
