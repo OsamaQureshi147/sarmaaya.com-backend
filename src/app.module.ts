@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { getOrmConfig } from './config/ormConfig';
+import { AssetDetailsModule } from './modules/asset-details/asset-details.module';
+import { AssetEssentialsModule } from './modules/asset-essentials/asset-essentials.module';
 
 @Module({
   imports: [
@@ -11,6 +13,8 @@ import { getOrmConfig } from './config/ormConfig';
     TypeOrmModule.forRootAsync({
       useFactory: () => getOrmConfig(),
     }),
+    AssetEssentialsModule,
+    AssetDetailsModule,
   ],
   controllers: [AppController],
 })
