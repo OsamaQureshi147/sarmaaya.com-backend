@@ -27,6 +27,14 @@ export class AssetEssentialsDto {
 
   @IsNotEmpty()
   @IsNumber()
+  annualChangePercent: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  yearToDateChangePercent: number;
+
+  @IsNotEmpty()
+  @IsNumber()
   @Min(0)
   volume: number;
 

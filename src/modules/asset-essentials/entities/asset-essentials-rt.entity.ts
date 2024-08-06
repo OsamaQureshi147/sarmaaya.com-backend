@@ -22,6 +22,12 @@ export class AssetEssentialsRealTimeEntity extends CustomBaseEntity {
   @Column('float')
   low: number;
 
+  @Column({ name: 'annual_change_percent', type: 'float' })
+  annualChangePercent: number;
+
+  @Column({ name: 'ytd_percent', type: 'float' })
+  yearToDateChangePercent: number;
+
   @Column()
   volume: number;
 
