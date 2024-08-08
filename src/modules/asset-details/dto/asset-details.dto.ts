@@ -1,11 +1,13 @@
 import {
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
   IsUrl,
   Matches,
 } from 'class-validator';
+import { AssetType } from 'src/common/interfaces';
 
 // import { Brand } from '../interfaces/brand.interface';
 
@@ -15,6 +17,10 @@ export class AssetDetailsDto {
     message: 'The ISIN must start with either "PK" or "SA".',
   })
   isin: string;
+
+  @IsNotEmpty()
+  @IsEnum(AssetType)
+  assetType: AssetType;
 
   @IsString()
   @IsNotEmpty()
