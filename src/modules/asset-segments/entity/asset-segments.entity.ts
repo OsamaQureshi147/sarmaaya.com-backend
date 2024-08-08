@@ -1,6 +1,5 @@
 import { CustomBaseEntity } from 'src/common/entity/custom-base.entity';
 import {
-  AssetType,
   SegmentMetrics,
   SegmentsPeriodicity,
   SegmentType,
@@ -11,9 +10,6 @@ import { Column, Entity } from 'typeorm';
 export class AssetSegmentsEntity extends CustomBaseEntity {
   @Column()
   isin: string;
-
-  @Column({ name: 'asset_type', type: 'enum', enum: AssetType })
-  assetType: AssetType;
 
   @Column({
     comment:
