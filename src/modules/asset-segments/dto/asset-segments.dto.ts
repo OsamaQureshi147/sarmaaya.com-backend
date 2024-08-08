@@ -1,6 +1,5 @@
 import { IsEnum, IsNotEmpty, Matches } from 'class-validator';
 import {
-  AssetType,
   SegmentMetrics,
   SegmentsPeriodicity,
   SegmentType,
@@ -12,10 +11,6 @@ export class AssetSegmentsDto {
     message: 'The ISIN must start with either "PK" or "SA".',
   })
   isin: string;
-
-  @IsNotEmpty()
-  @IsEnum(AssetType)
-  assetType: AssetType;
 
   @IsNotEmpty()
   label: string;

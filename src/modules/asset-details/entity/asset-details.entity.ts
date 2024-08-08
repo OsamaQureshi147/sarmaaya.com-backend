@@ -1,4 +1,5 @@
 import { CustomBaseEntity } from 'src/common/entity/custom-base.entity';
+import { AssetType } from 'src/common/interfaces';
 import { Column, Entity } from 'typeorm';
 
 // import { Brand } from '../interfaces/brand.interface';
@@ -10,6 +11,9 @@ import { Column, Entity } from 'typeorm';
 export class AssetDetailsEntity extends CustomBaseEntity {
   @Column({ unique: true })
   isin: string;
+
+  @Column({ name: 'asset_type', type: 'enum', enum: AssetType })
+  assetType: AssetType;
 
   @Column()
   sector: string;
