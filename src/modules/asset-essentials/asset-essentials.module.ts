@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssetEssentialsController } from './asset-essentials.controller';
 import { AssetEssentialsRealTimeEntity } from './entities/asset-essentials-rt.entity';
 import { AssetEssentialsWithoutRealTimeEntity } from './entities/asset-essentials-wrt.entity';
+import { AssetEssentialsService } from './asset-essentials.service';
 
 @Module({
   imports: [
@@ -13,5 +14,6 @@ import { AssetEssentialsWithoutRealTimeEntity } from './entities/asset-essential
     ]),
   ],
   controllers: [AssetEssentialsController],
+  providers: [AssetEssentialsService],
 })
 export class AssetEssentialsModule {}

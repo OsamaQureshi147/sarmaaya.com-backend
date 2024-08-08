@@ -8,6 +8,7 @@ import { AssetDetailsModule } from './modules/asset-details/asset-details.module
 import { AssetEssentialsModule } from './modules/asset-essentials/asset-essentials.module';
 import { AssetFundamentalsModule } from './modules/asset-fundamentals/asset-fundamentals.module';
 import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.module';
+import { AssetDetailsService } from './modules/asset-details/asset-details.service';
 
 @Module({
   imports: [
@@ -21,5 +22,6 @@ import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.mod
     AssetFundamentalsModule,
   ],
   controllers: [AppController],
+  providers: [AssetDetailsService],
 })
 export class AppModule {}
