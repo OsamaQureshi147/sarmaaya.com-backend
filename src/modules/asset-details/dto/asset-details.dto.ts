@@ -3,35 +3,42 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   IsUrl,
   Matches,
 } from 'class-validator';
-import { AssetType } from 'src/common/interfaces';
+import { ISIN_PATTERN } from 'src/common/constants';
+import { AssetType, ExchangeId } from 'src/common/interfaces';
 
 // import { Brand } from '../interfaces/brand.interface';
 
 export class AssetDetailsDto {
   @IsNotEmpty()
-  @Matches(/^(SA|PK)\d+/, {
-    message: 'The ISIN must start with either "PK" or "SA".',
-  })
+  @Matches(ISIN_PATTERN)
   isin: string;
+
+  @IsOptional()
+  companyName: string;
+
+  @IsEnum(ExchangeId)
+  @IsOptional()
+  exchangeId: ExchangeId;
 
   @IsNotEmpty()
   @IsEnum(AssetType)
   assetType: AssetType;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   sector: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   industry: string;
 
   @IsUrl()
-  @IsNotEmpty()
+  @IsOptional()
   website: string;
 
   //   @TODO create brands column
@@ -39,11 +46,11 @@ export class AssetDetailsDto {
   //   @IsNotEmpty()
   //   brands: Brand[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   companySize: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   about: string;
 
