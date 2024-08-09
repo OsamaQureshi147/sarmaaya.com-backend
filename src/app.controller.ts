@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Controller, Get } from '@nestjs/common';
 
 @Controller()

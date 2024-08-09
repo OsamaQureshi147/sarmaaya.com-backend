@@ -15,5 +15,6 @@ import { AssetEssentialsService } from './asset-essentials.service';
   ],
   controllers: [AssetEssentialsController],
   providers: [AssetEssentialsService],
+  exports: [TypeOrmModule],
 })
 export class AssetEssentialsModule {}

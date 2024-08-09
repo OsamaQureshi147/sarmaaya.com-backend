@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
 import { AssetDetailsService } from './asset-details.service';
 import { AssetDetailsDto } from 'lib-typeorm';
 import { AssetDetailsEntity } from 'lib-typeorm';
@@ -13,8 +13,8 @@ export class AssetDetailsController {
   }
 
   @Get()
-  async findAll(): Promise<AssetDetailsEntity[]> {
-    return this.assetDetailsService.findAll();
+  async findAll(@Query() query:any): Promise<AssetDetailsEntity[]> {
+    return this.assetDetailsService.findAll(query);
   }
 
   @Get(':id')

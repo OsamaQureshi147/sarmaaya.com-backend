@@ -16,8 +16,34 @@ export class AssetSegmentsService {
     return this.assetSegmentsRepository.save(assetSegment);
   }
 
-  async findAll(): Promise<AssetSegmentsEntity[]> {
-    return this.assetSegmentsRepository.find();
+  async findAll(query: any): Promise<AssetSegmentsEntity[]> {
+    const queryBuilder = this.assetSegmentsRepository.createQueryBuilder('asset_segments');
+    
+    if (query.isin) {
+      queryBuilder.andWhere('asset_segments.isin = :isin', { isin: query.isin });
+    }
+
+    if (query.label) {
+      queryBuilder.andWhere('asset_segments.label LIKE :label', { label: `%${query.label}%` });
+    }
+
+    if (query.value) {
+      queryBuilder.andWhere('asset_segments.value = :value', { value: query.value });
+    }
+
+    if (query.metric) {
+      queryBuilder.andWhere('asset_segments.metric = :metric', { metric: query.metric });
+    }
+
+    if (query.segmentType) {
+      queryBuilder.andWhere('asset_segments.segmentType = :segmentType', { segmentType: query.segmentType });
+    }
+
+    if (query.periodicity) {
+      queryBuilder.andWhere('asset_segments.periodicity = :periodicity', { periodicity: query.periodicity });
+    }
+
+    return queryBuilder.getMany();
   }
 
   async findOne(id: string): Promise<AssetSegmentsEntity> {

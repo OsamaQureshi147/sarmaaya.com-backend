@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
 import { AssetSegmentsService } from './asset-segments.service';
 import { AssetSegmentsDto } from 'lib-typeorm';
 import { AssetSegmentsEntity } from 'lib-typeorm';
@@ -13,8 +13,8 @@ export class AssetSegmentsController {
   }
 
   @Get()
-  async findAll(): Promise<AssetSegmentsEntity[]> {
-    return this.assetSegmentsService.findAll();
+  async findAll(@Query() query: any): Promise<AssetSegmentsEntity[]> {
+    return this.assetSegmentsService.findAll(query);
   }
 
   @Get(':id')

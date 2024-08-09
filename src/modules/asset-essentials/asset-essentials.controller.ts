@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
 import { AssetEssentialsService } from './asset-essentials.service';
 import { AssetFundamentalsDto } from 'lib-typeorm';
 import { AssetEssentialsRealTimeEntity } from 'lib-typeorm';
@@ -15,8 +15,8 @@ export class AssetEssentialsController {
   }
 
   @Get('real-time')
-  async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
-    return this.assetEssentialsService.findAllRealTime();
+  async findAllRealTime(@Query() query: any): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsService.findAllRealTime(query);
   }
 
   @Get('real-time/:id')
@@ -41,8 +41,8 @@ export class AssetEssentialsController {
   }
 
   @Get('without-real-time')
-  async findAllWithoutRealTime(): Promise<AssetEssentialsWithoutRealTimeEntity[]> {
-    return this.assetEssentialsService.findAllWithoutRealTime();
+  async findAllWithoutRealTime(@Query() query: any): Promise<AssetEssentialsWithoutRealTimeEntity[]> {
+    return this.assetEssentialsService.findAllWithoutRealTime(query);
   }
 
   @Get('without-real-time/:id')
