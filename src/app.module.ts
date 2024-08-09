@@ -13,7 +13,7 @@ import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.mod
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      useFactory: () => getOrmConfig(),
+      useFactory: getOrmConfig,
     }),
     AssetEssentialsModule,
     AssetDetailsModule,
