@@ -1,6 +1,14 @@
 import { CustomBaseEntity } from 'src/common/entity/custom-base.entity';
 import { Currency, FundamentalsPeriodicity } from 'src/common/interfaces';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { AssetDetailsEntity } from 'src/modules/asset-details/entity/asset-details.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { AssetMetricsEntity } from './asset-metrics.entity';
 
@@ -8,7 +16,8 @@ import { AssetMetricsEntity } from './asset-metrics.entity';
   name: 'asset_fundamentals',
 })
 export class AssetFundamentalsEntity extends CustomBaseEntity {
-  @Column()
+  @ManyToOne(() => AssetDetailsEntity, { cascade: ['remove'] })
+  @JoinColumn({ name: 'isin' })
   isin: string;
 
   @Column({ type: 'enum', enum: FundamentalsPeriodicity })
@@ -42,4 +51,17 @@ export class AssetFundamentalsEntity extends CustomBaseEntity {
 
   @Column()
   value: number;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  created_at: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
 }

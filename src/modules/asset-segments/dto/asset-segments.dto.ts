@@ -1,4 +1,5 @@
 import { IsEnum, IsNotEmpty, Matches } from 'class-validator';
+import { ISIN_PATTERN } from 'src/common/constants';
 import {
   SegmentMetrics,
   SegmentsPeriodicity,
@@ -7,9 +8,7 @@ import {
 
 export class AssetSegmentsDto {
   @IsNotEmpty()
-  @Matches(/^(SA|PK)\d+/, {
-    message: 'The ISIN must start with either "PK" or "SA".',
-  })
+  @Matches(ISIN_PATTERN)
   isin: string;
 
   @IsNotEmpty()

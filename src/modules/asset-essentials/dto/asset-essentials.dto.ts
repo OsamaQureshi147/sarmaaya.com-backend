@@ -1,10 +1,9 @@
 import { IsNotEmpty, IsNumber, Matches, Min } from 'class-validator';
+import { ISIN_PATTERN } from 'src/common/constants';
 
 export class AssetEssentialsDto {
   @IsNotEmpty()
-  @Matches(/^(SA|PK)\d+/, {
-    message: 'The ISIN must start with either "PK" or "SA".',
-  })
+  @Matches(ISIN_PATTERN)
   isin: string;
 
   @IsNotEmpty()
