@@ -22,20 +22,28 @@ export class AssetDetailsService {
       queryBuilder.andWhere('asset_details.isin = :isin', { isin: query.isin });
     }
 
+    if (query.companyName) {
+      queryBuilder.andWhere('asset_details.companyName LIKE :companyName', { companyName: `%${query.companyName}%` });
+    }
+
+    if (query.exchangeId) {
+      queryBuilder.andWhere('asset_details.exchangeId = :exchangeId', { exchangeId: query.exchangeId });
+    }
+
+    if (query.assetType) {
+      queryBuilder.andWhere('asset_details.assetType = :assetType', { assetType: query.assetType });
+    }
+
     if (query.sector) {
       queryBuilder.andWhere('asset_details.sector LIKE :sector', { sector: `%${query.sector}%` });
     }
 
     if (query.industry) {
-      queryBuilder.andWhere('asset_details.industry = :industry', { industry: `%${query.industry}%` });
-    }
-
-    if (query.assetType) {
-      queryBuilder.andWhere('asset_details.assetType = :assetType', { assetType: `%${query.assetType}%` });
+      queryBuilder.andWhere('asset_details.industry LIKE :industry', { industry: `%${query.industry}%` });
     }
 
     if (query.website) {
-      queryBuilder.andWhere('asset_details.website = :website', { website: `%${query.website}` });
+      queryBuilder.andWhere('asset_details.website LIKE :website', { website: `%${query.website}%` });
     }
 
     if (query.companySize) {
@@ -43,15 +51,25 @@ export class AssetDetailsService {
     }
 
     if (query.about) {
-      queryBuilder.andWhere('asset_details.about = :about', { about: query.about });
+      queryBuilder.andWhere('asset_details.about LIKE :about', { about: `%${query.about}%` });
     }
 
-    if (query.isShariah) {
-      queryBuilder.andWhere('asset_details.isShariah = :isShariah', { volume: query.isShariah });
+    if (query.isShariah !== undefined) {
+      queryBuilder.andWhere('asset_details.isShariah = :isShariah', { isShariah: query.isShariah });
+    }
+
+    if (query.created_at) {
+      queryBuilder.andWhere('asset_details.created_at = :created_at', { created_at: query.created_at });
+    }
+
+    if (query.updated_at) {
+      queryBuilder.andWhere('asset_details.updated_at = :updated_at', { updated_at: query.updated_at });
     }
 
     return queryBuilder.getMany();
-  }
+}
+
+
 
   async findOne(id: string): Promise<AssetDetailsEntity> {
     return this.assetDetailsRepository.findOne({ where: { isin: id } });

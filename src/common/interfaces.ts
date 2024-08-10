@@ -3,6 +3,12 @@ export enum AssetType {
   mutualFund = 'mutual_fund',
 }
 
+export enum ExchangeId {
+  SAU = 'SAU',
+  // @TBD
+  PSX = 'PSX',
+}
+
 export enum Currency {
   pakstaniRupee = 'PKR',
   saudiRiyal = 'SAR',

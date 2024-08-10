@@ -1,5 +1,6 @@
 import { CustomBaseEntity } from 'src/common/entity/custom-base.entity';
-import { Column, Entity } from 'typeorm';
+import { AssetDetailsEntity } from 'src/modules/asset-details/entity/asset-details.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({
   name: 'asset_essentials_rt',
@@ -7,7 +8,10 @@ import { Column, Entity } from 'typeorm';
     'Stores every minute data of all symbols, all markets upto one-month',
 })
 export class AssetEssentialsRealTimeEntity extends CustomBaseEntity {
-  @Column()
+  @ManyToOne(() => AssetDetailsEntity, (asset) => asset.isin, {
+    cascade: ['remove'],
+  })
+  @JoinColumn({ name: 'isin' })
   isin: string;
 
   @Column()

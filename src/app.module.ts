@@ -15,11 +15,13 @@ import { AssetDetailsController } from './modules/asset-details/asset-details.co
 import { AssetEssentialsController } from './modules/asset-essentials/asset-essentials.controller';
 import { AssetFundamentalsController } from './modules/asset-fundamentals/asset-fundamentals.controller';
 import { AssetSegmentsController } from './modules/asset-segments/asset-segments.controller';
+
+
 import { AssetDetailsService } from './modules/asset-details/asset-details.service';
 import { AssetFundamentalsService } from './modules/asset-fundamentals/asset-fundamentals.service';
 import { AssetSegmentsService } from './modules/asset-segments/asset-segments.service';
 import { AssetEssentialsService } from './modules/asset-essentials/asset-essentials.service';
-import { AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetSegmentsEntity } from 'lib-typeorm';
+import { AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm';
 
 
 @Module({
@@ -35,7 +37,7 @@ import { AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWitho
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE_NAME,
       schema: process.env.DB_SCHEMA,
-      entities: [AssetDetailsEntity, AssetSegmentsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity], 
+      entities: [AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity,  AssetSegmentsEntity, AssetFundamentalsEntity, AssetMetricsEntity], 
       synchronize: true,
       ssl: true,
       extra: {

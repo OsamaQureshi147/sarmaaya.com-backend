@@ -9,13 +9,12 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { ISIN_PATTERN } from 'src/common/constants';
 import { Currency, FundamentalsPeriodicity } from 'src/common/interfaces';
 
 export class AssetFundamentalsDto {
   @IsNotEmpty()
-  @Matches(/^(SA|PK)\d+/, {
-    message: 'The ISIN must start with either "PK" or "SA".',
-  })
+  @Matches(ISIN_PATTERN)
   isin: string;
 
   @IsEnum(FundamentalsPeriodicity)

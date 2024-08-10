@@ -4,11 +4,13 @@ import {
   SegmentsPeriodicity,
   SegmentType,
 } from 'src/common/interfaces';
-import { Column, Entity } from 'typeorm';
+import { AssetDetailsEntity } from 'src/modules/asset-details/entity/asset-details.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'asset_segments' })
 export class AssetSegmentsEntity extends CustomBaseEntity {
-  @Column()
+  @ManyToOne(() => AssetDetailsEntity, { cascade: ['remove'] })
+  @JoinColumn({ name: 'isin' })
   isin: string;
 
   @Column({

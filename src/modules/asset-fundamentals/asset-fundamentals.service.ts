@@ -62,10 +62,6 @@ export class AssetFundamentalsService {
       queryBuilder.andWhere('asset_fundamentals.epsReportDate = :epsReportDate', { epsReportDate: query.epsReportDate });
     }
 
-    if (query.currency) {
-      queryBuilder.andWhere('asset_fundamentals.currency = :currency', { currency: query.currency });
-    }
-
     if (query.value) {
       queryBuilder.andWhere('asset_fundamentals.value = :value', { value: query.value });
     }
@@ -125,7 +121,7 @@ export class AssetFundamentalsService {
     }
 
     if (query.subCategory) {
-      queryBuilder.andWhere('asset_metrics.subCategory = :subCategory', { subCategory : `%${query.subCategory}%` });
+      queryBuilder.andWhere('asset_metrics.subCategory = :subCategory', { subCategory : `%${query.subcategory}%` });
     }
 
     if (query.dataType) {
