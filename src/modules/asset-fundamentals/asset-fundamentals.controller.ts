@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
-import { AssetFundamentalsDto, AssetMetricsDto, AssetMetricsEntity, AssetFundamentalsEntity } from 'lib-typeorm';
+import { AssetFundamentalsDto, AssetFundamentalsEntity } from 'lib-typeorm';
 
 @Controller('asset-fundamentals')
 export class AssetFundamentalsController {
@@ -33,30 +33,4 @@ export class AssetFundamentalsController {
     return this.assetFundamentalsService.removeFundamental(isin);
   }
 
-  //METRICS CONTROLLERS
-
-  @Post('metrics')
-  async createMetric (@Body() dto: AssetMetricsDto): Promise <AssetMetricsEntity> {
-    return this.assetFundamentalsService.createMetric(dto);
-  }
-
-  @Get('metrics')
-  async findAllMetrics(@Query() query:any): Promise<AssetMetricsEntity[]> {
-    return this.assetFundamentalsService.findAllMetrics(query)
-  }
-
-  @Get('/metrics/:metric')
-  async findOneMetric(@Param('metric') metric: string): Promise<AssetMetricsEntity> {
-    return this.assetFundamentalsService.findOneMetric(metric);
-  }
-
-  @Put('/metrics/:metric')
-  async updateMetric(@Param('metric') metric: string, @Body() dto: AssetMetricsDto): Promise<AssetMetricsEntity> {
-    return this.assetFundamentalsService.updateMetric(metric, dto);
-  }
-
-  @Delete('metrics/:metric')
-  async removeMetric(@Param('metric') metric: string): Promise<AssetMetricsEntity> {
-    return this.assetFundamentalsService.removeMetric(metric);
-  }
 }

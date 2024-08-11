@@ -17,18 +17,18 @@ export class AssetDetailsController {
     return this.assetDetailsService.findAll(query);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<AssetDetailsEntity> {
-    return this.assetDetailsService.findOne(id);
+  @Get(':isin')
+  async findOne(@Param('isin') isin: string): Promise<AssetDetailsEntity> {
+    return this.assetDetailsService.findOne(isin);
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
-    return this.assetDetailsService.update(id, assetDetailsDto);
+  @Put(':isin')
+  async update(@Param('isin') isin: string, @Body() assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
+    return this.assetDetailsService.update(isin, assetDetailsDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    return this.assetDetailsService.remove(id);
+  @Delete(':isin')
+  async remove(@Param('isin') isin: string): Promise<void> {
+    return this.assetDetailsService.remove(isin);
   }
 }

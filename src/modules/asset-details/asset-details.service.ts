@@ -71,16 +71,16 @@ export class AssetDetailsService {
 
 
 
-  async findOne(id: string): Promise<AssetDetailsEntity> {
-    return this.assetDetailsRepository.findOne({ where: { isin: id } });
+  async findOne(isin: string): Promise<AssetDetailsEntity> {
+    return this.assetDetailsRepository.findOne({ where: { isin: isin } });
   }
 
-  async update(id: string, assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
-    await this.assetDetailsRepository.update(id, assetDetailsDto);
-    return this.findOne(id);
+  async update(isin: string, assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
+    await this.assetDetailsRepository.update(isin , assetDetailsDto);
+    return this.findOne(isin);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.assetDetailsRepository.delete(id);
+  async remove(isin: string): Promise<void> {
+    await this.assetDetailsRepository.delete(isin);
   }
 }
