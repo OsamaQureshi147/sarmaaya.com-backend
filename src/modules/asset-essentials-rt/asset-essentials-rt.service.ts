@@ -79,7 +79,7 @@ export class AssetEssentialsRtService {
    const updaterealTime =  await this.assetEssentialsRealTimeRepository.update(isin, dto);
 
    if (updaterealTime.affected === 0) {
-    throw new NotFoundException(`Asset with isin ${isin} not found.`);
+    throw new NotFoundException(`Asset with id ${isin} not found.`);
   }
     
   return this.findOneRealTime(isin);
