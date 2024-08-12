@@ -30,7 +30,7 @@ export class AssetMetricsController {
   }
 
   @Delete('/:metric')
-  async removeMetric(@Param('metric') metric: string): Promise<AssetMetricsEntity> {
+  async removeMetric(@Param('metric') metric: string): Promise<{ message: string; deletedMetric: AssetMetricsEntity }> {
     return this.assetFundamentalsService.removeMetric(metric);
   }
 }

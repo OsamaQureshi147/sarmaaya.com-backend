@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AssetSegmentsEntity } from 'lib-typeorm';
-import { AssetSegmentsDto } from 'lib-typeorm';
+import { AssetSegmentsEntity, AssetSegmentsDto } from 'lib-typeorm';
+
 
 @Injectable()
 export class AssetSegmentsService {
@@ -55,7 +55,13 @@ export class AssetSegmentsService {
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.assetSegmentsRepository.delete(id);
+  async remove(id: string): Promise<{ message: string }> {
+    const deleteResult = await this.assetSegmentsRepository.delete(id);
+  
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Asset Segment with ID ${id} not found.`);
+    }
+  
+    return { message: `Asset Segment with ID ${id} has been deleted successfully.` };
   }
 }

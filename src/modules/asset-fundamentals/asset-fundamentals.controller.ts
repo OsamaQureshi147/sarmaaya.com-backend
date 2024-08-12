@@ -30,7 +30,7 @@ export class AssetFundamentalsController {
   }
 
   @Delete(':id')
-  async removeFundamental(@Param('isin') isin: string): Promise<void> {
+  async removeFundamental(@Param('isin') isin: string): Promise<{message: string}> {
     return this.assetFundamentalsService.removeFundamental(isin);
   }
 

@@ -82,7 +82,7 @@ export class AssetMetricsService {
     return existingMetric;
   }
   
-  async removeMetric(metric: string): Promise<AssetMetricsEntity> {
+  async removeMetric(metric: string): Promise<{ message: string; deletedMetric: AssetMetricsEntity }> {
     const metricEntity = await this.assetMetricsRepository.findOne({ where: { metric } });
   
     if (!metricEntity) {
@@ -94,8 +94,13 @@ export class AssetMetricsService {
     if (fundamentals.length > 0) {
       await this.assetFundamentalsRepository.remove(fundamentals);
     }
+  
     await this.assetMetricsRepository.remove(metricEntity);
   
-    return metricEntity;
+    return {
+      message: `Metric '${metric}' has been deleted successfully.`,
+      deletedMetric: metricEntity,
+    };
   }
+  
 }

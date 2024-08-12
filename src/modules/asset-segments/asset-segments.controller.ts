@@ -29,7 +29,7 @@ export class AssetSegmentsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: string): Promise<{ message : string}> {
     return this.assetSegmentsService.remove(id);
   }
 }

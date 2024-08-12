@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm';
-import { AssetFundamentalsDto } from 'lib-typeorm';
+import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto } from 'lib-typeorm';
+
 
 @Injectable()
 export class AssetFundamentalsService {
@@ -86,8 +86,14 @@ export class AssetFundamentalsService {
   }
   
 
-  async removeFundamental(id: string): Promise<void> {
-    await this.assetFundamentalsRepository.delete(id);
+  async removeFundamental(id: string): Promise<{ message: string }> {
+    const deleteResult = await this.assetFundamentalsRepository.delete(id);
+  
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Fundamental with ID ${id} not found.`);
+    }
+  
+    return { message: `Fundamental with ID ${id} has been deleted successfully.` };
   }
 
 }
