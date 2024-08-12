@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
-import { AssetEssentialsRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-rt')
@@ -9,7 +9,7 @@ export class AssetEssentialsRtController {
 
   
   @Post()
-  async createRealTime(@Body() dto: AssetFundamentalsDto): Promise<AssetEssentialsRealTimeEntity> {
+  async createRealTime(@Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.createRealTime(dto);
   }
 
@@ -24,12 +24,12 @@ export class AssetEssentialsRtController {
   }
 
   @Put(':id')
-  async updateRealTime(@Param('id') id: string, @Body() dto: AssetFundamentalsDto): Promise<AssetEssentialsRealTimeEntity> {
+  async updateRealTime(@Param('id') id: string, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.updateRealTime(id, dto);
   }
 
   @Delete(':id')
-  async removeRealTime(@Param('id') id: string): Promise<void> {
+  async removeRealTime(@Param('id') id: string): Promise<{ message : string}> {
     return this.assetEssentialsService.removeRealTime(id);
   }
 

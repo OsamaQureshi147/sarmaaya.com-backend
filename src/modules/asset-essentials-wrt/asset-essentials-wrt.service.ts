@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm';
 
 
 @Injectable()
@@ -65,15 +65,36 @@ export class AssetEssentialsWrtService {
   }
 
   async findOneWithoutRealTime(id: string): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    return this.assetEssentialsWithoutRealTimeRepository.findOne({ where: { isin: id } });
+    const findOneWrt = await this.assetEssentialsWithoutRealTimeRepository.findOne({ where: { isin: id } });
+
+    if (!findOneWrt) {
+      throw new NotFoundException(`Asset with ISIN ${id} not found.`);
+    }
+
+    return findOneWrt;
   }
 
-  async updateWithoutRealTime(isin: string, dto: AssetFundamentalsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    await this.assetEssentialsWithoutRealTimeRepository.update(isin, dto);
+  async updateWithoutRealTime(isin: string, dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    if (!isin) {
+      throw new BadRequestException('ID must be provided.');
+    }
+  
+    const updateResult = await this.assetEssentialsWithoutRealTimeRepository.update({ isin:isin }, dto);
+  
+    if (updateResult.affected === 0) {
+      throw new NotFoundException(`Asset with isin ${isin} not found.`);
+    }
+  
     return this.findOneWithoutRealTime(isin);
   }
 
-  async removeWithoutRealTime(id: string): Promise<void> {
-    await this.assetEssentialsWithoutRealTimeRepository.delete(id);
+  async removeWithoutRealTime(isin: string): Promise<{message : string}> {
+
+    const deleteResult = await this.assetEssentialsWithoutRealTimeRepository.delete(isin);
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Asset with id ${isin} not found.`);
+    }
+  
+    return { message: `Asset with id ${isin} has been deleted successfully.` };
   }
 }

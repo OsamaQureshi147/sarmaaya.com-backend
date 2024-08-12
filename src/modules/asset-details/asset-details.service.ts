@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AssetDetailsEntity, AssetDetailsDto } from 'lib-typeorm';
@@ -71,16 +71,33 @@ export class AssetDetailsService {
 
 
 
-  async findOne(isin: string): Promise<AssetDetailsEntity> {
-    return this.assetDetailsRepository.findOne({ where: { isin: isin } });
+async findOne(isin: string): Promise<AssetDetailsEntity> {
+  const asset = await this.assetDetailsRepository.findOne({ where: { isin: isin } });
+
+  if (!asset) {
+    throw new NotFoundException(`Asset with ISIN ${isin} not found.`);
   }
 
-  async update(isin: string, assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
-    await this.assetDetailsRepository.update(isin , assetDetailsDto);
-    return this.findOne(isin);
+  return asset;
+}
+
+async update(isin: string, assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
+  const updateResult = await this.assetDetailsRepository.update(isin, assetDetailsDto);
+
+  if (updateResult.affected === 0) {
+    throw new NotFoundException(`Asset with ISIN ${isin} not found.`);
   }
 
-  async remove(isin: string): Promise<void> {
-    await this.assetDetailsRepository.delete(isin);
+  return this.findOne(isin);
+}
+
+  async remove(isin: string): Promise<{ message: string }> {
+    const deleteResult = await this.assetDetailsRepository.delete(isin);
+  
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Asset with ISIN ${isin} not found.`);
+    }
+  
+    return { message: `Asset with ISIN ${isin} has been deleted successfully.` };
   }
 }

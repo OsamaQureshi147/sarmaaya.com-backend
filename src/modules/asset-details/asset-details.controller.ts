@@ -28,7 +28,7 @@ export class AssetDetailsController {
   }
 
   @Delete(':isin')
-  async remove(@Param('isin') isin: string): Promise<void> {
+  async remove(@Param('isin') isin: string): Promise<{ message: string }> {
     return this.assetDetailsService.remove(isin);
   }
 }

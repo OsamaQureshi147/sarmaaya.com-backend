@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AssetEssentialsRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity} from 'lib-typeorm';
 
 
 @Injectable()
@@ -12,7 +12,7 @@ export class AssetEssentialsRtService {
   ) {}
 
   
-  async createRealTime(dto: AssetFundamentalsDto): Promise<AssetEssentialsRealTimeEntity> {
+  async createRealTime(dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     const entity = this.assetEssentialsRealTimeRepository.create(dto);
     return this.assetEssentialsRealTimeRepository.save(entity);
   }
@@ -64,16 +64,35 @@ export class AssetEssentialsRtService {
   }
 
 
-  async findOneRealTime(id: string): Promise<AssetEssentialsRealTimeEntity> {
-    return this.assetEssentialsRealTimeRepository.findOne({ where: { isin: id } });
+  async findOneRealTime(isin: string): Promise<AssetEssentialsRealTimeEntity> {
+
+    const oneRealTime = await this.assetEssentialsRealTimeRepository.findOne({where : {isin: isin}})
+    if (!oneRealTime){
+      throw new NotFoundException(`AssetEssential with isin ${isin} not found.`);
+    }
+    
+    return oneRealTime;
   }
 
-  async updateRealTime(id: string, dto: AssetFundamentalsDto): Promise<AssetEssentialsRealTimeEntity> {
-    await this.assetEssentialsRealTimeRepository.update(id, dto);
-    return this.findOneRealTime(id);
+  async updateRealTime(isin: string, dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
+
+   const updaterealTime =  await this.assetEssentialsRealTimeRepository.update(isin, dto);
+
+   if (updaterealTime.affected === 0) {
+    throw new NotFoundException(`Asset with isin ${isin} not found.`);
+  }
+    
+  return this.findOneRealTime(isin);
   }
 
-  async removeRealTime(id: string): Promise<void> {
-    await this.assetEssentialsRealTimeRepository.delete(id);
+  async removeRealTime(id: string): Promise<{ message: string}> {
+
+    const deleteResult = await this.assetEssentialsRealTimeRepository.delete(id);
+
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Asset with id ${id} not found.`);
+    }
+  
+    return { message: `Asset with id ${id} has been deleted successfully.` };
   }
 }

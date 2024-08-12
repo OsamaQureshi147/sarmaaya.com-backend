@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
-import { AssetFundamentalsDto, AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
+import {  AssetEssentialsWithoutRealTimeEntity, AssetEssentialsDto } from 'lib-typeorm';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-wrt')
@@ -9,7 +9,7 @@ export class AssetEssentialsWrtController {
 
   
   @Post()
-  async createWithoutRealTime(@Body() dto: AssetFundamentalsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
+  async createWithoutRealTime(@Body() dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
     return this.assetEssentialsService.createWithoutRealTime(dto);
   }
 
@@ -19,17 +19,17 @@ export class AssetEssentialsWrtController {
   }
 
   @Get(':isin')
-  async findOneWithoutRealTime(@Param('id') id: string): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    return this.assetEssentialsService.findOneWithoutRealTime(id);
+  async findOneWithoutRealTime(@Param('isin') isin: string): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    return this.assetEssentialsService.findOneWithoutRealTime(isin);
   }
 
   @Put(':isin')
-  async updateWithoutRealTime(@Param('id') id: string, @Body() dto: AssetFundamentalsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    return this.assetEssentialsService.updateWithoutRealTime(id, dto);
+  async updateWithoutRealTime(@Param('isin') isin: string, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    return this.assetEssentialsService.updateWithoutRealTime(isin, dto);
   }
 
-  @Delete(':id')
-  async removeWithoutRealTime(@Param('id') id: string): Promise<void> {
-    return this.assetEssentialsService.removeWithoutRealTime(id);
+  @Delete(':isin')
+  async removeWithoutRealTime(@Param('isin') isin: string): Promise<{message : string}> {
+    return this.assetEssentialsService.removeWithoutRealTime(isin);
   }
 }
