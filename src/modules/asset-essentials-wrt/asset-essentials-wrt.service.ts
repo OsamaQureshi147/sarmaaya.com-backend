@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
-import { AssetFundamentalsDto } from 'lib-typeorm';
+import { AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm';
+
 
 @Injectable()
 export class AssetEssentialsWrtService {

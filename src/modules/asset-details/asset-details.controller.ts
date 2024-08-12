@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetDetailsService } from './asset-details.service';
-import { AssetDetailsDto } from 'lib-typeorm';
-import { AssetDetailsEntity } from 'lib-typeorm';
+import { AssetDetailsDto, AssetDetailsEntity } from 'lib-typeorm';
 
+@UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-details')
 export class AssetDetailsController {
   constructor(private readonly assetDetailsService: AssetDetailsService) {}

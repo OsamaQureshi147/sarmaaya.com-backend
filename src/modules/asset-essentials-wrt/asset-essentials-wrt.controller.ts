@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
-import { AssetFundamentalsDto } from 'lib-typeorm';
-import { AssetEssentialsRealTimeEntity } from 'lib-typeorm';
-import { AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
+import { AssetFundamentalsDto, AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
 
+@UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-wrt')
 export class AssetEssentialsWrtController {
   constructor(private readonly assetEssentialsService: AssetEssentialsWrtService) {}

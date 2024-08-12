@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetMetricsService } from './asset-metrics.service';
-import { AssetFundamentalsDto, AssetMetricsDto, AssetMetricsEntity, AssetFundamentalsEntity } from 'lib-typeorm';
+import { AssetMetricsDto, AssetMetricsEntity} from 'lib-typeorm';
 
+@UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-metrics')
 export class AssetMetricsController {
   constructor(private readonly assetFundamentalsService: AssetMetricsService) {}
