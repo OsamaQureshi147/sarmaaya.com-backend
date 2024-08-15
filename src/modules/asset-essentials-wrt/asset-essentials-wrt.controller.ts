@@ -14,7 +14,7 @@ export class AssetEssentialsWrtController {
   }
 
   @Get()
-  async findAllWithoutRealTime(@Query() query: any): Promise<AssetEssentialsWithoutRealTimeEntity[]> {
+  async findAllWithoutRealTime(@Query() query: AssetEssentialsWithoutRealTimeEntity): Promise<AssetEssentialsWithoutRealTimeEntity[]> {
     return this.assetEssentialsService.findAllWithoutRealTime(query);
   }
 

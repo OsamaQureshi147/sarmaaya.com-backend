@@ -11,6 +11,6 @@ import { AssetFundamentalsService } from './asset-fundamentals.service';
   ],
   providers: [AssetFundamentalsService],
   controllers: [AssetFundamentalsController],
-  exports: [TypeOrmModule],
+  exports: [AssetFundamentalsService],
 })
 export class AssetFundamentalsModule {}

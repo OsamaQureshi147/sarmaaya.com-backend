@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { AssetSegmentsEntity, AssetSegmentsDto } from 'lib-typeorm';
 
 
@@ -16,34 +16,17 @@ export class AssetSegmentsService {
     return this.assetSegmentsRepository.save(assetSegment);
   }
 
-  async findAll(query: any): Promise<AssetSegmentsEntity[]> {
-    const queryBuilder = this.assetSegmentsRepository.createQueryBuilder('asset_segments');
-    
-    if (query.isin) {
-      queryBuilder.andWhere('asset_segments.isin = :isin', { isin: query.isin });
-    }
-
-    if (query.label) {
-      queryBuilder.andWhere('asset_segments.label LIKE :label', { label: `%${query.label}%` });
-    }
-
-    if (query.value) {
-      queryBuilder.andWhere('asset_segments.value = :value', { value: query.value });
-    }
-
-    if (query.metric) {
-      queryBuilder.andWhere('asset_segments.metric = :metric', { metric: query.metric });
-    }
-
-    if (query.segmentType) {
-      queryBuilder.andWhere('asset_segments.segmentType = :segmentType', { segmentType: query.segmentType });
-    }
-
-    if (query.periodicity) {
-      queryBuilder.andWhere('asset_segments.periodicity = :periodicity', { periodicity: query.periodicity });
-    }
-
-    return queryBuilder.getMany();
+  async findAllSegments(query: AssetSegmentsDto): Promise<AssetSegmentsEntity[]> {
+    const where: FindOptionsWhere<AssetSegmentsEntity> = {};
+  
+    Object.keys(query).forEach(key => {
+      const value = query[key];
+      if (value !== undefined && value !== null) {
+        where[key] = value;
+      }
+    });
+  
+    return await this.assetSegmentsRepository.find({ where });
   }
 
   async findOne(id: string): Promise<AssetSegmentsEntity> {

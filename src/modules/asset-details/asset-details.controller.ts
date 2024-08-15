@@ -13,7 +13,7 @@ export class AssetDetailsController {
   }
 
   @Get()
-  async findAll(@Query() query:any): Promise<AssetDetailsEntity[]> {
+  async findAll(@Query() query:AssetDetailsEntity): Promise<AssetDetailsEntity[]> {
     return this.assetDetailsService.findAll(query);
   }
 

@@ -15,7 +15,7 @@ export class AssetMetricsController {
   }
 
   @Get()
-  async findAllMetrics(@Query() query:any): Promise<AssetMetricsEntity[]> {
+  async findAllMetrics(@Query() query: AssetMetricsEntity): Promise<AssetMetricsEntity[]> {
     return this.assetFundamentalsService.findAllMetrics(query)
   }
 

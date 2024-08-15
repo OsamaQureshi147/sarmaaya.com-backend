@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity} from 'lib-typeorm';
 
 
@@ -17,52 +17,18 @@ export class AssetEssentialsRtService {
     return this.assetEssentialsRealTimeRepository.save(entity);
   }
 
-  async findAllRealTime(query: any): Promise<AssetEssentialsRealTimeEntity[]> {
-    const queryBuilder = this.assetEssentialsRealTimeRepository.createQueryBuilder('asset_essentials_rt_rt');
-    
-    if (query.isin) {
-      queryBuilder.andWhere('asset_essentials_rt.isin = :isin', { isin: query.isin });
-    }
-
-    if (query.symbol) {
-      queryBuilder.andWhere('asset_essentials_rt.symbol LIKE :symbol', { symbol: `%${query.symbol}%` });
-    }
-
-    if (query.price) {
-      queryBuilder.andWhere('asset_essentials_rt.price = :price', { price: query.price });
-    }
-
-    if (query.high) {
-      queryBuilder.andWhere('asset_essentials_rt.high = :high', { high: query.high });
-    }
-
-    if (query.low) {
-      queryBuilder.andWhere('asset_essentials_rt.low = :low', { low: query.low });
-    }
-
-    if (query.annualChangePercent) {
-      queryBuilder.andWhere('asset_essentials_rt.annualChangePercent = :annualChangePercent', { annualChangePercent: query.annualChangePercent });
-    }
-
-    if (query.yearToDateChangePercent) {
-      queryBuilder.andWhere('asset_essentials_rt.yearToDateChangePercent = :yearToDateChangePercent', { yearToDateChangePercent: query.yearToDateChangePercent });
-    }
-
-    if (query.volume) {
-      queryBuilder.andWhere('asset_essentials_rt.volume = :volume', { volume: query.volume });
-    }
-
-    if (query.changePercent) {
-      queryBuilder.andWhere('asset_essentials_rt.changePercent = :changePercent', { changePercent: query.changePercent });
-    }
-
-    if (query.marketCap) {
-      query.Builder.andWhere('asset_essentials_rt.marketCap = :marketCap', {marketCap: query.marketCap})
-    }
-
-    return queryBuilder.getMany();
+  async findAllRealTime(query: AssetEssentialsRealTimeEntity): Promise<AssetEssentialsRealTimeEntity[]> {
+    const where: FindOptionsWhere<AssetEssentialsRealTimeEntity> = {};
+  
+    Object.keys(query).forEach(key => {
+      const value = query[key];
+      if (value !== undefined && value !== null) {
+        where[key] = value;
+      }
+    });
+  
+    return await this.assetEssentialsRealTimeRepository.find({ where });
   }
-
 
   async findOneRealTime(isin: string): Promise<AssetEssentialsRealTimeEntity> {
 

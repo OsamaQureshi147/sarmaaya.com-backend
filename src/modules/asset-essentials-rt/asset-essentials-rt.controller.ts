@@ -14,7 +14,7 @@ export class AssetEssentialsRtController {
   }
 
   @Get()
-  async findAllRealTime(@Query() query: any): Promise<AssetEssentialsRealTimeEntity[]> {
+  async findAllRealTime(@Query() query: AssetEssentialsRealTimeEntity): Promise<AssetEssentialsRealTimeEntity[]> {
     return this.assetEssentialsService.findAllRealTime(query);
   }
 

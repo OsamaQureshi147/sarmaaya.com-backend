@@ -13,6 +13,6 @@ import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
   ],
   controllers: [AssetEssentialsWrtController],
   providers: [AssetEssentialsWrtService],
-  exports: [TypeOrmModule],
+  exports: [AssetEssentialsWrtService],
 })
 export class AssetEssentialsWrtModule {}

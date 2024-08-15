@@ -14,8 +14,8 @@ export class AssetSegmentsController {
   }
 
   @Get()
-  async findAll(@Query() query: any): Promise<AssetSegmentsEntity[]> {
-    return this.assetSegmentsService.findAll(query);
+  async findAll(@Query() query: AssetSegmentsDto): Promise<AssetSegmentsEntity[]> {
+    return this.assetSegmentsService.findAllSegments(query);
   }
 
   @Get(':id')

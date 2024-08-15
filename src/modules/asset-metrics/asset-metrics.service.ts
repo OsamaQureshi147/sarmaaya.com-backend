@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { AssetFundamentalsEntity, AssetMetricsDto, AssetMetricsEntity } from 'lib-typeorm';
 
 
@@ -28,31 +28,17 @@ export class AssetMetricsService {
     return this.assetMetricsRepository.save(assetMetric);
   }
 
-  async findAllMetrics(query: any): Promise<AssetMetricsEntity[]> {
-    const queryBuilder = this.assetMetricsRepository.createQueryBuilder('asset_metrics');
-    
-    if (query.metric) {
-      queryBuilder.andWhere('asset_metrics.metric = :metric', { metric : `%${query.metric}%` });
-    }
-
-    if (query.name) {
-      queryBuilder.andWhere('asset_metrics.name LIKE :name', { name : `%${query.name}%` });
-    }
-
-    if (query.category) {
-      queryBuilder.andWhere('asset_metrics.category = :category', { category : `%${query.category}%` });
-    }
-
-    if (query.subCategory) {
-      queryBuilder.andWhere('asset_metrics.subCategory = :subCategory', { subCategory : `%${query.subcategory}%` });
-    }
-
-    if (query.dataType) {
-      queryBuilder.andWhere('asset_metrics.dataType = :dataType', { dataType : `%${query.dataType}%` });
-    }
-
-    
-    return queryBuilder.getMany();
+  async findAllMetrics(query: AssetMetricsEntity): Promise<AssetMetricsEntity[]> {
+    const where: FindOptionsWhere<AssetMetricsEntity> = {};
+  
+    Object.keys(query).forEach(key => {
+      const value = query[key];
+      if (value !== undefined && value !== null) {
+        where[key] = value;
+      }
+    });
+  
+    return await this.assetMetricsRepository.find({ where });
   }
 
   async findOneMetric (metric: string): Promise<AssetMetricsEntity> {

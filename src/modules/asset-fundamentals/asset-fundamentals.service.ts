@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto } from 'lib-typeorm';
+import { DeepPartial, Repository } from 'typeorm';
+import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetMetricsDto } from 'lib-typeorm';
+import { FindOptionsWhere } from 'typeorm';
 
 
 @Injectable()
@@ -15,59 +16,34 @@ export class AssetFundamentalsService {
 
   //FUNDAMENTALS SERVICES
 
-  async createFundamental(assetFundamentalsDto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
-    const metricEntity = await this.assetMetricsRepository.findOne({ where: { metric: assetFundamentalsDto.metric } });
+  async createFundamental(assetFundamentalsDto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity>{
+    const metric = await this.assetMetricsRepository.findOne({ where: { metric: assetFundamentalsDto.metric } });
 
-    if (!metricEntity) {
-      throw new Error('Metric not found');
+    if (!metric) {
+      throw new NotFoundException('Metric not found');
     }
 
-
-    const assetFundamentals = this.assetFundamentalsRepository.create({
+    const assetFundamental = this.assetFundamentalsRepository.create({
       ...assetFundamentalsDto,
-      metric: metricEntity,
+      metric: metric, // Link the Fundamental to the existing Metric
+  } as unknown as DeepPartial<AssetFundamentalsEntity>);
+
+    return await this.assetFundamentalsRepository.save(assetFundamental);
+  }
+
+  async findAllFundamentals(query: AssetFundamentalsEntity): Promise<AssetFundamentalsEntity[]> {
+    const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
+  
+    Object.keys(query).forEach(key => {
+      const value = query[key];
+      if (value !== undefined && value !== null) {
+        where[key] = value;
+      }
     });
-
-    return this.assetFundamentalsRepository.save(assetFundamentals);
+  
+    return await this.assetFundamentalsRepository.find({ where });
   }
 
-  async findAllFundamentals(query: any): Promise<AssetFundamentalsEntity[]> {
-    const queryBuilder = this.assetFundamentalsRepository.createQueryBuilder('asset_fundamentals');
-    
-    if (query.isin) {
-      queryBuilder.andWhere('asset_fundamentals.isin = :isin', { isin: query.isin });
-    }
-
-    if (query.periodicity) {
-      queryBuilder.andWhere('asset_fundamentals.periodicity LIKE :periodicity', { periodicity: query.periodicity });
-    }
-
-    if (query.metric) {
-      queryBuilder.andWhere('asset_fundamentals.metric = :metric', { metric : `%${query.metric}%` });
-    }
-
-    if (query.fiscalPeriod) {
-      queryBuilder.andWhere('asset_fundamentals.fiscalPeriod = :fiscalPeriod', { fiscalPeriod: query.fiscalPeriod });
-    }
-
-    if (query.fiscalYear) {
-      queryBuilder.andWhere('asset_fundamentals.fiscalYear = :fiscalYear', { fiscalYear: query.fiscalYear });
-    }
-
-    if (query.fiscalEndDate) {
-      queryBuilder.andWhere('asset_fundamentals.fiscalEndDate = :fiscalEndDate', { fiscalEndDate: query.fiscalEndDate });
-    }
-
-    if (query.epsReportDate) {
-      queryBuilder.andWhere('asset_fundamentals.epsReportDate = :epsReportDate', { epsReportDate: query.epsReportDate });
-    }
-
-    if (query.value) {
-      queryBuilder.andWhere('asset_fundamentals.value = :value', { value: query.value });
-    }
-
-    return queryBuilder.getMany();
-  }
 
   async findOneFundamental(id: string): Promise<AssetFundamentalsEntity> {
     return this.assetFundamentalsRepository.findOne({ where: { isin: id } });

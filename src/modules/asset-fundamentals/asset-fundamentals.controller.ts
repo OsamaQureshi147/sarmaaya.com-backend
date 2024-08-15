@@ -15,7 +15,7 @@ export class AssetFundamentalsController {
   }
 
   @Get()
-  async findAllFundamentals(@Query() query:any): Promise<AssetFundamentalsEntity[]> {
+  async findAllFundamentals(@Query() query:AssetFundamentalsEntity): Promise<AssetFundamentalsEntity[]> {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
 
@@ -30,7 +30,7 @@ export class AssetFundamentalsController {
   }
 
   @Delete(':id')
-  async removeFundamental(@Param('isin') isin: string): Promise<{message: string}> {
+  async removeFundamental(@Param('isin') isin: string): Promise<{message : string}> {
     return this.assetFundamentalsService.removeFundamental(isin);
   }
 

@@ -10,6 +10,6 @@ import { AssetSegmentsEntity } from 'lib-typeorm';
   ],
   controllers: [AssetSegmentsController],
   providers: [AssetSegmentsService],
-  exports: [TypeOrmModule],
+  exports: [AssetSegmentsService],
 })
 export class AssetSegmentsModule {}

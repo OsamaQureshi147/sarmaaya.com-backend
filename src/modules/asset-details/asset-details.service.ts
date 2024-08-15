@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindOptionsWhere } from 'typeorm';
 import { AssetDetailsEntity, AssetDetailsDto } from 'lib-typeorm';
 
 @Injectable()
@@ -15,63 +15,21 @@ export class AssetDetailsService {
     return this.assetDetailsRepository.save(assetDetails);
   }
 
-  async findAll(query: any): Promise<AssetDetailsEntity[]> {
-    const queryBuilder = this.assetDetailsRepository.createQueryBuilder('asset_details');
-    
-    if (query.isin) {
-      queryBuilder.andWhere('asset_details.isin = :isin', { isin: query.isin });
-    }
-
-    if (query.companyName) {
-      queryBuilder.andWhere('asset_details.companyName LIKE :companyName', { companyName: `%${query.companyName}%` });
-    }
-
-    if (query.exchangeId) {
-      queryBuilder.andWhere('asset_details.exchangeId = :exchangeId', { exchangeId: query.exchangeId });
-    }
-
-    if (query.assetType) {
-      queryBuilder.andWhere('asset_details.assetType = :assetType', { assetType: query.assetType });
-    }
-
-    if (query.sector) {
-      queryBuilder.andWhere('asset_details.sector LIKE :sector', { sector: `%${query.sector}%` });
-    }
-
-    if (query.industry) {
-      queryBuilder.andWhere('asset_details.industry LIKE :industry', { industry: `%${query.industry}%` });
-    }
-
-    if (query.website) {
-      queryBuilder.andWhere('asset_details.website LIKE :website', { website: `%${query.website}%` });
-    }
-
-    if (query.companySize) {
-      queryBuilder.andWhere('asset_details.companySize = :companySize', { companySize: query.companySize });
-    }
-
-    if (query.about) {
-      queryBuilder.andWhere('asset_details.about LIKE :about', { about: `%${query.about}%` });
-    }
-
-    if (query.isShariah !== undefined) {
-      queryBuilder.andWhere('asset_details.isShariah = :isShariah', { isShariah: query.isShariah });
-    }
-
-    if (query.created_at) {
-      queryBuilder.andWhere('asset_details.created_at = :created_at', { created_at: query.created_at });
-    }
-
-    if (query.updated_at) {
-      queryBuilder.andWhere('asset_details.updated_at = :updated_at', { updated_at: query.updated_at });
-    }
-
-    return queryBuilder.getMany();
-}
+  async findAll(query: AssetDetailsEntity): Promise<AssetDetailsEntity[]> {
+    const where: FindOptionsWhere<AssetDetailsEntity> = {};
+  
+    Object.keys(query).forEach(key => {
+      const value = query[key];
+      if (value !== undefined && value !== null) {
+        where[key] = value;
+      }
+    });
+  
+    return await this.assetDetailsRepository.find({ where });
+  }
 
 
-
-async findOne(isin: string): Promise<AssetDetailsEntity> {
+  async findOne(isin: string): Promise<AssetDetailsEntity> {
   const asset = await this.assetDetailsRepository.findOne({ where: { isin: isin } });
 
   if (!asset) {

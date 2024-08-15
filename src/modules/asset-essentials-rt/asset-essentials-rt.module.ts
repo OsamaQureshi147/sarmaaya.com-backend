@@ -13,6 +13,6 @@ import { AssetEssentialsRtService } from './asset-essentials-rt.service';
   ],
   controllers: [AssetEssentialsRtController],
   providers: [AssetEssentialsRtService],
-  exports: [TypeOrmModule],
+  exports: [AssetEssentialsRtService],
 })
 export class AssetEssentialsRtModule {}
