@@ -31,28 +31,28 @@ export class AssetEssentialsWrtService {
     return await this.assetEssentialsWithoutRealTimeRepository.find({ where });
   }
 
-  async findOneWithoutRealTime(id: string): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    const findOneWrt = await this.assetEssentialsWithoutRealTimeRepository.findOne({ where: { isin: id } });
+  async findOneWithoutRealTime(id: number): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    const findOneWrt = await this.assetEssentialsWithoutRealTimeRepository.findOne({ where: { id: id } });
 
     if (!findOneWrt) {
-      throw new NotFoundException(`Asset with ISIN ${id} not found.`);
+      throw new NotFoundException(`Asset with id ${id} not found.`);
     }
 
     return findOneWrt;
   }
 
-  async updateWithoutRealTime(isin: string, dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    if (!isin) {
+  async updateWithoutRealTime(id: number, dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    if (!id) {
       throw new BadRequestException('ID must be provided.');
     }
   
-    const updateResult = await this.assetEssentialsWithoutRealTimeRepository.update({ isin:isin }, dto);
+    const updateResult = await this.assetEssentialsWithoutRealTimeRepository.update({ id:id }, dto);
   
     if (updateResult.affected === 0) {
-      throw new NotFoundException(`Asset with isin ${isin} not found.`);
+      throw new NotFoundException(`Asset with id ${id} not found.`);
     }
   
-    return this.findOneWithoutRealTime(isin);
+    return this.findOneWithoutRealTime(id);
   }
 
   async removeWithoutRealTime(id: number): Promise<{ message: string }> {

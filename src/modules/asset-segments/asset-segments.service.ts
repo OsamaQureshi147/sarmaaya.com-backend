@@ -29,29 +29,29 @@ export class AssetSegmentsService {
     return await this.assetSegmentsRepository.find({ where });
   }
 
-  async findOne(id: string): Promise<AssetSegmentsEntity> {
-    return this.assetSegmentsRepository.findOne({ where: { isin: id } });
+  async findOne(id: number): Promise<AssetSegmentsEntity> {
+    return this.assetSegmentsRepository.findOne({ where: { id: id } });
   }
 
-  async update(isin: string, assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
-    await this.assetSegmentsRepository.update({ isin }, assetSegmentsDto);
-    const updatedEntity = await this.assetSegmentsRepository.findOne({ where: { isin } });
+  async update(id: number, assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
+    await this.assetSegmentsRepository.update({ id }, assetSegmentsDto);
+    const updatedEntity = await this.assetSegmentsRepository.findOne({ where: { id} });
   
     if (!updatedEntity) {
-      throw new NotFoundException(`Asset Segment with ISIN ${isin} not found.`);
+      throw new NotFoundException(`Asset Segment with id ${id} not found.`);
     }
   
     return updatedEntity;
   }
   
 
-  async remove(isin: string): Promise<{ message: string }> {
-    const deleteResult = await this.assetSegmentsRepository.delete({ isin });
+  async remove(id: number): Promise<{ message: string }> {
+    const deleteResult = await this.assetSegmentsRepository.delete({ id });
   
     if (deleteResult.affected === 0) {
-      throw new NotFoundException(`Asset Segment with ISIN ${isin} not found.`);
+      throw new NotFoundException(`Asset Segment with id ${id} not found.`);
     }
   
-    return { message: `Asset Segment with ISIN ${isin} has been deleted successfully.` };
+    return { message: `Asset Segment with id ${id} has been deleted successfully.` };
   }
 }

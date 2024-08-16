@@ -19,18 +19,18 @@ export class AssetSegmentsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<AssetSegmentsEntity> {
+  async findOne(@Param('id') id: number): Promise<AssetSegmentsEntity> {
     return this.assetSegmentsService.findOne(id);
   }
 
-  @Put(':isin')
-  async update(@Param('isin') isin: string, @Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
-    return this.assetSegmentsService.update(isin, assetSegmentsDto);
+  @Put(':id')
+  async update(@Param('id') id: number, @Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
+    return this.assetSegmentsService.update(id, assetSegmentsDto);
   }
 
-  @Delete(':isin')
-  async remove(@Param('isin') isin: string): Promise<{ message: string }> {
-    return this.assetSegmentsService.remove(isin);
+  @Delete(':id')
+  async remove(@Param('id') id: number): Promise<{ message: string }> {
+    return this.assetSegmentsService.remove(id);
 }
 
 }

@@ -20,12 +20,12 @@ export class AssetFundamentalsController {
   }
 
   @Get('/:id')
-  async findOneFundamental(@Param('id') id: string): Promise<AssetFundamentalsEntity> {
+  async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity> {
     return this.assetFundamentalsService.findOneFundamental(id);
   }
 
   @Put('/:id')
-  async updateFundamental(@Param('id') id: string, @Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
+  async updateFundamental(@Param('id') id: number, @Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
     return this.assetFundamentalsService.updateFundamental(id,dto);
   }
 

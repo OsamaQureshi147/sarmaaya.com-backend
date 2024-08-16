@@ -47,9 +47,9 @@ export class AssetFundamentalsService {
   }
 
 
-  async findOneFundamental(id: string): Promise<any> {
+  async findOneFundamental(id: number): Promise<any> {
     const fundamental = await this.assetFundamentalsRepository.findOne({
-      where: { isin: id },
+      where: { id: id },
       relations: ['metric'],
     });
   
@@ -63,8 +63,8 @@ export class AssetFundamentalsService {
     };
   }
 
-  async updateFundamental(id: string, dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
-    const fundamental = await this.assetFundamentalsRepository.findOne({ where: { isin: id } });
+  async updateFundamental(id: number, dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
+    const fundamental = await this.assetFundamentalsRepository.findOne({ where: { id: id } });
   
     if (!fundamental) {
       throw new NotFoundException('Fundamental not found');
@@ -83,7 +83,7 @@ export class AssetFundamentalsService {
     await this.assetFundamentalsRepository.save(fundamental);
   
     return this.assetFundamentalsRepository.findOne({
-      where: { isin: id },
+      where: { id: id },
       relations: ['metric'],
     });
   }

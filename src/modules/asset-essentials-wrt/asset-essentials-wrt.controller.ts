@@ -18,14 +18,14 @@ export class AssetEssentialsWrtController {
     return this.assetEssentialsService.findAllWithoutRealTime(query);
   }
 
-  @Get(':isin')
-  async findOneWithoutRealTime(@Param('isin') isin: string): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    return this.assetEssentialsService.findOneWithoutRealTime(isin);
+  @Get(':id')
+  async findOneWithoutRealTime(@Param('id') id: number): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    return this.assetEssentialsService.findOneWithoutRealTime(id);
   }
 
-  @Put(':isin')
-  async updateWithoutRealTime(@Param('isin') isin: string, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
-    return this.assetEssentialsService.updateWithoutRealTime(isin, dto);
+  @Put(':id')
+  async updateWithoutRealTime(@Param('id') id: number, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
+    return this.assetEssentialsService.updateWithoutRealTime(id, dto);
   }
 
   @Delete(':id')
