@@ -7,6 +7,11 @@ import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
 export class AssetEssentialsRtController {
   constructor(private readonly assetEssentialsService: AssetEssentialsRtService) {}
 
+  @Get()
+  async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsService.findAllRealTime();
+  }
+
   
   @Post()
   async createRealTime(@Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
