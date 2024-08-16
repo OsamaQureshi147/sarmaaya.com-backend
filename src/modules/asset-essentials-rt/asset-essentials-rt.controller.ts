@@ -19,12 +19,12 @@ export class AssetEssentialsRtController {
   }
 
   @Get(':id')
-  async findOneRealTime(@Param('id') id: string): Promise<AssetEssentialsRealTimeEntity> {
+  async findOneRealTime(@Param('id') id: number): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.findOneRealTime(id);
   }
 
   @Put(':id')
-  async updateRealTime(@Param('id') id: string, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
+  async updateRealTime(@Param('id') id: number, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.updateRealTime(id, dto);
   }
 

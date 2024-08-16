@@ -19,19 +19,19 @@ export class AssetFundamentalsController {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
 
-  @Get(':id')
-  async findOneFundamental(@Param('isin') isin: string): Promise<AssetFundamentalsEntity> {
-    return this.assetFundamentalsService.findOneFundamental(isin);
+  @Get('/:id')
+  async findOneFundamental(@Param('id') id: string): Promise<AssetFundamentalsEntity> {
+    return this.assetFundamentalsService.findOneFundamental(id);
   }
 
-  @Put(':id')
-  async updateFundamental(@Param('isin') isin: string, @Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
-    return this.assetFundamentalsService.updateFundamental(isin, dto);
+  @Put('/:id')
+  async updateFundamental(@Param('id') id: string, @Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
+    return this.assetFundamentalsService.updateFundamental(id,dto);
   }
 
-  @Delete(':id')
-  async removeFundamental(@Param('isin') isin: string): Promise<{message : string}> {
-    return this.assetFundamentalsService.removeFundamental(isin);
+  @Delete('/:id')
+  async removeFundamental(@Param('id') id: string): Promise<{message : string}> {
+    return this.assetFundamentalsService.removeFundamental(id);
   }
 
 }

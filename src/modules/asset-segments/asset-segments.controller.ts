@@ -14,7 +14,7 @@ export class AssetSegmentsController {
   }
 
   @Get()
-  async findAll(@Query() query: AssetSegmentsDto): Promise<AssetSegmentsEntity[]> {
+  async findAll(@Query() query: AssetSegmentsEntity): Promise<AssetSegmentsEntity[]> {
     return this.assetSegmentsService.findAllSegments(query);
   }
 
@@ -23,13 +23,14 @@ export class AssetSegmentsController {
     return this.assetSegmentsService.findOne(id);
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
-    return this.assetSegmentsService.update(id, assetSegmentsDto);
+  @Put(':isin')
+  async update(@Param('isin') isin: string, @Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
+    return this.assetSegmentsService.update(isin, assetSegmentsDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ message : string}> {
-    return this.assetSegmentsService.remove(id);
-  }
+  @Delete(':isin')
+  async remove(@Param('isin') isin: string): Promise<{ message: string }> {
+    return this.assetSegmentsService.remove(isin);
+}
+
 }

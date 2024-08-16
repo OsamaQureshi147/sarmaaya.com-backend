@@ -5,32 +5,32 @@ import { AssetMetricsDto, AssetMetricsEntity} from 'lib-typeorm';
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-metrics')
 export class AssetMetricsController {
-  constructor(private readonly assetFundamentalsService: AssetMetricsService) {}
+  constructor(private readonly assetMetricsService: AssetMetricsService) {}
 
   //METRICS CONTROLLERS
 
   @Post()
   async createMetric (@Body() dto: AssetMetricsDto): Promise <AssetMetricsEntity> {
-    return this.assetFundamentalsService.createMetric(dto);
+    return this.assetMetricsService.createMetric(dto);
   }
 
   @Get()
   async findAllMetrics(@Query() query: AssetMetricsEntity): Promise<AssetMetricsEntity[]> {
-    return this.assetFundamentalsService.findAllMetrics(query)
+    return this.assetMetricsService.findAllMetrics(query)
   }
 
   @Get('/:metric')
   async findOneMetric(@Param('metric') metric: string): Promise<AssetMetricsEntity> {
-    return this.assetFundamentalsService.findOneMetric(metric);
+    return this.assetMetricsService.findOneMetric(metric);
   }
 
   @Put('/:metric')
   async updateMetric(@Param('metric') metric: string, @Body() dto: AssetMetricsDto): Promise<AssetMetricsEntity> {
-    return this.assetFundamentalsService.updateMetric(metric, dto);
+    return this.assetMetricsService.updateMetric(metric, dto);
   }
 
   @Delete('/:metric')
   async removeMetric(@Param('metric') metric: string): Promise<{ message: string; deletedMetric: AssetMetricsEntity }> {
-    return this.assetFundamentalsService.removeMetric(metric);
+    return this.assetMetricsService.removeMetric(metric);
   }
 }

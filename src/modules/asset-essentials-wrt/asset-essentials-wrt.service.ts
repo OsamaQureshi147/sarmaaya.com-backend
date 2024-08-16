@@ -55,13 +55,14 @@ export class AssetEssentialsWrtService {
     return this.findOneWithoutRealTime(isin);
   }
 
-  async removeWithoutRealTime(isin: string): Promise<{message : string}> {
-
-    const deleteResult = await this.assetEssentialsWithoutRealTimeRepository.delete(isin);
+  async removeWithoutRealTime(id: number): Promise<{ message: string }> {
+    const deleteResult = await this.assetEssentialsWithoutRealTimeRepository.delete(id);;
+  
     if (deleteResult.affected === 0) {
-      throw new NotFoundException(`Asset with id ${isin} not found.`);
+      throw new NotFoundException(`Asset Segment with id ${id} not found.`);
     }
   
-    return { message: `Asset with id ${isin} has been deleted successfully.` };
+    return { message: `Asset Essential with id ${id} has been deleted successfully.` };
   }
+
 }

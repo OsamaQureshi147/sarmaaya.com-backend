@@ -28,8 +28,8 @@ export class AssetEssentialsWrtController {
     return this.assetEssentialsService.updateWithoutRealTime(isin, dto);
   }
 
-  @Delete(':isin')
-  async removeWithoutRealTime(@Param('isin') isin: string): Promise<{message : string}> {
-    return this.assetEssentialsService.removeWithoutRealTime(isin);
-  }
+  @Delete(':id')
+  async remove(@Param('id') id: number): Promise<{ message: string }> {
+    return this.assetEssentialsService.removeWithoutRealTime(id);
+}
 }

@@ -30,26 +30,29 @@ export class AssetEssentialsRtService {
     return await this.assetEssentialsRealTimeRepository.find({ where });
   }
 
-  async findOneRealTime(isin: string): Promise<AssetEssentialsRealTimeEntity> {
+  async findOneRealTime(id: number): Promise<AssetEssentialsRealTimeEntity> {
 
-    const oneRealTime = await this.assetEssentialsRealTimeRepository.findOne({where : {isin: isin}})
+    const oneRealTime = await this.assetEssentialsRealTimeRepository.findOne({where : {id: id}})
     if (!oneRealTime){
-      throw new NotFoundException(`AssetEssential with isin ${isin} not found.`);
+      throw new NotFoundException(`AssetEssential with id ${id} not found.`);
     }
     
     return oneRealTime;
   }
 
-  async updateRealTime(isin: string, dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
-
-   const updaterealTime =  await this.assetEssentialsRealTimeRepository.update(isin, dto);
-
-   if (updaterealTime.affected === 0) {
-    throw new NotFoundException(`Asset with id ${isin} not found.`);
+  async updateRealTime(id: number, dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
+    const realTimeEntity = await this.assetEssentialsRealTimeRepository.findOne({where: {id:id}});
+  
+    if (!realTimeEntity) {
+      throw new NotFoundException(`Asset with id ${id} not found.`);
+    }
+  
+    Object.assign(realTimeEntity, dto);
+  
+    await this.assetEssentialsRealTimeRepository.save(realTimeEntity);
+    return realTimeEntity;
   }
-    
-  return this.findOneRealTime(isin);
-  }
+  
 
   async removeRealTime(id: string): Promise<{ message: string}> {
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getOrmConfig } from './config/ormConfig';
@@ -9,7 +9,6 @@ import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.mod
 import { AssetMetricsModule } from './modules/asset-metrics/asset-metrics.module';
 import { AssetEssentialsRtModule } from './modules/asset-essentials-rt/asset-essentials-rt.module';
 import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-essentials-wrt.module';
-
 
 @Module({
   imports: [

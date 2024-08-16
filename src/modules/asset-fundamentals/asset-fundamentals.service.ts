@@ -25,7 +25,7 @@ export class AssetFundamentalsService {
 
     const assetFundamental = this.assetFundamentalsRepository.create({
       ...assetFundamentalsDto,
-      metric: metric, // Link the Fundamental to the existing Metric
+      metric: metric, 
   } as unknown as DeepPartial<AssetFundamentalsEntity>);
 
     return await this.assetFundamentalsRepository.save(assetFundamental);
@@ -41,24 +41,51 @@ export class AssetFundamentalsService {
       }
     });
   
-    return await this.assetFundamentalsRepository.find({ where });
+    return await this.assetFundamentalsRepository.find({
+      relations: ['metric'],
+    });
   }
 
 
-  async findOneFundamental(id: string): Promise<AssetFundamentalsEntity> {
-    return this.assetFundamentalsRepository.findOne({ where: { isin: id } });
-  }
-
-  async updateFundamental(id: string, newMetric: AssetMetricsEntity): Promise<AssetFundamentalsEntity> {
-    const fundamental = await this.assetFundamentalsRepository.findOne({ where: {isin: id}});
+  async findOneFundamental(id: string): Promise<any> {
+    const fundamental = await this.assetFundamentalsRepository.findOne({
+      where: { isin: id },
+      relations: ['metric'],
+    });
   
     if (!fundamental) {
-      throw new Error('Fundamental not found');
+      throw new NotFoundException('Fundamental not found');
+    }
+
+    return {
+      ...fundamental,
+      metric: fundamental.metric?.metric, 
+    };
+  }
+
+  async updateFundamental(id: string, dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
+    const fundamental = await this.assetFundamentalsRepository.findOne({ where: { isin: id } });
+  
+    if (!fundamental) {
+      throw new NotFoundException('Fundamental not found');
     }
   
-    fundamental.metric = newMetric;
+    const metric = await this.assetMetricsRepository.findOne({
+      where: { metric: dto.metric }, 
+    });
   
-    return this.assetFundamentalsRepository.save(fundamental);
+    if (!metric) {
+      throw new NotFoundException('Metric not found');
+    }
+    Object.assign(fundamental, dto);
+    fundamental.metric = metric; 
+  
+    await this.assetFundamentalsRepository.save(fundamental);
+  
+    return this.assetFundamentalsRepository.findOne({
+      where: { isin: id },
+      relations: ['metric'],
+    });
   }
   
 
