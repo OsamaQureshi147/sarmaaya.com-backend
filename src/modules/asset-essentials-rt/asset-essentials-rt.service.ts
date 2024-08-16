@@ -70,6 +70,10 @@ export class AssetEssentialsRtService {
     return isins;
   }
 
+  async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsRealTimeRepository.find();
+  }
+
 
   async findOneRealTime(id: number): Promise<AssetEssentialsRealTimeEntity> {
 

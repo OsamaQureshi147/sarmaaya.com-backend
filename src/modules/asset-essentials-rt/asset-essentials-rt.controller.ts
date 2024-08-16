@@ -12,7 +12,6 @@ export class AssetEssentialsRtController {
     return this.assetEssentialsService.findAllRealTime();
   }
 
-  
   @Post()
   async createRealTime(@Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.createRealTime(dto);
