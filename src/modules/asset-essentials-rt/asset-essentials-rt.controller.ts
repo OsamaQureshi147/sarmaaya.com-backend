@@ -18,6 +18,39 @@ export class AssetEssentialsRtController {
     return this.assetEssentialsService.findOneRealTime(id);
   }
 
+  @Get()
+  async findAllRealTime(@Query() query: AssetEssentialsRealTimeEntity, days?: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsService.findAllRealTime(query, days);
+  }
+
+  @Get('latest-isin-data')
+  async getLatestByIsinAndTime(
+    @Query('isin') isin: string,
+  ): Promise<AssetEssentialsRealTimeEntity> {
+    return this.assetEssentialsService.findLatestByIsin(isin);
+  }
+
+  @Get('by-days')
+  async getByIsinAndDays(
+  @Query('isin') isin: string,
+  @Query('days') days?: string,
+): Promise<AssetEssentialsRealTimeEntity[]> {
+  if (!isin) {
+    throw new BadRequestException('ISIN is required');
+  }
+
+  let daysNumber: number | null = null;
+  if (days !== undefined && days !== null) {
+    daysNumber = parseInt(days, 10);
+    if (isNaN(daysNumber) || daysNumber <= 0) {
+      throw new BadRequestException('Days must be a positive number');
+    }
+  }
+
+  return this.assetEssentialsService.findByIsinAndDays(isin, daysNumber);
+}
+
+
   @Put(':id')
   async updateRealTime(@Param('id') id: number, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.updateRealTime(id, dto);

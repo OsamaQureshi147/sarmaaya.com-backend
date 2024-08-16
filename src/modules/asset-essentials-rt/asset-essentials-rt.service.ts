@@ -11,10 +11,63 @@ export class AssetEssentialsRtService {
     private readonly assetEssentialsRealTimeRepository: Repository<AssetEssentialsRealTimeEntity>
   ) {}
 
-  
   async createRealTime(dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     const entity = this.assetEssentialsRealTimeRepository.create(dto);
     return this.assetEssentialsRealTimeRepository.save(entity);
+  }
+  
+  
+  async findLatestByIsin(isin: string): Promise<AssetEssentialsRealTimeEntity> {
+    const latestData = await this.assetEssentialsRealTimeRepository.findOne({
+      where: { isin },
+      order: { created_at: 'DESC' }, 
+    });
+
+    if (!latestData) {
+      throw new NotFoundException(`No data found for ISIN: ${isin}`);
+    }
+
+    return latestData;
+  }
+
+  
+  async findByIsinAndDays(isin: string, days: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
+    const whereClause: any = { isin };
+  
+    if (days !== null) {
+      const now = new Date();
+      const startDate = new Date(now);
+      startDate.setDate(now.getDate() - days);
+  
+      whereClause.created_at = MoreThanOrEqual(startDate);
+    }
+  
+    const data = await this.assetEssentialsRealTimeRepository.find({
+      where: whereClause,
+    });
+  
+    if (!data.length) {
+      throw new NotFoundException(`No data found for ISIN: ${isin}${days !== null ? ` in the last ${days} days` : ''}.`);
+    }
+  
+    return data;
+  }
+  
+  
+  async findAllLatestIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
+    const query = `
+      SELECT DISTINCT ON (isin) *
+      FROM asset_essentials_rt
+      ORDER BY isin, created_at DESC;
+    `;
+
+    const isins = await this.assetEssentialsRealTimeRepository.query(query);
+
+    if (!isins.length) {
+      throw new NotFoundException('No ISINs found.');
+    }
+
+    return isins;
   }
 
 
