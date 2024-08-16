@@ -17,6 +17,10 @@ export class AssetEssentialsRtService {
     return this.assetEssentialsRealTimeRepository.save(entity);
   }
 
+  async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsRealTimeRepository.find();
+  }
+
 
   async findOneRealTime(id: number): Promise<AssetEssentialsRealTimeEntity> {
 
