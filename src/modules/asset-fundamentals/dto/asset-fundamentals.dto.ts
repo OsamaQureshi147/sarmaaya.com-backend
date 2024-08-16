@@ -38,8 +38,8 @@ export class AssetFundamentalsDto {
   @IsDate()
   epsReportDate: Date;
 
-  @IsEnum(Currency)
-  currency: Currency;
+  // @IsEnum(Currency)
+  // currency: Currency;
 
   @IsNumber()
   value: number;
