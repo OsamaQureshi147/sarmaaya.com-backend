@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
 
@@ -11,11 +11,6 @@ export class AssetEssentialsRtController {
   @Post()
   async createRealTime(@Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.createRealTime(dto);
-  }
-
-  @Get()
-  async findAllRealTime(@Query() query: AssetEssentialsRealTimeEntity): Promise<AssetEssentialsRealTimeEntity[]> {
-    return this.assetEssentialsService.findAllRealTime(query);
   }
 
   @Get(':id')
