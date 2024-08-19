@@ -46,8 +46,8 @@ export class AssetFundamentalsEntity extends CustomBaseEntity {
   @Column({ name: 'eps_report_date' })
   epsReportDate: Date;
 
-  @Column({ type: 'enum', enum: Currency })
-  currency: Currency;
+  // @Column({ type: 'enum', enum: Currency })
+  // currency: Currency;
 
   @Column()
   value: number;
