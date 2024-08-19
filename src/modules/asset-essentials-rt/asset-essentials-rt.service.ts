@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
+import { Repository, MoreThanOrEqual} from 'typeorm';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity} from 'lib-typeorm';
 
 
@@ -19,8 +19,8 @@ export class AssetEssentialsRtService {
   
   async findLatestByIsin(isin: string): Promise<AssetEssentialsRealTimeEntity> {
     const latestData = await this.assetEssentialsRealTimeRepository.findOne({
-      where: { isin },
-      order: { created_at: 'DESC' }, 
+      //where: { isin },
+      order: { created_at: 'DESC' },
     });
 
     if (!latestData) {
@@ -29,7 +29,6 @@ export class AssetEssentialsRtService {
 
     return latestData;
   }
-
   
   async findByIsinAndDays(isin: string, days: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
     const whereClause: any = { isin };
@@ -54,22 +53,31 @@ export class AssetEssentialsRtService {
   }
   
   
-  async findAllLatestIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
+  async findAllLatestIsins(days: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
+    const now = new Date();
+    let whereClause = '';
+  
+    if (days !== null) {
+      const startDate = new Date(now);
+      startDate.setDate(now.getDate() - days);
+      whereClause = `WHERE created_at >= '${startDate.toISOString()}'`;
+    }
+  
     const query = `
       SELECT DISTINCT ON (isin) *
       FROM asset_essentials_rt
+      ${whereClause}
       ORDER BY isin, created_at DESC;
     `;
-
+  
     const isins = await this.assetEssentialsRealTimeRepository.query(query);
-
+  
     if (!isins.length) {
       throw new NotFoundException('No ISINs found.');
     }
-
+  
     return isins;
   }
-
   async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
     return this.assetEssentialsRealTimeRepository.find();
   }
