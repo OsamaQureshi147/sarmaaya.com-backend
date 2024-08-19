@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-rt')
@@ -17,57 +17,79 @@ export class AssetEssentialsRtController {
     return this.assetEssentialsService.createRealTime(dto);
   }
 
+  @Get('latest-isin-data')
+  async getDataofLatestIsin(@Query('isin') isin: string): Promise<AssetEssentialsRealTimeEntity> {
+  if (!isin) {
+    throw new BadRequestException('ISIN is required as a query parameter');
+  }
+  return this.assetEssentialsService.findLatestByIsin(isin);
+}
+
+  @Get('by-isin-and-days')
+  async getDataByIsinAndDays(
+    @Query('isin') isin: string,
+    @Query('days') days?: string 
+  ): Promise<AssetEssentialsRealTimeEntity[]> {
+    if (!isin) {
+      throw new BadRequestException('ISIN is required as a query parameter');
+    }
+    let daysNumber: number | null = null;
+    if (days !== undefined && days !== null) {
+      daysNumber = parseInt(days, 10);
+      if (isNaN(daysNumber) || daysNumber <= 0) {
+        throw new BadRequestException('Days must be a positive number');
+      }
+    }
+
+    return this.assetEssentialsService.findByIsinAndDays(isin, daysNumber);
+  }
+
+  // @Get('by-isin-and-days')
+  // async getDataByIsinAndDays(
+  //   @Query('isin') isin: string,
+  //   @Query('days') days?: string 
+  // ): Promise<(AssetEssentialsRealTimeEntity | AssetEssentialsWithoutRealTimeEntity)[]> {
+  //   if (!isin) {
+  //     throw new BadRequestException('ISIN is required as a query parameter');
+  //   }
+  
+  //   let daysNumber: number | null = null;
+  //   if (days !== undefined && days !== null) {
+  //     daysNumber = parseInt(days, 10);
+  //     if (isNaN(daysNumber) || daysNumber <= 0) {
+  //       throw new BadRequestException('Days must be a positive number');
+  //     }
+  
+  //     if (daysNumber > 30) {
+  //       
+  //       const rtData = await this.assetEssentialsService.findByIsinAndDays(isin, 30);
+  
+  //       
+  //       const remainingDays = daysNumber - 30;
+  //       const wrtData = await this.assetEssentialsService.findByIsinAndDays(isin, remainingDays, true);
+  
+  //       
+  //       return [...rtData, ...wrtData];
+  //     } else {
+  //       
+  //       return this.assetEssentialsService.findByIsinAndDays(isin, daysNumber);
+  //     }
+  //   }
+  
+  //   throw new BadRequestException('Days parameter is required');
+  // }
+  
+
+  @Get('latest-data-by-isins')
+  async getLatestDataByIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsService.findLatestDataByIsins();
+  }
+
+
   @Get(':id')
   async findOneRealTime(@Param('id') id: number): Promise<AssetEssentialsRealTimeEntity> {
     return this.assetEssentialsService.findOneRealTime(id);
   }
-
-  @Get('latest-by-isin')
-  async getLatestByIsin(@Query('isin') isin: string): Promise<AssetEssentialsRealTimeEntity> {
-    if (!isin) {
-      throw new BadRequestException('ISIN is required');
-    }
-
-    return this.assetEssentialsService.findLatestByIsin(isin);
-  }
-
-  @Get('by-days')
-  async getByIsinAndDays(
-  @Query('isin') isin: string,
-  @Query('days') days?: string,
-): Promise<AssetEssentialsRealTimeEntity[]> {
-  if (!isin) {
-    throw new BadRequestException('ISIN is required');
-  }
-
-  let daysNumber: number | null = null;
-  if (days !== undefined && days !== null) {
-    daysNumber = parseInt(days, 10);
-    if (isNaN(daysNumber) || daysNumber <= 0) {
-      throw new BadRequestException('Days must be a positive number');
-    }
-  }
-
-  return this.assetEssentialsService.findByIsinAndDays(isin, daysNumber);
-}
-
-@Get('all-latest-isins')
-async findAllLatestIsins(
-  @Query('days') days?: string,
-): Promise<AssetEssentialsRealTimeEntity[]> {
-  let daysNumber: number | null = null;
-  
-  if (days !== undefined && days !== null) {
-    daysNumber = parseInt(days, 10);
-    console.log(daysNumber)
-    if (isNaN(daysNumber) || daysNumber <= 0) {
-      throw new BadRequestException('Days must be a positive number');
-    }
-  }
-
-  return this.assetEssentialsService.findAllLatestIsins(daysNumber);
-}
-
 
   @Put(':id')
   async updateRealTime(@Param('id') id: number, @Body() dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
@@ -75,8 +97,14 @@ async findAllLatestIsins(
   }
 
   @Delete(':id')
-  async removeRealTime(@Param('id') id: string): Promise<{ message : string}> {
+  async removeRealTime(@Param('id') id: number): Promise<{ message : string}> {
     return this.assetEssentialsService.removeRealTime(id);
   }
 
+  
+
 }
+
+
+
+
