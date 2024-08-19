@@ -129,10 +129,5 @@ export class AssetEssentialsRtService {
     
     return latestIsinsData;
   }
-
- 
-  
-  
-  
 }
 
