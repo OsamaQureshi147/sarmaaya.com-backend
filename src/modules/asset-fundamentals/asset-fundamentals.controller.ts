@@ -19,17 +19,17 @@ export class AssetFundamentalsController {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
 
-  @Get('/:id')
+  @Get(':id')
   async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
     return this.assetFundamentalsService.findOneFundamental(id);
   }
 
-  @Put('/:id')
+  @Put(':id')
   async updateFundamental(@Param('id') id: number, @Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
     return this.assetFundamentalsService.updateFundamental(id,dto);
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   async removeFundamental(@Param('id') id: string): Promise<{message : string}> {
     return this.assetFundamentalsService.removeFundamental(id);
   }
