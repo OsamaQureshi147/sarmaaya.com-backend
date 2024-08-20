@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-rt')
@@ -17,6 +17,15 @@ export class AssetEssentialsRtController {
     return this.assetEssentialsService.createRealTime(dto);
   }
 
+  @Get('isin-and-days')
+  async getData(
+    @Query('isin') isin: string,
+    @Query('days') days: number,
+  ) {
+    return this.assetEssentialsService.findIsinDatabyDays(isin, days);
+  }
+
+
   @Get('latest-isin-data')
   async getDataofLatestIsin(@Query('isin') isin: string): Promise<AssetEssentialsRealTimeEntity> {
   if (!isin) {
@@ -24,25 +33,6 @@ export class AssetEssentialsRtController {
   }
   return this.assetEssentialsService.findLatestDataofIsin(isin);
 }
-
-  @Get('isin-and-days')
-  async getDataByIsinAndDays(
-    @Query('isin') isin: string,
-    @Query('days') days?: string 
-  ): Promise<AssetEssentialsRealTimeEntity[]> {
-    if (!isin) {
-      throw new BadRequestException('ISIN is required as a query parameter');
-    }
-    let daysNumber: number | null = null;
-    if (days !== undefined && days !== null) {
-      daysNumber = parseInt(days, 10);
-      if (isNaN(daysNumber) || daysNumber <= 0) {
-        throw new BadRequestException('Days must be a positive number');
-      }
-    }
-
-    return this.assetEssentialsService.findIsinDatabyDays(isin, daysNumber);
-  }
   
 
   @Get('latest-data-of-isins')

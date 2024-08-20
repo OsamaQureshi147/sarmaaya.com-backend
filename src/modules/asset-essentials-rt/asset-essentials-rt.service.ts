@@ -1,14 +1,16 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThanOrEqual} from 'typeorm';
+import { Repository, MoreThanOrEqual, Between} from 'typeorm';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity} from 'lib-typeorm';
-
+import { AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
 
 @Injectable()
 export class AssetEssentialsRtService {
   constructor(
     @InjectRepository(AssetEssentialsRealTimeEntity)
     private readonly assetEssentialsRealTimeRepository: Repository<AssetEssentialsRealTimeEntity>,
+    @InjectRepository(AssetEssentialsWithoutRealTimeEntity)
+    private readonly assetEssentialsWithoutRealTimeRepository: Repository<AssetEssentialsWithoutRealTimeEntity>,
     
   ) {}
 
@@ -75,21 +77,36 @@ export class AssetEssentialsRtService {
     }
   }
 
-  async findIsinDatabyDays(isin: string, days: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
-    const whereClause: any = { isin };
-  
-    if (days !== null) {
-      const now = new Date();
-      const startDate = new Date(now);
-      startDate.setDate(now.getDate() - days);
-  
-      whereClause.created_at = MoreThanOrEqual(startDate);
-    }
-  
-    return this.assetEssentialsRealTimeRepository.find({
-      where: whereClause,
-      order: { created_at: 'DESC' },
+  async findIsinDatabyDays(isin: string, days: number): Promise<AssetEssentialsRealTimeEntity[]| AssetEssentialsWithoutRealTimeEntity[]> {
+    const today = new Date();
+    const endDate = today;
+    const startDate = new Date();
+    startDate.setDate(today.getDate() - days);
+
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setDate(today.getDate() - 30);
+
+    
+    const rtData = await this.assetEssentialsRealTimeRepository.find({
+      where: {
+        isin,
+        created_at: Between(oneMonthAgo, endDate),
+      },
     });
+
+    
+    const wrtData = days > 30
+      ? await this.assetEssentialsWithoutRealTimeRepository.find({
+          where: {
+            isin,
+            created_at: Between(startDate, oneMonthAgo),
+          },
+        })
+      : [];
+
+    
+    const combinedData = [...rtData, ...wrtData];
+    return combinedData;
   }
 
   
@@ -103,6 +120,40 @@ export class AssetEssentialsRtService {
     const latestIsinsData = await this.assetEssentialsRealTimeRepository.query(query);
     
     return latestIsinsData;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+
+  async getData(isin: string, days: number): Promise<AssetEssentialsRealTimeEntity[]| AssetEssentialsWithoutRealTimeEntity[]> {
+    const today = new Date();
+    const endDate = today;
+    const startDate = new Date();
+    startDate.setDate(today.getDate() - days);
+
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setDate(today.getDate() - 30);
+
+    
+    const rtData = await this.assetEssentialsRealTimeRepository.find({
+      where: {
+        isin,
+        created_at: Between(oneMonthAgo, endDate),
+      },
+    });
+
+    
+    const wrtData = days > 30
+      ? await this.assetEssentialsWithoutRealTimeRepository.find({
+          where: {
+            isin,
+            created_at: Between(startDate, oneMonthAgo),
+          },
+        })
+      : [];
+
+    
+    const combinedData = [...rtData, ...wrtData];
+    return combinedData;
   }
 }
 

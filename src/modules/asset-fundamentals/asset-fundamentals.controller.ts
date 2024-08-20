@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
-import { AssetFundamentalsDto, AssetFundamentalsEntity } from 'lib-typeorm';
+import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm';
 
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-fundamentals')
@@ -20,7 +20,7 @@ export class AssetFundamentalsController {
   }
 
   @Get('/:id')
-  async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity> {
+  async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
     return this.assetFundamentalsService.findOneFundamental(id);
   }
 

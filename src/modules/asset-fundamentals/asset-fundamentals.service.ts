@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
-import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetMetricsDto } from 'lib-typeorm';
+import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto} from 'lib-typeorm';
 import { FindOptionsWhere } from 'typeorm';
 
 
@@ -47,7 +47,7 @@ export class AssetFundamentalsService {
   }
 
 
-  async findOneFundamental(id: number): Promise<any> {
+  async findOneFundamental(id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
     const fundamental = await this.assetFundamentalsRepository.findOne({
       where: { id: id },
       relations: ['metric'],
