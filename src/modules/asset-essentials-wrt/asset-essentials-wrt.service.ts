@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere } from 'typeorm';
+import { Repository, FindOptionsWhere, MoreThanOrEqual } from 'typeorm';
 import { AssetEssentialsDto, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm';
 
 

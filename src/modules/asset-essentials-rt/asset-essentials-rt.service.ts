@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThanOrEqual} from 'typeorm';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity} from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity} from 'lib-typeorm';
 
 
 @Injectable()
@@ -9,8 +9,7 @@ export class AssetEssentialsRtService {
   constructor(
     @InjectRepository(AssetEssentialsRealTimeEntity)
     private readonly assetEssentialsRealTimeRepository: Repository<AssetEssentialsRealTimeEntity>,
-    @InjectRepository(AssetEssentialsRealTimeEntity)
-    private readonly assetEssentialsWithoutRealTimeRepository: Repository<AssetEssentialsWithoutRealTimeEntity>
+    
   ) {}
 
   async createRealTime(dto: AssetEssentialsDto): Promise<AssetEssentialsRealTimeEntity> {
@@ -59,7 +58,7 @@ export class AssetEssentialsRtService {
     return { message: `Asset with id ${id} has been deleted successfully.` };
   }
 
-  async findLatestByIsin(isin: string): Promise<AssetEssentialsRealTimeEntity> {
+  async findLatestDataofIsin(isin: string): Promise<AssetEssentialsRealTimeEntity> {
     try {
       const latestData = await this.assetEssentialsRealTimeRepository.findOne({
         where: { isin },
@@ -76,7 +75,7 @@ export class AssetEssentialsRtService {
     }
   }
 
-  async findByIsinAndDays(isin: string, days: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
+  async findIsinDatabyDays(isin: string, days: number | null): Promise<AssetEssentialsRealTimeEntity[]> {
     const whereClause: any = { isin };
   
     if (days !== null) {
@@ -93,32 +92,8 @@ export class AssetEssentialsRtService {
     });
   }
 
-  // async findByIsinAndDays(
-  //   isin: string, 
-  //   days: number, 
-  //   isWrt: boolean = false
-  // ): Promise<AssetEssentialsRealTimeEntity[] | AssetEssentialsWithoutRealTimeEntity[]> {
-  //   const whereClause: any = { isin };
-  //   const now = new Date();
-  //   const startDate = new Date(now);
-  //   startDate.setDate(now.getDate() - days);
-  //   whereClause.created_at = MoreThanOrEqual(startDate);
-
-  //   if (isWrt) {
-  //     return this.assetEssentialsWithoutRealTimeRepository.find({
-  //       where: whereClause,
-  //       order: { created_at: 'DESC' },
-  //     });
-  //   } else {
-  //     return this.assetEssentialsRealTimeRepository.find({
-  //       where: whereClause,
-  //       order: { created_at: 'DESC' },
-  //     });
-  //   }
-  // }
-
-
-  async findLatestDataByIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
+  
+  async findLatestDataOfIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
     const query = `
       SELECT DISTINCT ON (isin) *
       FROM asset_essentials_rt

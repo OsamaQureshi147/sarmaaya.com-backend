@@ -22,10 +22,10 @@ export class AssetEssentialsRtController {
   if (!isin) {
     throw new BadRequestException('ISIN is required as a query parameter');
   }
-  return this.assetEssentialsService.findLatestByIsin(isin);
+  return this.assetEssentialsService.findLatestDataofIsin(isin);
 }
 
-  @Get('by-isin-and-days')
+  @Get('isin-and-days')
   async getDataByIsinAndDays(
     @Query('isin') isin: string,
     @Query('days') days?: string 
@@ -41,48 +41,13 @@ export class AssetEssentialsRtController {
       }
     }
 
-    return this.assetEssentialsService.findByIsinAndDays(isin, daysNumber);
+    return this.assetEssentialsService.findIsinDatabyDays(isin, daysNumber);
   }
-
-  // @Get('by-isin-and-days')
-  // async getDataByIsinAndDays(
-  //   @Query('isin') isin: string,
-  //   @Query('days') days?: string 
-  // ): Promise<(AssetEssentialsRealTimeEntity | AssetEssentialsWithoutRealTimeEntity)[]> {
-  //   if (!isin) {
-  //     throw new BadRequestException('ISIN is required as a query parameter');
-  //   }
-  
-  //   let daysNumber: number | null = null;
-  //   if (days !== undefined && days !== null) {
-  //     daysNumber = parseInt(days, 10);
-  //     if (isNaN(daysNumber) || daysNumber <= 0) {
-  //       throw new BadRequestException('Days must be a positive number');
-  //     }
-  
-  //     if (daysNumber > 30) {
-  //       
-  //       const rtData = await this.assetEssentialsService.findByIsinAndDays(isin, 30);
-  
-  //       
-  //       const remainingDays = daysNumber - 30;
-  //       const wrtData = await this.assetEssentialsService.findByIsinAndDays(isin, remainingDays, true);
-  
-  //       
-  //       return [...rtData, ...wrtData];
-  //     } else {
-  //       
-  //       return this.assetEssentialsService.findByIsinAndDays(isin, daysNumber);
-  //     }
-  //   }
-  
-  //   throw new BadRequestException('Days parameter is required');
-  // }
   
 
-  @Get('latest-data-by-isins')
+  @Get('latest-data-of-isins')
   async getLatestDataByIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
-    return this.assetEssentialsService.findLatestDataByIsins();
+    return this.assetEssentialsService.findLatestDataOfIsins();
   }
 
 
