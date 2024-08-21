@@ -25,7 +25,6 @@ export class AssetEssentialsRtController {
     return this.assetEssentialsService.findIsinDatabyDays(isin, days);
   }
 
-
   @Get('latest-isin-data')
   async getDataofLatestIsin(@Query('isin') isin: string): Promise<AssetEssentialsRealTimeEntity> {
   if (!isin) {
