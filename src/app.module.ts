@@ -10,12 +10,17 @@ import { AssetMetricsModule } from './modules/asset-metrics/asset-metrics.module
 import { AssetEssentialsRtModule } from './modules/asset-essentials-rt/asset-essentials-rt.module';
 import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-essentials-wrt.module';
 
+import { BullModule } from '@nestjs/bull';
+
+import { ScheduleModule } from '@nestjs/schedule';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(getOrmConfig()), 
+    ScheduleModule.forRoot(),
     AssetDetailsModule,
     AssetEssentialsRtModule,
     AssetEssentialsWrtModule,
