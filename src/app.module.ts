@@ -9,24 +9,30 @@ import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.mod
 import { AssetMetricsModule } from './modules/asset-metrics/asset-metrics.module';
 import { AssetEssentialsRtModule } from './modules/asset-essentials-rt/asset-essentials-rt.module';
 import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-essentials-wrt.module';
-
+import { JobModule } from './jobs/job.module';
 import { BullModule } from '@nestjs/bull';
 
-import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',  
+        port: 6379,        
+      },
+    }),
     TypeOrmModule.forRoot(getOrmConfig()), 
-    ScheduleModule.forRoot(),
     AssetDetailsModule,
     AssetEssentialsRtModule,
     AssetEssentialsWrtModule,
     AssetSegmentsModule,
     AssetFundamentalsModule,
     AssetMetricsModule,
+    JobModule,
   ],
+ 
 })
 export class AppModule {}
