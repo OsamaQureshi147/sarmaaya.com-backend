@@ -24,7 +24,9 @@ import { BullModule } from '@nestjs/bull';
         port: 6379,        
       },
     }),
-    TypeOrmModule.forRoot(getOrmConfig()), 
+    TypeOrmModule.forRootAsync({
+      useFactory: getOrmConfig,
+    }), 
     AssetDetailsModule,
     AssetEssentialsRtModule,
     AssetEssentialsWrtModule,

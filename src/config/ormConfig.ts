@@ -11,9 +11,9 @@ export const getOrmConfig = () =>
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE_NAME!,
     migrationsTransactionMode: 'each',
-    // ssl: {
-    //   rejectUnauthorized: false,
-    // },
+    ssl: {
+      rejectUnauthorized: false,
+    },
     entities: [AssetDetailsEntity, AssetSegmentsEntity, AssetMetricsEntity, AssetFundamentalsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetMetricsEntity],
     logging: process.env.NODE_ENV === 'development',
     synchronize: process.env.NODE_ENV === 'development',
