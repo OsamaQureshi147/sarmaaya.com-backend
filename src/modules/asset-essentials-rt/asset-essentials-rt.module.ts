@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssetEssentialsRtController } from './asset-essentials-rt.controller';
 import { AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
-import { JobModule } from 'src/jobs/job.module';
+//import { JobModule } from 'src/jobs/job.module';
 import { forwardRef } from '@nestjs/common';
 //import { DataSource } from 'typeorm';
 
@@ -13,7 +13,7 @@ import { forwardRef } from '@nestjs/common';
       AssetEssentialsRealTimeEntity,
       AssetEssentialsWithoutRealTimeEntity
     ]),
-    forwardRef(() => JobModule),
+    //forwardRef(() => JobModule),
   ],
   controllers: [AssetEssentialsRtController],
   providers: [AssetEssentialsRtService],

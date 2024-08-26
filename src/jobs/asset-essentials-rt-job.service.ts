@@ -8,10 +8,10 @@ import { DataSource } from 'typeorm';
 
 @Injectable()
 export class AssetEssentialsRtJobService {
+
   constructor(
     @InjectQueue('real-time-data-queue') private readonly realTimeDataQueue: Queue,
     private readonly assetEssentialsRtService: AssetEssentialsRtService,
-    private readonly dataSource: DataSource, // Injecting DataSource here
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -22,22 +22,12 @@ export class AssetEssentialsRtJobService {
   }
 
   private async fetchRealTimeData(): Promise<AssetEssentialsDto[]> {
-    // Example: Fetch real-time data using the injected DataSource
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    try {
-      await queryRunner.connect();
-      // Example: Running a custom query, you can replace this with actual data fetching logic
-      const result = await queryRunner.query(`
-        SELECT isin, price, volume FROM asset_essentials_rt_table 
-        WHERE some_condition = true
-      `);
-      return result;
-    } catch (error) {
-      console.error('Error fetching real-time data:', error);
-      throw new Error('Failed to fetch real-time data');
-    } finally {
-      await queryRunner.release();
-    }
+    // Fetch your real-time data from an external API or source
+    // Here, you can use AssetEssentialsRtService to save the fetched data
+    return [
+      { isin: 'ISIN1', price: 100.5, volume: 200 },
+      { isin: 'ISIN2', price: 101.0, volume: 250 },
+      // Add more data as per your structure
+    ];
   }
 }
