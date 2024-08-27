@@ -21,6 +21,13 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     ScheduleModule.forRoot(),
     forwardRef(() => AssetEssentialsRtModule),
+
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',  
+        port: 6379,        
+      },
+    }),
   ],
   providers: [
     AssetEssentialsRtService,

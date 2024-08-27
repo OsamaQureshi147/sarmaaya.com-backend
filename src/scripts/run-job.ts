@@ -11,7 +11,7 @@ async function bootstrap() {
 
   if (!jobName || jobName.trim() === '') {
     console.error('No job specified. Exiting...');
-    process.exit();  // Exit if no job is specified
+    process.exit();  
   }
 
   console.log(`Starting job: ${jobName}`);
@@ -42,7 +42,6 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  // Graceful shutdown
   process.on('SIGTERM', async () => {
     console.log('SIGTERM signal received: closing jobs');
     await app.close();
