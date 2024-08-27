@@ -1,5 +1,3 @@
-// 
-
 import { NestFactory } from '@nestjs/core';
 import { JobModule } from 'src/jobs/job.module';
 import { AssetEssentialsRtJobService } from '../jobs/asset-essentials-rt-job.service';
@@ -9,7 +7,12 @@ async function bootstrap() {
   dotenv.config();
 
   const args = process.argv.slice(2);
-  const jobName = args.find(arg => arg.startsWith('JOB='))?.split('=')[1] || 'processRealTimeData';
+  const jobName = args.find(arg => arg.startsWith('JOB='))?.split('=')[1];
+
+  if (!jobName || jobName.trim() === '') {
+    console.error('No job specified. Exiting...');
+    process.exit();  // Exit if no job is specified
+  }
 
   console.log(`Starting job: ${jobName}`);
 
@@ -19,50 +22,24 @@ async function bootstrap() {
 
   const jobService = app.get(AssetEssentialsRtJobService);
 
-  switch (jobName) {
-    case 'processRealTimeData':
-      async function runRealTimeDataJob() {
-        try {
-          await jobService.handleCron();
-          console.log('Job processRealTimeData executed successfully.');
-        } catch (error) {
-          console.error('Error executing real-time data job:', error);
-        }
-        setTimeout(runRealTimeDataJob, 60000); // Run every 1 minute
-      }
-
-      async function runEodJob() {
-        try {
-          await jobService.handleEodCron();
-          console.log('Job processEodData executed successfully.');
-        } catch (error) {
-          console.error('Error executing EOD job:', error);
-        }
-        setTimeout(runEodJob, 300000); // Run every 5 minutes
-      }
-
-      runRealTimeDataJob();
-      runEodJob();
-      break;
-
-    // Example of adding more jobs in the future
-    case 'someOtherJob':
-      async function runSomeOtherJob() {
-        try {
-          // Implement some other job functionality here
-          console.log('Job someOtherJob executed successfully.');
-        } catch (error) {
-          console.error('Error executing some other job:', error);
-        }
-        setTimeout(runSomeOtherJob, 60000); // Example interval
-      }
-
-      runSomeOtherJob();
-      break;
-
-    default:
-      console.error(`Unknown job: ${jobName}`);
-      process.exit(1);
+  if (['processRealTimeData' ,'processEodData', 'deleteRtData'].includes(jobName)) {
+    switch (jobName) {
+      case 'processRealTimeData':
+        await jobService.handleCron();
+        console.log('Job processRealTimeData executed successfully.');
+        break;
+      case 'processEodData':
+        await jobService.runEodJob();
+        console.log('Job processEodData executed successfully.');
+        process.exit(1);
+      case 'deleteRtData':
+        await jobService.deleteRtData();
+        console.log('Job deleteRtData executed successfully.');
+        process.exit(1);
+    }
+  } else {
+    console.error('Unknown job:', jobName);
+    process.exit(1);
   }
 
   // Graceful shutdown
@@ -72,11 +49,6 @@ async function bootstrap() {
     process.exit(0);
   });
 
-  process.on('SIGINT', async () => {
-    console.log('SIGINT signal received: closing jobs');
-    await app.close();
-    process.exit(0);
-  });
 }
 
 bootstrap().catch(err => {

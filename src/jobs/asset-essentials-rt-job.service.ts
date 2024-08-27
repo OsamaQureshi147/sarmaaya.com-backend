@@ -32,61 +32,65 @@ export class AssetEssentialsRtJobService {
   }
 
   
-  @Cron('2 */5 * * * *')
-  async handleEodCron() {
+  async runEodJob() {
     try {
-        console.log(`[${new Date().toISOString()}] EOD Cron job started`);
+      console.log(`[${new Date().toISOString()}] EOD job triggered`);
 
-        
-        const isins = await this.rtRepository
-            .createQueryBuilder('asset')
-            .select('DISTINCT(asset.isin)', 'isin') 
-            .getRawMany();
+      const isins = await this.rtRepository
+        .createQueryBuilder('asset')
+        .select('DISTINCT(asset.isin)', 'isin') 
+        .getRawMany();
 
-        console.log('Fetched ISINs:', isins);
+      console.log('Fetched ISINs:', isins);
 
-        for (const record of isins) {  
-            const isin = record.isin; 
-            if (!isin) {
-                console.log('ISIN is undefined, skipping...');
-                continue;
-            }
-
-            
-            console.log(`Processing EOD for ISIN: ${isin}`);
-
-            
-            const eodData = await this.rtRepository.findOne({
-                where: { isin },
-                order: { created_at: 'DESC' },  
-            });
-
-            if (eodData) {
-                
-                await this.wrtRepository.save({
-                    isin: eodData.isin,
-                    symbol: eodData.symbol,
-                    price: eodData.price,
-                    high: eodData.high,
-                    low: eodData.low,
-                    annualChangePercent: eodData.annualChangePercent,
-                    yearToDateChangePercent: eodData.yearToDateChangePercent,
-                    volume: eodData.volume,
-                    changePercent: eodData.changePercent,
-                    marketCap: eodData.marketCap,
-                });
-
-                
-                await this.rtRepository.delete({ isin });
-                console.log(`Processed and deleted EOD data for ISIN ${isin}`);
-            } else {
-                console.log(`No EOD data found for ISIN ${isin}`);
-            }
+      for (const record of isins) {  
+        const isin = record.isin; 
+        if (!isin) {
+          console.log('ISIN is undefined, skipping...');
+          continue;
         }
 
-        console.log('EOD process completed.');
+        console.log(`Processing EOD for ISIN: ${isin}`);
+
+        const eodData = await this.rtRepository.findOne({
+          where: { isin },
+          order: { created_at: 'DESC' },  
+        });
+
+        if (eodData) {
+          await this.wrtRepository.save({
+            isin: eodData.isin,
+            symbol: eodData.symbol,
+            price: eodData.price,
+            high: eodData.high,
+            low: eodData.low,
+            annualChangePercent: eodData.annualChangePercent,
+            yearToDateChangePercent: eodData.yearToDateChangePercent,
+            volume: eodData.volume,
+            changePercent: eodData.changePercent,
+            marketCap: eodData.marketCap,
+          });
+
+          await this.rtRepository.delete({ isin });
+          console.log(`Processed and deleted EOD data for ISIN ${isin}`);
+        } else {
+          console.log(`No EOD data found for ISIN ${isin}`);
+        }
+      }
+
+      console.log('EOD process completed.');
     } catch (error) {
-        console.error('Error in EOD cron job:', error);
+      console.error('Error in EOD job:', error);
+    }
+  }
+
+  async deleteRtData(): Promise<void> {
+    try {
+      await this.rtRepository.clear();
+      console.log('All data deleted from the RT table.');
+    } catch (error) {
+      console.error('Error deleting data from the RT table:', error);
+      throw error;
     }
   }
 

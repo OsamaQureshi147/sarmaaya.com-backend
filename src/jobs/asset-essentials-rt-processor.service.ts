@@ -15,21 +15,22 @@ export class AssetEssentialsRtProcessorService {
     const data = job.data;
 
     try {
-      
+      // Check and establish database connection
       if (!this.dataSource.isInitialized) {
         console.log('Database connection is not initialized. Trying to connect...');
         await this.dataSource.initialize();
+        console.log('Database connection established.');
       }
 
-      
+      // Process each data point
       for (const dataPoint of data) {
         console.log(`Processing data for ISIN ${dataPoint.isin}:`, dataPoint);
         await this.assetEssentialsRtService.createRealTime(dataPoint);
       }
 
-      console.log(`Processed batch data at ${new Date().toISOString()}`);
+      console.log(`Successfully processed ${data.length} data points at ${new Date().toISOString()}`);
     } catch (error) {
-      console.error(`Error processing batch data:`, error);
+      console.error(`Error processing batch data at ${new Date().toISOString()}:`, error);
     }
   }
 }
