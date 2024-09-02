@@ -16,7 +16,7 @@ export const getOrmConfig = () =>
     },
     entities: [AssetDetailsEntity, AssetSegmentsEntity, AssetMetricsEntity, AssetFundamentalsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetMetricsEntity],
     logging: process.env.NODE_ENV === 'development',
-    synchronize: process.env.NODE_ENV === 'development',
+    synchronize: false,
     migrationsRun: process.env.NODE_ENV === 'test',
     dropSchema: process.env.NODE_ENV === 'test',
     migrationsTableName: 'migrations',

@@ -42,6 +42,7 @@ export class AssetFundamentalsService {
     });
   
     return await this.assetFundamentalsRepository.find({
+      where,
       relations: ['metric'],
     });
   }
