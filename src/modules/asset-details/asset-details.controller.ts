@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetDetailsService } from './asset-details.service';
 import { AssetDetailsDto, AssetDetailsEntity } from 'lib-typeorm';
+import {  ApiTags } from '@nestjs/swagger';
 
+@ApiTags('asset-details')
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-details')
 export class AssetDetailsController {
@@ -18,6 +20,7 @@ export class AssetDetailsController {
   }
 
   @Get(':isin')
+  // @ApiParam({ name: 'isin', required: true, description: 'The ISIN of the asset' })
   async findOne(@Param('isin') isin: string): Promise<AssetDetailsEntity> {
     return this.assetDetailsService.findOne(isin);
   }

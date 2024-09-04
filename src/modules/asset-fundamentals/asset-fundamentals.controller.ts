@@ -1,7 +1,11 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
 import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm';
+import { ApiTags, ApiQuery, ApiExtraModels } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/swagger';
 
+@ApiTags('asset-fundamentals')
+@ApiExtraModels(PartialType(AssetFundamentalsDto))
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-fundamentals')
 export class AssetFundamentalsController {
@@ -15,9 +19,16 @@ export class AssetFundamentalsController {
   }
 
   @Get()
+  @ApiQuery({
+    name: 'query',
+    type: PartialType(AssetFundamentalsDto),
+    description: 'Query parameters',
+  })
   async findAllFundamentals(@Query() query:AssetFundamentalsEntity): Promise<AssetFundamentalsEntity[]> {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
+
+
 
   @Get(':id')
   async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
