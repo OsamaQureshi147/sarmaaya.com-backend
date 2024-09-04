@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetMetricsService } from './asset-metrics.service';
 import { AssetMetricsDto, AssetMetricsEntity} from 'lib-typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('asset-metrics')
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-metrics')
 export class AssetMetricsController {

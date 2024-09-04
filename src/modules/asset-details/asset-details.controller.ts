@@ -20,7 +20,6 @@ export class AssetDetailsController {
   }
 
   @Get(':isin')
-  // @ApiParam({ name: 'isin', required: true, description: 'The ISIN of the asset' })
   async findOne(@Param('isin') isin: string): Promise<AssetDetailsEntity> {
     return this.assetDetailsService.findOne(isin);
   }

@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('asset-essentials-rt')
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-rt')
 export class AssetEssentialsRtController {

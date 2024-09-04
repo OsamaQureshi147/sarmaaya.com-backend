@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
 import {  AssetEssentialsWithoutRealTimeEntity, AssetEssentialsDto } from 'lib-typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('asset-essentials-wrt')
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-essentials-wrt')
 export class AssetEssentialsWrtController {

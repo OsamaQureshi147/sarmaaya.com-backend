@@ -31,22 +31,23 @@ export class AssetFundamentalsService {
     return await this.assetFundamentalsRepository.save(assetFundamental);
   }
 
-  async findAllFundamentals(query: AssetFundamentalsEntity): Promise<AssetFundamentalsEntity[]> {
+  async findAllFundamentals(
+    query: Partial<AssetFundamentalsDto>, // Accept the partial DTO as input
+  ): Promise<AssetFundamentalsEntity[]> {
     const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
-  
-    Object.keys(query).forEach(key => {
+
+    Object.keys(query).forEach((key) => {
       const value = query[key];
       if (value !== undefined && value !== null) {
-        where[key] = value;
+        where[key] = value; // Map query fields to where clause
       }
     });
-  
-    return await this.assetFundamentalsRepository.find({
+
+    return this.assetFundamentalsRepository.find({
       where,
-      relations: ['metric'],
+      relations: ['metric'], // Include any necessary relations
     });
   }
-
 
   async findOneFundamental(id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
     const fundamental = await this.assetFundamentalsRepository.findOne({

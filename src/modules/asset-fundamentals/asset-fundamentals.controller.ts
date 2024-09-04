@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
 import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm';
-import { ApiTags, ApiQuery, ApiExtraModels } from '@nestjs/swagger';
+import { ApiTags, ApiQuery, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/swagger';
+import {  FundamentalsPeriodicity } from 'src/common/interfaces';
 
 @ApiTags('asset-fundamentals')
 @ApiExtraModels(PartialType(AssetFundamentalsDto))
@@ -20,14 +21,58 @@ export class AssetFundamentalsController {
 
   @Get()
   @ApiQuery({
-    name: 'query',
-    type: PartialType(AssetFundamentalsDto),
-    description: 'Query parameters',
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
   })
-  async findAllFundamentals(@Query() query:AssetFundamentalsEntity): Promise<AssetFundamentalsEntity[]> {
+  @ApiQuery({
+    name: 'periodicity',
+    required: false,
+    enum: FundamentalsPeriodicity, // Assuming this is an enum
+    description: 'The periodicity of the data',
+  })
+  @ApiQuery({
+    name: 'metric',
+    required: false,
+    type: String,
+    description: 'The metric of the asset fundamentals',
+  })
+  @ApiQuery({
+    name: 'fiscalPeriod',
+    required: false,
+    type: Number,
+    description: 'The fiscal period (1-4)',
+  })
+  @ApiQuery({
+    name: 'fiscalYear',
+    required: false,
+    type: Number,
+    description: 'The fiscal year',
+  })
+  @ApiQuery({
+    name: 'fiscalEndDate',
+    required: false,
+    type: String,
+    description: 'The end date of the fiscal year',
+  })
+  @ApiQuery({
+    name: 'epsReportDate',
+    required: false,
+    type: String,
+    description: 'The date of the EPS report',
+  })
+  @ApiQuery({
+    name: 'value',
+    required: false,
+    type: String,
+    description: 'The value of the asset',
+  })
+  async findAllFundamentals(
+    @Query() query: Partial<AssetFundamentalsDto>, // Use Partial<DTO> for query
+  ): Promise<AssetFundamentalsEntity[]> {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
-
 
 
   @Get(':id')
