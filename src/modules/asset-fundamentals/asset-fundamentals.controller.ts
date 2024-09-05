@@ -29,7 +29,7 @@ export class AssetFundamentalsController {
   @ApiQuery({
     name: 'periodicity',
     required: false,
-    enum: FundamentalsPeriodicity, // Assuming this is an enum
+    enum: FundamentalsPeriodicity, 
     description: 'The periodicity of the data',
   })
   @ApiQuery({
@@ -69,7 +69,7 @@ export class AssetFundamentalsController {
     description: 'The value of the asset',
   })
   async findAllFundamentals(
-    @Query() query: Partial<AssetFundamentalsDto>, // Use Partial<DTO> for query
+    @Query() query: Partial<AssetFundamentalsDto>, 
   ): Promise<AssetFundamentalsEntity[]> {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }

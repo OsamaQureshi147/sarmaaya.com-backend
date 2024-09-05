@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto} from 'lib-typeorm';
 import { FindOptionsWhere } from 'typeorm';
-
+import { In, Between } from 'typeorm';
 
 @Injectable()
 export class AssetFundamentalsService {
@@ -31,21 +31,54 @@ export class AssetFundamentalsService {
     return await this.assetFundamentalsRepository.save(assetFundamental);
   }
 
+  // async findAllFundamentals(
+  //   query: Partial<AssetFundamentalsDto>, 
+  // ): Promise<AssetFundamentalsEntity[]> {
+  //   const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
+
+  //   Object.keys(query).forEach((key) => {
+  //     const value = query[key];
+  //     if (value !== undefined && value !== null) {
+  //       where[key] = value; 
+  //     }
+  //   });
+
+  //   return this.assetFundamentalsRepository.find({
+  //     where,
+  //     relations: ['metric'], 
+  //   });
+  // }
+
   async findAllFundamentals(
-    query: Partial<AssetFundamentalsDto>, // Accept the partial DTO as input
+    query: Partial<AssetFundamentalsDto> & { startDate?: string, endDate?: string }, // Add startDate and endDate as query params
   ): Promise<AssetFundamentalsEntity[]> {
     const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
-
+  
     Object.keys(query).forEach((key) => {
       const value = query[key];
       if (value !== undefined && value !== null) {
-        where[key] = value; // Map query fields to where clause
+        if (key === 'metric') {
+          const metricsArray = Array.isArray(value) ? value : value.split(',').map(item => item.trim());
+          where[key] = In(metricsArray);
+        } else if (key === 'isin') {
+          const isinsArray = Array.isArray(value) ? value : value.split(',').map(item => item.trim());
+          where[key] = In(isinsArray);
+        } else if (key === 'startDate' || key === 'endDate') {
+        } else {
+          where[key] = value;
+        }
       }
     });
-
+  
+    if (query.startDate && query.endDate) {
+      where.epsReportDate = Between(new Date(query.startDate), new Date(query.endDate));
+    } else if (query.startDate) {
+      where.epsReportDate = Between(new Date(query.startDate), new Date()); // If only startDate provided
+    }
+  
     return this.assetFundamentalsRepository.find({
       where,
-      relations: ['metric'], // Include any necessary relations
+      relations: ['metric'],
     });
   }
 

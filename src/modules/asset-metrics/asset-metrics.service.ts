@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { AssetFundamentalsEntity, AssetMetricsDto, AssetMetricsEntity } from 'lib-typeorm';
-
+import { In } from 'typeorm';
 
 @Injectable()
 export class AssetMetricsService {
@@ -34,7 +34,12 @@ export class AssetMetricsService {
     Object.keys(query).forEach(key => {
       const value = query[key];
       if (value !== undefined && value !== null) {
+        if (key === 'metric') {
+          const metricsArray = Array.isArray(value) ? value : value.split(',').map(item => item.trim());
+          where[key] = In(metricsArray);
+      } else {
         where[key] = value;
+      }
       }
     });
   
