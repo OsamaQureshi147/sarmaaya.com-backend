@@ -289,7 +289,7 @@ export class AssetFundamentalsService {
   }
 
 
-  async companyAbout(isin: string) {
+  async getcompanyAbout(isin: string) {
     const metrics = [
       'FF_PHONE',        
       'FF_BUS_DESC_EXT',

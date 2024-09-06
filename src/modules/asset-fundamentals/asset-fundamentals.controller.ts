@@ -34,7 +34,7 @@ export class AssetFundamentalsController {
 
   @Get('company-about')
   async getCompanyAbout(@Query('isin') isin: string){
-    const about = await this.assetFundamentalsService.companyAbout(isin);
+    const about = await this.assetFundamentalsService.getcompanyAbout(isin);
     return about;
   }
 
