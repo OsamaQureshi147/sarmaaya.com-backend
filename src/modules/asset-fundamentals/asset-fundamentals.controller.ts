@@ -13,6 +13,31 @@ export class AssetFundamentalsController {
   constructor(private readonly assetFundamentalsService: AssetFundamentalsService) {}
 
   //FUNDAMENTALS CONTROLLERS
+  
+  @Get('company-details')
+  async getCompanyDetails(@Query('isin') isin: string) {
+    const details = await this.assetFundamentalsService.getCompanyDetails(isin);
+    return details;
+  }
+
+  @Get('ratios')
+  async getRatios(@Query('isin') isin: string) {
+    const ratios = await this.assetFundamentalsService.getRatios(isin);
+    return ratios;
+  }
+
+  @Get('company-snapshot')
+  async getCompanySnapshot(@Query('isin') isin: string) {
+    const snapshot = await this.assetFundamentalsService.getCompanySnapshot(isin);
+    return snapshot;
+  }
+
+  @Get('company-about')
+  async getCompanyAbout(@Query('isin') isin: string){
+    const about = await this.assetFundamentalsService.companyAbout(isin);
+    return about;
+  }
+
 
   @Post()
   async createFundamental(@Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
