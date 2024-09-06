@@ -31,24 +31,6 @@ export class AssetFundamentalsService {
     return await this.assetFundamentalsRepository.save(assetFundamental);
   }
 
-  // async findAllFundamentals(
-  //   query: Partial<AssetFundamentalsDto>, 
-  // ): Promise<AssetFundamentalsEntity[]> {
-  //   const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
-
-  //   Object.keys(query).forEach((key) => {
-  //     const value = query[key];
-  //     if (value !== undefined && value !== null) {
-  //       where[key] = value; 
-  //     }
-  //   });
-
-  //   return this.assetFundamentalsRepository.find({
-  //     where,
-  //     relations: ['metric'], 
-  //   });
-  // }
-
   async findAllFundamentals(
     query: Partial<AssetFundamentalsDto> & { startDate?: string, endDate?: string }, // Add startDate and endDate as query params
   ): Promise<AssetFundamentalsEntity[]> {
