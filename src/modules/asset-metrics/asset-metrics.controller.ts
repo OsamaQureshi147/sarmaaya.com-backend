@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetMetricsService } from './asset-metrics.service';
 import { AssetMetricsDto, AssetMetricsEntity} from 'lib-typeorm';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('asset-metrics')
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -17,6 +17,42 @@ export class AssetMetricsController {
   }
 
   @Get()
+  @ApiQuery({
+    name: 'metric',
+    required: false,
+    type: String,
+    description: 'The metric',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    description: 'The name of the metric',
+  })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    type: String,
+    description: 'Category of the metric',
+  })
+  @ApiQuery({
+    name: 'subCategory',
+    required: false,
+    type: String,
+    description: 'Subcategory of the metric',
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    description: 'The name of the metric',
+  })
+  @ApiQuery({
+    name: 'dataType',
+    required: false,
+    type: String,
+    description: 'data type of the metric',
+  })
   async findAllMetrics(@Query() query: AssetMetricsEntity): Promise<AssetMetricsEntity[]> {
     return this.assetMetricsService.findAllMetrics(query)
   }

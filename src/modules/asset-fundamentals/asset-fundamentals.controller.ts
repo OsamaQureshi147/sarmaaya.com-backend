@@ -15,24 +15,48 @@ export class AssetFundamentalsController {
   //FUNDAMENTALS CONTROLLERS
   
   @Get('company-details')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
   async getCompanyDetails(@Query('isin') isin: string) {
     const details = await this.assetFundamentalsService.getCompanyDetails(isin);
     return details;
   }
 
   @Get('ratios')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
   async getRatios(@Query('isin') isin: string) {
     const ratios = await this.assetFundamentalsService.getRatios(isin);
     return ratios;
   }
 
   @Get('company-snapshot')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
   async getCompanySnapshot(@Query('isin') isin: string) {
     const snapshot = await this.assetFundamentalsService.getCompanySnapshot(isin);
     return snapshot;
   }
 
   @Get('company-about')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
   async getCompanyAbout(@Query('isin') isin: string){
     const about = await this.assetFundamentalsService.getcompanyAbout(isin);
     return about;
