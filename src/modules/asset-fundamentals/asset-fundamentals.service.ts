@@ -4,7 +4,6 @@ import { DeepPartial, Repository } from 'typeorm';
 import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetDetailsEntity} from 'lib-typeorm';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
-import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class AssetFundamentalsService {
