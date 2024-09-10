@@ -4,6 +4,7 @@ import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } fro
 import { ApiTags, ApiQuery, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/swagger';
 import {  FundamentalsPeriodicity } from 'src/common/interfaces';
+import { Res } from '@nestjs/common';
 
 @ApiTags('asset-fundamentals')
 @ApiExtraModels(PartialType(AssetFundamentalsDto))
@@ -138,5 +139,7 @@ export class AssetFundamentalsController {
   async removeFundamental(@Param('id') id: string): Promise<{message : string}> {
     return this.assetFundamentalsService.removeFundamental(id);
   }
+
+  
 
 }

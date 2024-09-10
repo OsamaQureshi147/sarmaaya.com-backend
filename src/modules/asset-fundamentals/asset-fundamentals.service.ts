@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
-import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto} from 'lib-typeorm';
+import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetDetailsEntity} from 'lib-typeorm';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
+import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class AssetFundamentalsService {
@@ -12,6 +13,8 @@ export class AssetFundamentalsService {
     private readonly assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
     @InjectRepository(AssetMetricsEntity)
     private readonly assetMetricsRepository: Repository<AssetMetricsEntity>,
+    @InjectRepository(AssetDetailsEntity)
+    private readonly assetDetailsRepository: Repository<AssetDetailsEntity>,
   ) {}
 
   //FUNDAMENTALS SERVICES
@@ -331,6 +334,9 @@ export class AssetFundamentalsService {
     return formattedResponse;
   }
 
-
-
 }
+
+
+
+
+
