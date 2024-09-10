@@ -218,7 +218,6 @@ export class AssetFundamentalsService {
       return acc;
     }, {});
 
-    
     for (const record of result) {
       const displayName = metricDisplayNames[record.metric.metric];
       formattedResponse[displayName].push({
