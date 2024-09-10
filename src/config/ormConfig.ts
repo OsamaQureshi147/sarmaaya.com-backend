@@ -1,4 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm';
+
 
 export const getOrmConfig = () =>
   <TypeOrmModuleOptions>{
@@ -12,9 +14,9 @@ export const getOrmConfig = () =>
     ssl: {
       rejectUnauthorized: false,
     },
-    entities: [__dirname + '/../**/*.entity.{js,ts}'],
+    entities: [AssetDetailsEntity, AssetSegmentsEntity, AssetMetricsEntity, AssetFundamentalsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetMetricsEntity],
     logging: process.env.NODE_ENV === 'development',
-    synchronize: process.env.NODE_ENV === 'development',
+    synchronize: false,
     migrationsRun: process.env.NODE_ENV === 'test',
     dropSchema: process.env.NODE_ENV === 'test',
     migrationsTableName: 'migrations',
