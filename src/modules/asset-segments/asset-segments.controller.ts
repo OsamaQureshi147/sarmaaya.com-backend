@@ -9,6 +9,15 @@ import { ApiTags } from '@nestjs/swagger';
 export class AssetSegmentsController {
   constructor(private readonly assetSegmentsService: AssetSegmentsService) {}
 
+  @Get(':segmentType')
+  async getSegmentsByType(
+    @Param('segmentType') segmentType: string,
+    @Query('isin') isin: string,
+    @Query('metric') metric: string
+  ) {
+    return await this.assetSegmentsService.findSegmentsByIsinAndType(isin, metric, segmentType);
+  }
+
   @Post()
   async create(@Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
     return this.assetSegmentsService.create(assetSegmentsDto);
