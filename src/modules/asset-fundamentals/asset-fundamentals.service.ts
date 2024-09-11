@@ -167,6 +167,69 @@ export class AssetFundamentalsService {
     return formattedResponse;
   }
 
+  // async getRatios(isin: string) {
+  //   const metrics = [
+  //     'FF_EPS_BASIC_GR',  
+  //     'FF_PE',   
+  //     'FF_DEBT_EQ', 
+  //     'FF_ROIC', 
+  //     'FF_ROCE',
+  //     'FF_ROA',
+  //     'FF_CURR_RATIO', 
+  //   ];
+
+  //   const metricDisplayNames = {
+  //     'FF_EPS_BASIC_GR': 'EPS',
+  //     'FF_PE': 'P/E',
+  //     'FF_DEBT_EQ': 'Debt to Equity',
+  //     'FF_ROIC': 'ROI',
+  //     'FF_ROCE':'ROE',
+  //     'FF_ROA':'ROA',
+  //     'FF_CURR_RATIO':'Current Ratio'
+  //   };
+
+    
+  //   const currentDate = new Date();
+  //   const fiveYearsAgo = new Date();
+  //   fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
+
+    
+  //   const result = await this.assetFundamentalsRepository
+  //     .createQueryBuilder('cd')
+  //     .leftJoinAndSelect('cd.metric', 'metric')
+  //     .select([
+  //       'metric.metric', 
+  //       'cd.value',
+  //       'cd.eps_report_date',
+  //     ])
+  //     .where('cd.isin = :isin', { isin })
+  //     .andWhere('metric.metric IN (:...metrics)', { metrics })
+  //     .andWhere('cd.eps_report_date BETWEEN :start AND :end', {
+  //       start: fiveYearsAgo,
+  //       end: currentDate,
+  //     })
+  //     .orderBy('cd.eps_report_date', 'DESC')
+  //     .getMany();
+
+    
+  //   const formattedResponse = metrics.reduce((acc, metric) => {
+  //     const displayName = metricDisplayNames[metric];
+  //     acc[displayName] = []; 
+  //     return acc;
+  //   }, {});
+
+    
+  //   for (const record of result) {
+  //     const displayName = metricDisplayNames[record.metric.metric];
+  //     formattedResponse[displayName].push({
+  //       value: record.value,
+  //       date: record.epsReportDate,
+  //     });
+  //   }
+
+  //   return formattedResponse;
+  // }
+
   async getRatios(isin: string) {
     const metrics = [
       'FF_EPS_BASIC_GR',  
@@ -177,58 +240,77 @@ export class AssetFundamentalsService {
       'FF_ROA',
       'FF_CURR_RATIO', 
     ];
-
+  
     const metricDisplayNames = {
       'FF_EPS_BASIC_GR': 'EPS',
       'FF_PE': 'P/E',
       'FF_DEBT_EQ': 'Debt to Equity',
       'FF_ROIC': 'ROI',
-      'FF_ROCE':'ROE',
-      'FF_ROA':'ROA',
-      'FF_CURR_RATIO':'Current Ratio'
+      'FF_ROCE': 'ROE',
+      'FF_ROA': 'ROA',
+      'FF_CURR_RATIO': 'Current Ratio'
     };
-
-    
+  
     const currentDate = new Date();
     const fiveYearsAgo = new Date();
     fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
-
-    
+  
+    // Query to fetch the metrics
     const result = await this.assetFundamentalsRepository
       .createQueryBuilder('cd')
       .leftJoinAndSelect('cd.metric', 'metric')
       .select([
         'metric.metric', 
         'cd.value',
-        'cd.eps_report_date',
+        'cd.epsReportDate', // Ensure this is the correct field in your DB
       ])
       .where('cd.isin = :isin', { isin })
       .andWhere('metric.metric IN (:...metrics)', { metrics })
-      .andWhere('cd.eps_report_date BETWEEN :start AND :end', {
+      .andWhere('cd.epsReportDate BETWEEN :start AND :end', {
         start: fiveYearsAgo,
         end: currentDate,
       })
-      .orderBy('cd.eps_report_date', 'DESC')
+      .orderBy('cd.epsReportDate', 'DESC')
       .getMany();
-
-    
+  
+    // Initialize formatted response with empty arrays
     const formattedResponse = metrics.reduce((acc, metric) => {
       const displayName = metricDisplayNames[metric];
       acc[displayName] = []; 
       return acc;
     }, {});
-
-    
+  
+    // Iterate over the result and add values with corresponding year to the response
     for (const record of result) {
       const displayName = metricDisplayNames[record.metric.metric];
-      formattedResponse[displayName].push({
-        value: record.value,
-        date: record.epsReportDate,
-      });
+      
+      // Check if eps_report_date is valid
+      if (record.epsReportDate) {
+        const reportDate = new Date(record.epsReportDate);
+  
+        // Ensure the date is valid
+        if (!isNaN(reportDate.getTime())) {
+          const reportYear = reportDate.getFullYear();  // Extract the year
+          formattedResponse[displayName].push({
+            value: record.value,
+            year: reportYear,  // Add the year here
+            epsReportDate: reportDate.toISOString().split('T')[0]  // Optionally add the full report date
+          });
+        } else {
+          // Handle invalid date if necessary (e.g., log or skip)
+          console.warn(`Invalid date found for record with value: ${record.value}`);
+        }
+      } else {
+        // Handle missing date case if needed
+        console.warn(`Missing eps_report_date for record with value: ${record.value}`);
+      }
     }
-
+  
     return formattedResponse;
   }
+  
+  
+  
 
   async getCompanySnapshot(isin: string) {
     const metrics = [

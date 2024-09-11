@@ -9,6 +9,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class AssetSegmentsController {
   constructor(private readonly assetSegmentsService: AssetSegmentsService) {}
 
+  @Post('sync')
+  async syncSegments() {
+    return this.assetSegmentsService.getSegmentsAndSave();
+  }
+
   @Post()
   async create(@Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
     return this.assetSegmentsService.create(assetSegmentsDto);
