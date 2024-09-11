@@ -14,7 +14,6 @@
 //     private readonly assetEssentialsWithoutRealTimeRepository: Repository<AssetEssentialsWithoutRealTimeEntity>,
 //   ) {}
 
-  
 //   async createRealTime(dto: AssetFundamentalsDto): Promise<AssetEssentialsRealTimeEntity> {
 //     const entity = this.assetEssentialsRealTimeRepository.create(dto);
 //     return this.assetEssentialsRealTimeRepository.save(entity);
@@ -22,7 +21,7 @@
 
 //   async findAllRealTime(query: any): Promise<AssetEssentialsRealTimeEntity[]> {
 //     const queryBuilder = this.assetEssentialsRealTimeRepository.createQueryBuilder('asset_essentials_rt_rt');
-    
+
 //     if (query.isin) {
 //       queryBuilder.andWhere('asset_essentials_rt.isin = :isin', { isin: query.isin });
 //     }
@@ -66,7 +65,6 @@
 //     return queryBuilder.getMany();
 //   }
 
-
 //   async findOneRealTime(id: string): Promise<AssetEssentialsRealTimeEntity> {
 //     return this.assetEssentialsRealTimeRepository.findOne({ where: { isin: id } });
 //   }
@@ -80,7 +78,6 @@
 //     await this.assetEssentialsRealTimeRepository.delete(id);
 //   }
 
-  
 //   async createWithoutRealTime(dto: AssetFundamentalsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
 //     const entity = this.assetEssentialsWithoutRealTimeRepository.create(dto);
 //     return this.assetEssentialsWithoutRealTimeRepository.save(entity);
@@ -92,7 +89,7 @@
 
 //   async findAllWithoutRealTime(query: any): Promise<AssetEssentialsWithoutRealTimeEntity[]> {
 //     const queryBuilder = this.assetEssentialsRealTimeRepository.createQueryBuilder('asset_essentials_wrt');
-    
+
 //     if (query.isin) {
 //       queryBuilder.andWhere('asset_essentials_wrt.isin = :isin', { isin: query.isin });
 //     }

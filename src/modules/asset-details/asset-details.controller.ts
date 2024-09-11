@@ -1,7 +1,18 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AssetDetailsService } from './asset-details.service';
 import { AssetDetailsDto, AssetDetailsEntity } from 'lib-typeorm';
-import {  ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('asset-details')
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -10,12 +21,16 @@ export class AssetDetailsController {
   constructor(private readonly assetDetailsService: AssetDetailsService) {}
 
   @Post()
-  async create(@Body() assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
+  async create(
+    @Body() assetDetailsDto: AssetDetailsDto,
+  ): Promise<AssetDetailsEntity> {
     return this.assetDetailsService.create(assetDetailsDto);
   }
 
   @Get()
-  async findAll(@Query() query:AssetDetailsEntity): Promise<AssetDetailsEntity[]> {
+  async findAll(
+    @Query() query: AssetDetailsEntity,
+  ): Promise<AssetDetailsEntity[]> {
     return this.assetDetailsService.findAll(query);
   }
 
@@ -25,7 +40,10 @@ export class AssetDetailsController {
   }
 
   @Put(':isin')
-  async update(@Param('isin') isin: string, @Body() assetDetailsDto: AssetDetailsDto): Promise<AssetDetailsEntity> {
+  async update(
+    @Param('isin') isin: string,
+    @Body() assetDetailsDto: AssetDetailsDto,
+  ): Promise<AssetDetailsEntity> {
     return this.assetDetailsService.update(isin, assetDetailsDto);
   }
 

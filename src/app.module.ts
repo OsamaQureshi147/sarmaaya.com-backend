@@ -1,4 +1,4 @@
-import { Module} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getOrmConfig } from './config/ormConfig';
@@ -15,7 +15,7 @@ import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-e
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(getOrmConfig()), 
+    TypeOrmModule.forRoot(getOrmConfig()),
     AssetDetailsModule,
     AssetEssentialsRtModule,
     AssetEssentialsWrtModule,

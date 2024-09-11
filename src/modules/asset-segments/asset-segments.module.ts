@@ -5,9 +5,7 @@ import { AssetSegmentsService } from './asset-segments.service';
 import { AssetSegmentsEntity } from 'lib-typeorm';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([AssetSegmentsEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([AssetSegmentsEntity])],
   controllers: [AssetSegmentsController],
   providers: [AssetSegmentsService],
   exports: [AssetSegmentsService],

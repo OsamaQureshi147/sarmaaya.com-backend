@@ -8,6 +8,6 @@ import { AssetDetailsController } from './asset-details.controller';
   imports: [TypeOrmModule.forFeature([AssetDetailsEntity])],
   providers: [AssetDetailsService],
   controllers: [AssetDetailsController],
-  exports: [AssetDetailsService]
+  exports: [AssetDetailsService],
 })
 export class AssetDetailsModule {}

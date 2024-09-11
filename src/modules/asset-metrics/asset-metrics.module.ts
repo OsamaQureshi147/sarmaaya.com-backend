@@ -7,13 +7,16 @@ import { AssetFundamentalsService } from '../asset-fundamentals/asset-fundamenta
 import { AssetMetricsService } from './asset-metrics.service';
 import { AssetMetricsController } from './asset-metrics.controller';
 
-
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AssetFundamentalsEntity, AssetMetricsEntity, AssetDetailsEntity]),
+    TypeOrmModule.forFeature([
+      AssetFundamentalsEntity,
+      AssetMetricsEntity,
+      AssetDetailsEntity,
+    ]),
   ],
-  providers: [AssetMetricsService,AssetFundamentalsService],
+  providers: [AssetMetricsService, AssetFundamentalsService],
   controllers: [AssetMetricsController, AssetFundamentalsController],
-  exports: [AssetMetricsService,AssetFundamentalsService]
+  exports: [AssetMetricsService, AssetFundamentalsService],
 })
 export class AssetMetricsModule {}
