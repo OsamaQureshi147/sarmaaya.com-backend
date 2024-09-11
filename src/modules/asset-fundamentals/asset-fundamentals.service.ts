@@ -4,7 +4,6 @@ import { DeepPartial, Repository } from 'typeorm';
 import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetDetailsEntity} from 'lib-typeorm';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
-import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class AssetFundamentalsService {
@@ -35,7 +34,7 @@ export class AssetFundamentalsService {
   }
 
   async findAllFundamentals(
-    query: Partial<AssetFundamentalsDto> & { startDate?: string, endDate?: string }, // Add startDate and endDate as query params
+    query: Partial<AssetFundamentalsDto> & { startDate?: string, endDate?: string }, 
   ): Promise<AssetFundamentalsEntity[]> {
     const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
   
@@ -118,225 +117,233 @@ export class AssetFundamentalsService {
   
     return { message: `Fundamental with ID ${id} has been deleted successfully.` };
   }
-
+  
   async getCompanyDetails(isin: string) {
-    const metrics = [
-      'FF_PE', 
-      'FF_PBK', 
-      'FF_MKT_VAL_PUBLIC', 
-      'FF_ENTRPR_VAL', 
-      'FF_VOLUME_TRADE', 
-      'FF_VOLUME_WK_AVG', 
-    ]
-  
-    
-    const metricDisplayNames = {
-      'FF_PE': 'Price to Earning (P/E)',
-      'FF_PBK': 'Price to Book (P/B)',
-      'FF_MKT_VAL_PUBLIC': 'Market Cap',
-      'FF_ENTRPR_VAL': 'Enterprise Value',
-      'FF_VOLUME_TRADE': 'Volume',
-      'FF_VOLUME_WK_AVG': 'Avg Vol'
-    };
-  
-    const result = await this.assetFundamentalsRepository
-      .createQueryBuilder('cd')
-      .leftJoinAndSelect('cd.metric', 'metric')
-      .select([
-        'metric.metric', 
-        'cd.value',
-        'cd.eps_report_date',
-      ])
-      .where('cd.isin = :isin', { isin })
-      .andWhere('metric.metric IN (:...metrics)', { metrics })
-      .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
-      .getMany();
-  
-    const formattedResponse = metrics.reduce((acc, metric) => {
-      const displayName = metricDisplayNames[metric];
-      acc[displayName] = ''; 
-      return acc;
-    }, {});
-  
-    for (const record of result) {
-      
-      const displayName = metricDisplayNames[record.metric.metric];
-      formattedResponse[displayName] = record.value;
-    }
-  
-    return formattedResponse;
+    const details = await getCompanyDetails(isin, this.assetFundamentalsRepository);
+    return details;
   }
 
   async getRatios(isin: string) {
-    const metrics = [
-      'FF_EPS_BASIC_GR',  
-      'FF_PE',   
-      'FF_DEBT_EQ', 
-      'FF_ROIC', 
-      'FF_ROCE',
-      'FF_ROA',
-      'FF_CURR_RATIO', 
-    ];
-
-    const metricDisplayNames = {
-      'FF_EPS_BASIC_GR': 'EPS',
-      'FF_PE': 'P/E',
-      'FF_DEBT_EQ': 'Debt to Equity',
-      'FF_ROIC': 'ROI',
-      'FF_ROCE':'ROE',
-      'FF_ROA':'ROA',
-      'FF_CURR_RATIO':'Current Ratio'
-    };
-
-    
-    const currentDate = new Date();
-    const fiveYearsAgo = new Date();
-    fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
-
-    
-    const result = await this.assetFundamentalsRepository
-      .createQueryBuilder('cd')
-      .leftJoinAndSelect('cd.metric', 'metric')
-      .select([
-        'metric.metric', 
-        'cd.value',
-        'cd.eps_report_date',
-      ])
-      .where('cd.isin = :isin', { isin })
-      .andWhere('metric.metric IN (:...metrics)', { metrics })
-      .andWhere('cd.eps_report_date BETWEEN :start AND :end', {
-        start: fiveYearsAgo,
-        end: currentDate,
-      })
-      .orderBy('cd.eps_report_date', 'DESC')
-      .getMany();
-
-    
-    const formattedResponse = metrics.reduce((acc, metric) => {
-      const displayName = metricDisplayNames[metric];
-      acc[displayName] = []; 
-      return acc;
-    }, {});
-
-    
-    for (const record of result) {
-      const displayName = metricDisplayNames[record.metric.metric];
-      formattedResponse[displayName].push({
-        value: record.value,
-        date: record.epsReportDate,
-      });
-    }
-
-    return formattedResponse;
+    const ratios = await getRatios(isin, this.assetFundamentalsRepository);
+    return ratios;
   }
 
-  async getCompanySnapshot(isin: string) {
-    const metrics = [
-      'FF_PAR_PS',        
-      'FF_EPS_RPT_DATE',             
-      'FF_PRICE_HIGH_52WK',       
-      'FF_FREQ_CODE',
-      'FF_PRICE_LOW_52WK',
-      'FF_PBK',
-      'FF_DIV_YLD',
-      'FF_EBIT_OPER_INT_COVG',
-      'FF_DPS_LTM',
-      'FF_GROSS_MGN',
-      'FF_COM_SHS_OUT_CURR_DATE',
-      'FF_SHS_FLOAT',
-    ];
-
-    const metricDisplayNames = {
-      'FF_PAR_PS': 'Face Value',
-      'FF_EPS_RPT_DATE': 'EPS',
-      'FF_PRICE_HIGH_52WK': '52 Week High',
-      'FF_FREQ_CODE': 'Earnings Report Frequency',
-      'FF_PRICE_LOW_52WK': '52 Week Low',
-      'FF_PBK': 'Book Value',
-      'FF_DIV_YLD': 'Dividend Yield (%)',
-      'FF_EBIT_OPER_INT_COVG': 'EBIT Interest Coverage',
-      'FF_DPS_LTM': 'Last Dividend (RS)',
-      'FF_GROSS_MGN': 'Gross Income Margin',
-      'FF_COM_SHS_OUT_CURR_DATE': 'Outstanding Shares',
-      'FF_SHS_FLOAT': 'Free Float Share'
-    };
-
-    
-    const result = await this.assetFundamentalsRepository
-      .createQueryBuilder('cd')
-      .leftJoinAndSelect('cd.metric', 'metric')
-      .select([
-        'metric.metric', 
-        'cd.value',
-        'cd.eps_report_date',
-      ])
-      .where('cd.isin = :isin', { isin })
-      .andWhere('metric.metric IN (:...metrics)', { metrics })
-      .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
-      .getMany();
-
-    
-    const formattedResponse = metrics.reduce((acc, metric) => {
-      const displayName = metricDisplayNames[metric];
-      acc[displayName] = ''; 
-      return acc;
-    }, {});
-
-    
-    for (const record of result) {
-      const displayName = metricDisplayNames[record.metric.metric];
-      formattedResponse[displayName] = record.value; 
-    }
-
-    return formattedResponse;
+  async getCompanySnapshot(isin:string) {
+    const snapshot = await getCompanySnapshot(isin, this.assetFundamentalsRepository);
+    return snapshot;
   }
-
 
   async getcompanyAbout(isin: string) {
-    const metrics = [
-      'FF_PHONE',        
-      'FF_BUS_DESC_EXT',
-    ];
-
-    const metricDisplayNames = {
-      'FF_PHONE': 'Phone Number',
-      'FF_BUS_DESC_EXT': 'About Company',
-      
-    };
-
-    
-    const result = await this.assetFundamentalsRepository
-      .createQueryBuilder('cd')
-      .leftJoinAndSelect('cd.metric', 'metric')
-      .select([
-        'metric.metric', 
-        'cd.value',
-        'cd.eps_report_date',
-      ])
-      .where('cd.isin = :isin', { isin })
-      .andWhere('metric.metric IN (:...metrics)', { metrics })
-      .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
-      .getMany();
-
-    
-    const formattedResponse = metrics.reduce((acc, metric) => {
-      const displayName = metricDisplayNames[metric];
-      acc[displayName] = ''; 
-      return acc;
-    }, {});
-
-    
-    for (const record of result) {
-      const displayName = metricDisplayNames[record.metric.metric];
-      formattedResponse[displayName] = record.value; 
-    }
-
-    return formattedResponse;
+    const companyAbout = await getcompanyAbout(isin, this.assetFundamentalsRepository);
+    return companyAbout;
   }
 
 }
 
+export async function getCompanyDetails(isin: string, assetFundamentalsRepository: Repository<any>): Promise<Record<string, any>> {
+  const metrics = [
+    'FF_PE', 
+    'FF_PBK', 
+    'FF_MKT_VAL_PUBLIC', 
+    'FF_ENTRPR_VAL', 
+    'FF_VOLUME_TRADE', 
+    'FF_VOLUME_WK_AVG', 
+  ];
+
+  const metricDisplayNames = {
+    'FF_PE': 'Price to Earning (P/E)',
+    'FF_PBK': 'Price to Book (P/B)',
+    'FF_MKT_VAL_PUBLIC': 'Market Cap',
+    'FF_ENTRPR_VAL': 'Enterprise Value',
+    'FF_VOLUME_TRADE': 'Volume',
+    'FF_VOLUME_WK_AVG': 'Avg Vol'
+  };
 
 
+  const result = await assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select([
+      'metric.metric', 
+      'cd.value',
+      'cd.eps_report_date',
+    ])
+    .where('cd.isin = :isin', { isin })
+    .andWhere('metric.metric IN (:...metrics)', { metrics })
+    .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
+    .getMany();
 
 
+  const formattedResponse = metrics.reduce((acc, metric) => {
+    const displayName = metricDisplayNames[metric];
+    acc[displayName] = ''; 
+    return acc;
+  }, {});
+
+
+  for (const record of result) {
+    const displayName = metricDisplayNames[record.metric.metric];
+    formattedResponse[displayName] = record.value;
+  }
+
+  return formattedResponse;
+}
+
+export async function getRatios(
+  isin: string, 
+  assetFundamentalsRepository: Repository<AssetFundamentalsEntity>
+): Promise<Record<string, any>> {
+  const metrics = [
+    'FF_EPS_BASIC_GR',  
+    'FF_PE',   
+    'FF_DEBT_EQ', 
+    'FF_ROIC', 
+    'FF_ROCE',
+    'FF_ROA',
+    'FF_CURR_RATIO', 
+  ];
+
+  const metricDisplayNames = {
+    'FF_EPS_BASIC_GR': 'EPS',
+    'FF_PE': 'P/E',
+    'FF_DEBT_EQ': 'Debt to Equity',
+    'FF_ROIC': 'ROI',
+    'FF_ROCE': 'ROE',
+    'FF_ROA': 'ROA',
+    'FF_CURR_RATIO': 'Current Ratio'
+  };
+
+  const currentDate = new Date();
+  const fiveYearsAgo = new Date();
+  fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
+
+  const result = await assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select([
+      'metric.metric', 
+      'cd.value',
+      'cd.epsReportDate',  
+    ])
+    .where('cd.isin = :isin', { isin })
+    .andWhere('metric.metric IN (:...metrics)', { metrics })
+    .andWhere('cd.epsReportDate BETWEEN :start AND :end', {
+      start: fiveYearsAgo,
+      end: currentDate,
+    })
+    .orderBy('cd.epsReportDate', 'DESC')
+    .getMany();
+
+  const formattedResponse = metrics.reduce((acc, metric) => {
+    const displayName = metricDisplayNames[metric];
+    acc[displayName] = []; 
+    return acc;
+  }, {});
+
+  for (const record of result) {
+    const displayName = metricDisplayNames[record.metric.metric];
+    formattedResponse[displayName].push({
+      value: record.value,
+      date: record.epsReportDate,  
+    });
+  }
+
+  return formattedResponse;
+}
+
+export async function getCompanySnapshot(isin: string, assetFundamentalsRepository: Repository<AssetFundamentalsEntity>): Promise<Record<string, any>> {
+  const metrics = [
+    'FF_PAR_PS',        
+    'FF_EPS_RPT_DATE',             
+    'FF_PRICE_HIGH_52WK',       
+    'FF_FREQ_CODE',
+    'FF_PRICE_LOW_52WK',
+    'FF_PBK',
+    'FF_DIV_YLD',
+    'FF_EBIT_OPER_INT_COVG',
+    'FF_DPS_LTM',
+    'FF_GROSS_MGN',
+    'FF_COM_SHS_OUT_CURR_DATE',
+    'FF_SHS_FLOAT',
+  ];
+
+  const metricDisplayNames = {
+    'FF_PAR_PS': 'Face Value',
+    'FF_EPS_RPT_DATE': 'EPS',
+    'FF_PRICE_HIGH_52WK': '52 Week High',
+    'FF_FREQ_CODE': 'Earnings Report Frequency',
+    'FF_PRICE_LOW_52WK': '52 Week Low',
+    'FF_PBK': 'Book Value',
+    'FF_DIV_YLD': 'Dividend Yield (%)',
+    'FF_EBIT_OPER_INT_COVG': 'EBIT Interest Coverage',
+    'FF_DPS_LTM': 'Last Dividend (RS)',
+    'FF_GROSS_MGN': 'Gross Income Margin',
+    'FF_COM_SHS_OUT_CURR_DATE': 'Outstanding Shares',
+    'FF_SHS_FLOAT': 'Free Float Share'
+  };
+
+  const result = await assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select([
+      'metric.metric', 
+      'cd.value',
+      'cd.eps_report_date', 
+    ])
+    .where('cd.isin = :isin', { isin })
+    .andWhere('metric.metric IN (:...metrics)', { metrics })
+    .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
+    .getMany();
+
+  const formattedResponse = metrics.reduce((acc, metric) => {
+    const displayName = metricDisplayNames[metric];
+    acc[displayName] = ''; 
+    return acc;
+  }, {});
+
+  for (const record of result) {
+    const displayName = metricDisplayNames[record.metric.metric];
+    formattedResponse[displayName] = record.value; 
+  }
+
+  return formattedResponse;
+}
+
+
+export async function getcompanyAbout(isin: string, assetFundamentalsRepository: Repository<AssetFundamentalsEntity>): Promise<Record<string, any>> {
+  const metrics = [
+    'FF_PHONE',        
+    'FF_BUS_DESC_EXT',
+  ];
+
+  const metricDisplayNames = {
+    'FF_PHONE': 'Phone Number',
+    'FF_BUS_DESC_EXT': 'About Company',
+  };
+
+  const result = await assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select([
+      'metric.metric', 
+      'cd.value',
+      'cd.eps_report_date', 
+    ])
+    .where('cd.isin = :isin', { isin })
+    .andWhere('metric.metric IN (:...metrics)', { metrics })
+    .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
+    .getMany();
+
+  const formattedResponse = metrics.reduce((acc, metric) => {
+    const displayName = metricDisplayNames[metric];
+    acc[displayName] = ''; 
+    return acc;
+  }, {});
+
+  for (const record of result) {
+    const displayName = metricDisplayNames[record.metric.metric];
+    formattedResponse[displayName] = record.value; 
+  }
+
+  return formattedResponse;
+}
