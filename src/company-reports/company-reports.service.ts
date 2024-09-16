@@ -42,7 +42,7 @@ export class CompanyReportsService {
   }
 
   // Fetch financial statement for a specific ISIN
-  private async fetchFinancialStatement(isin: string): Promise<void> {
+  async fetchFinancialStatement(isin: string): Promise<void> {
     const apiUrl = `https://api.factset.com/content/factset-fundamentals/v2/company-reports/financial-statement`;
   
     try {
@@ -92,7 +92,7 @@ export class CompanyReportsService {
   }
   
 //   // Fetch company profile for a specific ISIN
-  private async fetchProfile(isin: string): Promise<void> {
+  async fetchProfile(isin: string): Promise<void> {
     const apiUrl = `https://api.factset.com/content/factset-fundamentals/v2/company-reports/profile`;
   
     try {
@@ -120,7 +120,7 @@ export class CompanyReportsService {
   }
   
 
-  private async fetchFundamentals(isin: string): Promise<void> {
+  async fetchFundamentals(isin: string): Promise<void> {
     const apiUrl = `https://api.factset.com/content/factset-fundamentals/v2/company-reports/fundamentals`;
   
     try {
