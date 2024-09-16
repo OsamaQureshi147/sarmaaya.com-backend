@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThanOrEqual, Between} from 'typeorm';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity} from 'lib-typeorm';
-import { AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
+import { Repository, FindOptionsWhere, Between} from 'typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity,  AssetEssentialsWithoutRealTimeEntity} from 'lib-typeorm';
+
+
 
 @Injectable()
 export class AssetEssentialsRtService {
@@ -20,8 +21,21 @@ export class AssetEssentialsRtService {
   }
   
   
-  async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
-    return this.assetEssentialsRealTimeRepository.find();
+  // async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
+  //   return this.assetEssentialsRealTimeRepository.find();
+  // }
+
+  async findAllRealTime(query: AssetEssentialsRealTimeEntity): Promise<AssetEssentialsRealTimeEntity[]> {
+    const where: FindOptionsWhere<AssetEssentialsRealTimeEntity> = {};
+  
+    Object.keys(query).forEach(key => {
+      const value = query[key];
+      if (value !== undefined && value !== null) {
+        where[key] = value;
+      }
+    });
+  
+    return await this.assetEssentialsRealTimeRepository.find({ where });
   }
 
 
