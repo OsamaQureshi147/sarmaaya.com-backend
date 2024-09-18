@@ -215,10 +215,14 @@ async getCompanySnapshot(isin: string) {
 }
 
 async getCompanyAbout(isin: string) {
-  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT'];
+  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_ADDRESS2', 'FF_CITY', 'FF_URL', 'FF_EMP_NUM'];
   const metricDisplayNames = {
     'FF_PHONE': 'Phone Number',
-    'FF_BUS_DESC_EXT': 'About Company'
+    'FF_BUS_DESC_EXT': 'About Company',
+    'FF_ADDRESS2' : 'Address',
+    'FF_CITY' : 'City',
+    'FF_URL': 'Website',
+    'FF_EMP_NUM': 'No of Employees'
   };
 
   return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
