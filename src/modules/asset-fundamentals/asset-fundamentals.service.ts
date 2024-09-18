@@ -224,8 +224,20 @@ async getCompanyAbout(isin: string) {
   return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
 }
 
+async getDividendData (isin:string) {
+  const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO','FF_PAY_OUT_RATIO','FF_EPS_BASIC_GR'];
+  const metricDisplayNames = {
+    'FF_DPS_LTM' : 'Dividend Yield',
+    'FF_STK_SPLIT_RATIO': 'Dividend Amount',
+    'FF_PAY_OUT_RATIO': 'Payout Ratio',
+    'FF_EPS_BASIC_GR': 'EPS'
+  };
+
+  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+
 }
 
+}
 
 export async function getMetricsData(
   isin: string, 
