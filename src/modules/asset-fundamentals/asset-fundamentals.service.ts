@@ -118,38 +118,9 @@ export class AssetFundamentalsService {
     return { message: `Fundamental with ID ${id} has been deleted successfully.` };
   }
   
-  async getCompanyDetails(isin: string) {
-    const details = await getCompanyDetails(isin, this.assetFundamentalsRepository);
-    return details;
-  }
 
-  async getRatios(isin: string) {
-    const ratios = await getRatios(isin, this.assetFundamentalsRepository);
-    return ratios;
-  }
-
-  async getCompanySnapshot(isin:string) {
-    const snapshot = await getCompanySnapshot(isin, this.assetFundamentalsRepository);
-    return snapshot;
-  }
-
-  async getcompanyAbout(isin: string) {
-    const companyAbout = await getcompanyAbout(isin, this.assetFundamentalsRepository);
-    return companyAbout;
-  }
-
-}
-
-export async function getCompanyDetails(isin: string, assetFundamentalsRepository: Repository<any>): Promise<Record<string, any>> {
-  const metrics = [
-    'FF_PE', 
-    'FF_PBK', 
-    'FF_MKT_VAL_PUBLIC', 
-    'FF_ENTRPR_VAL', 
-    'FF_VOLUME_TRADE', 
-    'FF_VOLUME_WK_AVG', 
-  ];
-
+async getCompanyDetails(isin: string) {
+  const metrics = ['FF_PE', 'FF_PBK', 'FF_MKT_VAL_PUBLIC', 'FF_ENTRPR_VAL', 'FF_VOLUME_TRADE', 'FF_VOLUME_WK_AVG'];
   const metricDisplayNames = {
     'FF_PE': 'Price to Earning (P/E)',
     'FF_PBK': 'Price to Book (P/B)',
@@ -159,40 +130,10 @@ export async function getCompanyDetails(isin: string, assetFundamentalsRepositor
     'FF_VOLUME_WK_AVG': 'Avg Vol'
   };
 
-
-  const result = await assetFundamentalsRepository
-    .createQueryBuilder('cd')
-    .leftJoinAndSelect('cd.metric', 'metric')
-    .select([
-      'metric.metric', 
-      'cd.value',
-      'cd.eps_report_date',
-    ])
-    .where('cd.isin = :isin', { isin })
-    .andWhere('metric.metric IN (:...metrics)', { metrics })
-    .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
-    .getMany();
-
-
-  const formattedResponse = metrics.reduce((acc, metric) => {
-    const displayName = metricDisplayNames[metric];
-    acc[displayName] = ''; 
-    return acc;
-  }, {});
-
-
-  for (const record of result) {
-    const displayName = metricDisplayNames[record.metric.metric];
-    formattedResponse[displayName] = record.value;
-  }
-
-  return formattedResponse;
+  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
 }
 
-export async function getRatios(
-  isin: string, 
-  assetFundamentalsRepository: Repository<AssetFundamentalsEntity>
-): Promise<Record<string, any>> {
+async getRatios(isin: string) {
   const metrics = [
     'FF_EPS_BASIC_GR',  
     'FF_PE',   
@@ -217,7 +158,7 @@ export async function getRatios(
   const fiveYearsAgo = new Date();
   fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
 
-  const result = await assetFundamentalsRepository
+  const result = await this.assetFundamentalsRepository
     .createQueryBuilder('cd')
     .leftJoinAndSelect('cd.metric', 'metric')
     .select([
@@ -236,9 +177,10 @@ export async function getRatios(
 
   const formattedResponse = metrics.reduce((acc, metric) => {
     const displayName = metricDisplayNames[metric];
-    acc[displayName] = []; 
+    acc[displayName] = [];  
     return acc;
-  }, {});
+  }, {} as Record<string, any>);
+
 
   for (const record of result) {
     const displayName = metricDisplayNames[record.metric.metric];
@@ -251,22 +193,9 @@ export async function getRatios(
   return formattedResponse;
 }
 
-export async function getCompanySnapshot(isin: string, assetFundamentalsRepository: Repository<AssetFundamentalsEntity>): Promise<Record<string, any>> {
-  const metrics = [
-    'FF_PAR_PS',        
-    'FF_EPS_RPT_DATE',             
-    'FF_PRICE_HIGH_52WK',       
-    'FF_FREQ_CODE',
-    'FF_PRICE_LOW_52WK',
-    'FF_PBK',
-    'FF_DIV_YLD',
-    'FF_EBIT_OPER_INT_COVG',
-    'FF_DPS_LTM',
-    'FF_GROSS_MGN',
-    'FF_COM_SHS_OUT_CURR_DATE',
-    'FF_SHS_FLOAT',
-  ];
-
+  
+async getCompanySnapshot(isin: string) {
+  const metrics = ['FF_PAR_PS', 'FF_EPS_RPT_DATE', 'FF_PRICE_HIGH_52WK', 'FF_FREQ_CODE', 'FF_PRICE_LOW_52WK', 'FF_PBK', 'FF_DIV_YLD', 'FF_EBIT_OPER_INT_COVG', 'FF_DPS_LTM', 'FF_GROSS_MGN', 'FF_COM_SHS_OUT_CURR_DATE', 'FF_SHS_FLOAT'];
   const metricDisplayNames = {
     'FF_PAR_PS': 'Face Value',
     'FF_EPS_RPT_DATE': 'EPS',
@@ -282,67 +211,70 @@ export async function getCompanySnapshot(isin: string, assetFundamentalsReposito
     'FF_SHS_FLOAT': 'Free Float Share'
   };
 
-  const result = await assetFundamentalsRepository
-    .createQueryBuilder('cd')
-    .leftJoinAndSelect('cd.metric', 'metric')
-    .select([
-      'metric.metric', 
-      'cd.value',
-      'cd.eps_report_date', 
-    ])
-    .where('cd.isin = :isin', { isin })
-    .andWhere('metric.metric IN (:...metrics)', { metrics })
-    .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
-    .getMany();
+  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+}
 
-  const formattedResponse = metrics.reduce((acc, metric) => {
-    const displayName = metricDisplayNames[metric];
-    acc[displayName] = ''; 
-    return acc;
-  }, {});
+async getCompanyAbout(isin: string) {
+  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT'];
+  const metricDisplayNames = {
+    'FF_PHONE': 'Phone Number',
+    'FF_BUS_DESC_EXT': 'About Company'
+  };
 
-  for (const record of result) {
-    const displayName = metricDisplayNames[record.metric.metric];
-    formattedResponse[displayName] = record.value; 
-  }
+  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+}
 
-  return formattedResponse;
 }
 
 
-export async function getcompanyAbout(isin: string, assetFundamentalsRepository: Repository<AssetFundamentalsEntity>): Promise<Record<string, any>> {
-  const metrics = [
-    'FF_PHONE',        
-    'FF_BUS_DESC_EXT',
-  ];
+export async function getMetricsData(
+  isin: string, 
+  assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
+  metrics: string[],
+  metricDisplayNames: Record<string, string>,
+  dateRange?: { start: Date, end: Date }
+): Promise<Record<string, any>> {
 
-  const metricDisplayNames = {
-    'FF_PHONE': 'Phone Number',
-    'FF_BUS_DESC_EXT': 'About Company',
-  };
-
-  const result = await assetFundamentalsRepository
+  const queryBuilder = assetFundamentalsRepository
     .createQueryBuilder('cd')
     .leftJoinAndSelect('cd.metric', 'metric')
     .select([
       'metric.metric', 
       'cd.value',
-      'cd.eps_report_date', 
+      'cd.eps_report_date',
     ])
     .where('cd.isin = :isin', { isin })
-    .andWhere('metric.metric IN (:...metrics)', { metrics })
-    .andWhere('cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)')
-    .getMany();
+    .andWhere('metric.metric IN (:...metrics)', { metrics });
+
+  if (dateRange) {
+    queryBuilder.andWhere('cd.eps_report_date BETWEEN :start AND :end', {
+      start: dateRange.start,
+      end: dateRange.end,
+    });
+  } else {
+    queryBuilder.andWhere(
+      'cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)'
+    );
+  }
+
+  const result = await queryBuilder.getMany();
 
   const formattedResponse = metrics.reduce((acc, metric) => {
     const displayName = metricDisplayNames[metric];
-    acc[displayName] = ''; 
+    acc[displayName] = Array.isArray(acc[displayName]) ? [] : ''; 
     return acc;
-  }, {});
+  }, {} as Record<string, any>);
 
   for (const record of result) {
     const displayName = metricDisplayNames[record.metric.metric];
-    formattedResponse[displayName] = record.value; 
+    if (Array.isArray(formattedResponse[displayName])) {
+      formattedResponse[displayName].push({
+        value: record.value,
+        date: record.epsReportDate,
+      });
+    } else {
+      formattedResponse[displayName] = record.value;
+    }
   }
 
   return formattedResponse;

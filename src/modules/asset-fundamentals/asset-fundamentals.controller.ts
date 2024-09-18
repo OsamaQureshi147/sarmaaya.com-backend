@@ -59,7 +59,7 @@ export class AssetFundamentalsController {
     description: 'The ISIN of the asset',
   })
   async getCompanyAbout(@Query('isin') isin: string){
-    const about = await this.assetFundamentalsService.getcompanyAbout(isin);
+    const about = await this.assetFundamentalsService.getCompanyAbout(isin);
     return about;
   }
 
