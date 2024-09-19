@@ -54,4 +54,31 @@ export class AssetSegmentsService {
   
     return { message: `Asset Segment with id ${id} has been deleted successfully.` };
   }
+
+
+  async findSegmentsByIsinAndType(isin: string, metric: string, segmentType: string): Promise<AssetSegmentsDto[]> {
+    const where: FindOptionsWhere<AssetSegmentsEntity> = {
+      isin,
+      metric,
+      segmentType
+    };
+
+    const segments = await this.assetSegmentsRepository.find({ where });
+
+    if (!segments.length) {
+      throw new NotFoundException(`No segments found for ISIN: ${isin}, metric: ${metric}, and segment type: ${segmentType}`);
+    }
+
+    
+    const uniqueLabels = [...new Set(segments.map(segment => segment.label))];
+
+    
+    const filteredSegments = segments.filter(segment => uniqueLabels.includes(segment.label));
+
+    return filteredSegments.map(segment => ({
+      label: segment.label,
+      value: segment.value
+    }));
+  }
 }
+

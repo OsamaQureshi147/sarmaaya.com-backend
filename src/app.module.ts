@@ -9,6 +9,9 @@ import { AssetSegmentsModule } from './modules/asset-segments/asset-segments.mod
 import { AssetMetricsModule } from './modules/asset-metrics/asset-metrics.module';
 import { AssetEssentialsRtModule } from './modules/asset-essentials-rt/asset-essentials-rt.module';
 import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-essentials-wrt.module';
+import { CompanyReportsModule } from './company-reports/company-reports.module';
+import { CompanyReportsService } from './company-reports/company-reports.service';
+import { CompanyReportsController } from './company-reports/company-reports.controller';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-e
     AssetSegmentsModule,
     AssetFundamentalsModule,
     AssetMetricsModule,
+    CompanyReportsModule,
   ],
+  // providers: [CompanyReportsService],
+  // controllers: [CompanyReportsController],
 })
 export class AppModule {}
