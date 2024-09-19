@@ -59,7 +59,19 @@ export class AssetFundamentalsController {
     description: 'The ISIN of the asset',
   })
   async getCompanyAbout(@Query('isin') isin: string){
-    const about = await this.assetFundamentalsService.getcompanyAbout(isin);
+    const about = await this.assetFundamentalsService.getCompanyAbout(isin);
+    return about;
+  }
+
+  @Get('dividend-data')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async getDividendData(@Query('isin') isin: string){
+    const about = await this.assetFundamentalsService.getDividendData(isin);
     return about;
   }
 
