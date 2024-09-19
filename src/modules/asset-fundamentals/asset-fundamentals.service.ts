@@ -120,8 +120,9 @@ export class AssetFundamentalsService {
   
 
 async getCompanyDetails(isin: string) {
-  const metrics = ['FF_PE', 'FF_PBK', 'FF_MKT_VAL_PUBLIC', 'FF_ENTRPR_VAL', 'FF_VOLUME_TRADE', 'FF_VOLUME_WK_AVG'];
+  const metrics = ['FF_CO_NAME', 'FF_PE', 'FF_PBK', 'FF_MKT_VAL_PUBLIC', 'FF_ENTRPR_VAL', 'FF_VOLUME_TRADE', 'FF_VOLUME_WK_AVG'];
   const metricDisplayNames = {
+    'FF_CO_NAME': 'Company Name',
     'FF_PE': 'Price to Earning (P/E)',
     'FF_PBK': 'Price to Book (P/B)',
     'FF_MKT_VAL_PUBLIC': 'Market Cap',
@@ -215,18 +216,54 @@ async getCompanySnapshot(isin: string) {
 }
 
 async getCompanyAbout(isin: string) {
-  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_ADDRESS2', 'FF_CITY', 'FF_URL', 'FF_EMP_NUM'];
+  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_ADDRESS2', 'FF_CITY', 'FF_URL'];
+  const employeeMetrics = ['FF_EMP_NUM'];
+
   const metricDisplayNames = {
     'FF_PHONE': 'Phone Number',
     'FF_BUS_DESC_EXT': 'About Company',
-    'FF_ADDRESS2' : 'Address',
-    'FF_CITY' : 'City',
+    'FF_ADDRESS2': 'Address',
+    'FF_CITY': 'City',
     'FF_URL': 'Website',
-    'FF_EMP_NUM': 'No of Employees'
+    'FF_EMP_NUM': 'No of Employees',
   };
 
-  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+  // Get the current date and calculate the date for 5 years ago
+  const currentDate = new Date();
+  const fiveYearsAgo = new Date();
+  fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
+
+  const nonEmployeeData = await getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+
+  const employeeData = await this.assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select(['metric.metric', 'cd.value', 'cd.epsReportDate'])
+    .where('cd.isin = :isin', { isin })
+    .andWhere('metric.metric IN (:...metrics)', { metrics: employeeMetrics })
+    .andWhere('cd.epsReportDate BETWEEN :start AND :end', { start: fiveYearsAgo, end: currentDate })
+    .orderBy('cd.epsReportDate', 'DESC')
+    .getMany();
+
+  // Initialize the response with non-employee data
+  const formattedResponse = {
+    ...nonEmployeeData,
+    'No of Employees': [],
+  };
+
+  for (const record of employeeData) {
+    const displayName = metricDisplayNames[record.metric.metric];
+    formattedResponse[displayName].push({
+      value: record.value || null,
+      date: record.epsReportDate
+    });
+  }
+
+  return formattedResponse;
 }
+
+
+
 
 async getDividendData (isin:string) {
   const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO','FF_PAY_OUT_RATIO','FF_EPS_BASIC_GR'];
