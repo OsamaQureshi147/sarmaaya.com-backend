@@ -4,6 +4,8 @@ import { DeepPartial, Repository } from 'typeorm';
 import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetDetailsEntity} from 'lib-typeorm';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
+import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AssetFundamentalsService {
@@ -14,6 +16,7 @@ export class AssetFundamentalsService {
     private readonly assetMetricsRepository: Repository<AssetMetricsEntity>,
     @InjectRepository(AssetDetailsEntity)
     private readonly assetDetailsRepository: Repository<AssetDetailsEntity>,
+    private readonly configService: ConfigService
   ) {}
 
   //FUNDAMENTALS SERVICES
@@ -215,20 +218,67 @@ async getCompanySnapshot(isin: string) {
   return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
 }
 
+// async getCompanyAbout(isin: string) {
+//   const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_ADDRESS2', 'FF_CITY', 'FF_URL'];
+//   const employeeMetrics = ['FF_EMP_NUM'];
+
+//   const metricDisplayNames = {
+//     'FF_PHONE': 'Phone Number',
+//     'FF_BUS_DESC_EXT': 'About Company',
+//     'FF_ADDRESS2': 'Address',
+//     'FF_CITY': 'City',
+//     'FF_URL': 'Website',
+//     'FF_EMP_NUM': 'No of Employees',
+//   };
+
+//   // Get the current date and calculate the date for 5 years ago
+//   const currentDate = new Date();
+//   const fiveYearsAgo = new Date();
+//   fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
+
+//   const nonEmployeeData = await getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+
+//   const employeeData = await this.assetFundamentalsRepository
+//     .createQueryBuilder('cd')
+//     .leftJoinAndSelect('cd.metric', 'metric')
+//     .select(['metric.metric', 'cd.value', 'cd.epsReportDate'])
+//     .where('cd.isin = :isin', { isin })
+//     .andWhere('metric.metric IN (:...metrics)', { metrics: employeeMetrics })
+//     .andWhere('cd.epsReportDate BETWEEN :start AND :end', { start: fiveYearsAgo, end: currentDate })
+//     .orderBy('cd.epsReportDate', 'DESC')
+//     .getMany();
+
+//   // Initialize the response with non-employee data
+//   const formattedResponse = {
+//     ...nonEmployeeData,
+//     'No of Employees': [],
+//   };
+
+//   for (const record of employeeData) {
+//     const displayName = metricDisplayNames[record.metric.metric];
+//     formattedResponse[displayName].push({
+//       value: record.value || null,
+//       date: record.epsReportDate
+//     });
+//   }
+
+//   return formattedResponse;
+// }
+
 async getCompanyAbout(isin: string) {
-  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_ADDRESS2', 'FF_CITY', 'FF_URL'];
+  const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_URL', 'FF_ADDRESS2', 'FF_CITY', 'FF_COUNTRY'];
   const employeeMetrics = ['FF_EMP_NUM'];
 
   const metricDisplayNames = {
     'FF_PHONE': 'Phone Number',
     'FF_BUS_DESC_EXT': 'About Company',
-    'FF_ADDRESS2': 'Address',
-    'FF_CITY': 'City',
     'FF_URL': 'Website',
     'FF_EMP_NUM': 'No of Employees',
+    'FF_ADDRESS2': 'Address',
+    'FF_CITY': 'City',
+    'FF_COUNTRY': 'Country'
   };
 
-  // Get the current date and calculate the date for 5 years ago
   const currentDate = new Date();
   const fiveYearsAgo = new Date();
   fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
@@ -245,7 +295,6 @@ async getCompanyAbout(isin: string) {
     .orderBy('cd.epsReportDate', 'DESC')
     .getMany();
 
-  // Initialize the response with non-employee data
   const formattedResponse = {
     ...nonEmployeeData,
     'No of Employees': [],
@@ -255,15 +304,50 @@ async getCompanyAbout(isin: string) {
     const displayName = metricDisplayNames[record.metric.metric];
     formattedResponse[displayName].push({
       value: record.value || null,
-      date: record.epsReportDate
+      date: record.epsReportDate,
     });
+  }
+
+  const profile = await this.fetchProfile(isin);
+
+  if (profile && profile.data && profile.data.length > 0) {
+    const { ceo, address, sector, industry } = profile.data[0];
+    formattedResponse['Industry'] = industry;
+    formattedResponse['Sector'] = sector;
+    formattedResponse['CEO'] = ceo;
+
   }
 
   return formattedResponse;
 }
 
+async fetchProfile(isin: string): Promise<any> {
+  const apiUrl = `https://api.factset.com/content/factset-fundamentals/v2/company-reports/profile`;
 
+  try {
+    const response = await axios.get(apiUrl, {
+      params: {
+        ids: isin,
+      },
+      auth: {
+        username: this.configService.get('FACTSET_USERNAME'),
+        password: this.configService.get('FACTSET_PASSWORD'),
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error(`Error fetching profile for ISIN ${isin}:`, error.response.data);
+    } else {
+      console.error(`Error fetching profile for ISIN ${isin}:`, error.message);
+    }
+    return null;
+  }
+}
 
 async getDividendData (isin:string) {
   const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO','FF_PAY_OUT_RATIO','FF_EPS_BASIC_GR'];
