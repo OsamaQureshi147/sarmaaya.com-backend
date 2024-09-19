@@ -136,7 +136,6 @@ export class AssetFundamentalsController {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
 
-
   @Get(':id')
   async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
     return this.assetFundamentalsService.findOneFundamental(id);
@@ -151,7 +150,4 @@ export class AssetFundamentalsController {
   async removeFundamental(@Param('id') id: string): Promise<{message : string}> {
     return this.assetFundamentalsService.removeFundamental(id);
   }
-
-  
-
 }
