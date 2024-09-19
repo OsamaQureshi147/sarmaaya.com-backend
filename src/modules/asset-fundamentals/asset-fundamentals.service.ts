@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
     FactSetFundamentalsApi,
     FundamentalsRequest,
+    CompanyReportsApi,
     MetricsApi
 } from '@factset/sdk-factsetfundamentals';
 import { EntityManager, Repository } from 'typeorm';
@@ -66,9 +67,7 @@ export class AssetFundamentalsService {
                 value: value?.value || value, // Handle both nested and non-nested cases
             };
         });
-    }
-
-    
+    } 
 
     async createBulk(isins: String[], metrics: String[], periodicity: string = 'ANN', batchRequest: string = 'N') {
         try {
@@ -122,13 +121,32 @@ export class AssetFundamentalsService {
 
     }
 
+    async getFundamentalsProfile(){
+        const apiInstance = new CompanyReportsApi();
+        let isins = await this.getIsins()
+        const ids = isins.map(x => x.isin); // [String] | The requested list of security identifiers. Accepted ID types include Market Tickers, SEDOL, ISINs, CUSIPs, or FactSet Permanent Ids. <p>***ids limit** =  50 per request*</p> 
+
+        //Call api endpoint
+        apiInstance.getFdsProfiles(ids).then(
+        data => {
+            console.log('API called successfully. Returned data:');
+            console.log(data);
+        },
+        error => {
+            console.error(error);
+        },
+        );
+
+        return 'ok'
+    }
+
     async getMetrics(datatype: string = 'floatArray') {
         let metrics = await this.entityManager.query(`select metric from asset_metrics am where data_type = '${datatype}' and metric not IN ('FF_VOLUME_WK_AVG', 'FF_VOLUME_TRADE')`);
         return metrics
     }
 
     async getIsins() {
-        let isins = await this.entityManager.query(`select isin from asset_details ad order by isin asc limit 100`);
+        let isins = await this.entityManager.query(`select isin from asset_details ad order by isin limit 50`);
         return isins
     }
 
@@ -146,11 +164,11 @@ export class AssetFundamentalsService {
             console.error(error);
           },
         );
-      }
+    }
 
     async test(){
-        let isins = await this.getIsins()
         let metrics = await this.getMetrics()
+        let isins = await this.getIsins()
         console.log("ISINS: ",isins.map(x => x.isin))
         console.log("Metrics: ",metrics.map(x => x.metric))
         

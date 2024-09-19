@@ -9,7 +9,7 @@ export class AssetFundamentalsController {
 
     @Get()
     getMetrics(): any {
-        return this.assetFundamentalsService.test();
+        return this.assetFundamentalsService.getFundamentalsProfile();
     }
 
     @Get('metrics')
