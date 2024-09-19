@@ -10,8 +10,8 @@ export class AssetEssentialsRtController {
   constructor(private readonly assetEssentialsService: AssetEssentialsRtService) {}
 
   @Get()
-  async findAllRealTime(): Promise<AssetEssentialsRealTimeEntity[]> {
-    return this.assetEssentialsService.findAllRealTime();
+  async findAll(@Query() query: AssetEssentialsRealTimeEntity): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsService.findAllRealTime(query);
   }
 
   @Post()
