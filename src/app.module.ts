@@ -12,6 +12,7 @@ import { AssetEssentialsWrtModule } from './modules/asset-essentials-wrt/asset-e
 import { CompanyReportsModule } from './company-reports/company-reports.module';
 import { CompanyReportsService } from './company-reports/company-reports.service';
 import { CompanyReportsController } from './company-reports/company-reports.controller';
+import { AssetOwnershipsModule } from './modules/asset-ownerships/asset-ownerships.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CompanyReportsController } from './company-reports/company-reports.cont
     AssetFundamentalsModule,
     AssetMetricsModule,
     CompanyReportsModule,
+    AssetOwnershipsModule,
   ],
   // providers: [CompanyReportsService],
   // controllers: [CompanyReportsController],
