@@ -377,6 +377,7 @@ export async function getMetricsData(
     .leftJoinAndSelect('cd.metric', 'metric')
     .select([
       'metric.metric', 
+      'metric.name',
       'cd.value',
       'cd.eps_report_date',
     ])
@@ -396,23 +397,26 @@ export async function getMetricsData(
 
   const result = await queryBuilder.getMany();
 
-  const formattedResponse = metrics.reduce((acc, metric) => {
-    const displayName = metricDisplayNames[metric];
-    acc[displayName] = Array.isArray(acc[displayName]) ? [] : ''; 
+  // const formattedResponse = metrics.reduce((acc, metric) => {
+  //   const displayName = metricDisplayNames[metric];
+  //   acc[displayName] = Array.isArray(acc[displayName]) ? [] : ''; 
+  //   return acc;
+  // }, {} as Record<string, any>);
+
+  // for (const record of result) {
+  //   const displayName = metricDisplayNames[record.metric.metric];
+  //   if (Array.isArray(formattedResponse[displayName])) {
+  //     formattedResponse[displayName].push({
+  //       value: record.value,
+  //       date: record.epsReportDate,
+  //     });
+  //   } else {
+  //     formattedResponse[displayName] = record.value;
+  //   }
+  // }
+
+  return result.reduce((acc, curr) => {
+    acc[curr.metric.metric] = curr.value;
     return acc;
-  }, {} as Record<string, any>);
-
-  for (const record of result) {
-    const displayName = metricDisplayNames[record.metric.metric];
-    if (Array.isArray(formattedResponse[displayName])) {
-      formattedResponse[displayName].push({
-        value: record.value,
-        date: record.epsReportDate,
-      });
-    } else {
-      formattedResponse[displayName] = record.value;
-    }
-  }
-
-  return formattedResponse;
+}, {} as Record<string, string>);
 }
