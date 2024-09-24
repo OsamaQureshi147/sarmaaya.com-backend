@@ -8,7 +8,6 @@
 // export class AssetEssentialsController {
 //   constructor(private readonly assetEssentialsService: AssetEssentialsService) {}
 
-  
 //   @Post('real-time')
 //   async createRealTime(@Body() dto: AssetFundamentalsDto): Promise<AssetEssentialsRealTimeEntity> {
 //     return this.assetEssentialsService.createRealTime(dto);
@@ -34,7 +33,6 @@
 //     return this.assetEssentialsService.removeRealTime(id);
 //   }
 
-  
 //   @Post('without-real-time')
 //   async createWithoutRealTime(@Body() dto: AssetFundamentalsDto): Promise<AssetEssentialsWithoutRealTimeEntity> {
 //     return this.assetEssentialsService.createWithoutRealTime(dto);
