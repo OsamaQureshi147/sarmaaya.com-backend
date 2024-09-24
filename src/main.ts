@@ -7,6 +7,7 @@ async function bootstrap() {
 
   const serverPort = process.env.SERVER_PORT || 5000;
   app.setGlobalPrefix('api');
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('API Documentation')
@@ -18,9 +19,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   await app.listen(serverPort, () =>
     console.log(`App listening on port: ${serverPort}`),
-  );
-
-  
+  );  
 }
 
 bootstrap();
