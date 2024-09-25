@@ -16,7 +16,7 @@ export class AssetDetailsController {
   }
 
   @Get()
-  //@SupabaseAuth()
+  @SupabaseAuth()
   async findAll(@Query() query:AssetDetailsEntity): Promise<AssetDetailsEntity[]> {
     return this.assetDetailsService.findAll(query);
   }
