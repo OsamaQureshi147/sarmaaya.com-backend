@@ -146,6 +146,30 @@ async getRatios(isin: string) {
     'FF_ROCE',
     'FF_ROA',
     'FF_CURR_RATIO', 
+    'FF_COM_EQ_ASSETS',
+    'FF_PAY_OUT_RATIO',
+    'FF_TOT_DEBT_TCAP_STD',
+    'FF_BPS_GR',
+    'FF_COM_EQ_GR',
+    'FF_DPS_GR',
+    'FF_NONPERF_LOAN_PCT',
+    'FF_QUICK_RATIO',
+    'FF_EBIT_OPER_MGN',
+    'FF_GROSS_MGN',
+    'FF_INT_MGN',
+    'FF_NET_MGN',
+    'FF_ROE',
+    'FF_ROTC',
+    'FF_ENTRPR_VAL',
+    'FF_MKT_VAL_PUBLIC',
+    'FF_DIV_YLD',
+    'FF_PBK',
+    'FF_EBIT_OPER_INT_COVG',
+    'FF_CLAIMS_NET_PREM',
+    'FF_OPER_INC_PREM_EARN',
+    'FF_OPER_INC_PREM_WRITTEN',
+    'FF_PREM_WRITTEN_COM_EQ'
+
   ];
 
   const metricDisplayNames = {
@@ -155,7 +179,32 @@ async getRatios(isin: string) {
     'FF_ROIC': 'ROI',
     'FF_ROCE': 'ROE',
     'FF_ROA': 'ROA',
-    'FF_CURR_RATIO': 'Current Ratio'
+    'FF_CURR_RATIO': 'Current Ratio',
+    'FF_COM_EQ_ASSETS': 'FF_COM_EQ_ASSETS',
+    'FF_PAY_OUT_RATIO': 'FF_PAY_OUT_RATIO',
+    'FF_TOT_DEBT_TCAP_STD': 'FF_TOT_DEBT_TCAP_STD',
+    'FF_BPS_GR': 'FF_BPS_GR',
+    'FF_COM_EQ_GR': 'FF_COM_EQ_GR',
+    'FF_DPS_GR': 'FF_DPS_GR',
+    'FF_NONPERF_LOAN_PCT': 'FF_NONPERF_LOAN_PCT',
+    'FF_QUICK_RATIO': 'FF_QUICK_RATIO',
+    'FF_EBIT_OPER_MGN': 'FF_EBIT_OPER_MGN',
+    'FF_GROSS_MGN': 'FF_GROSS_MGN',
+    'FF_INT_MGN': 'FF_INT_MGN',
+    'FF_NET_MGN': 'FF_NET_MGN',
+    'FF_ROE': 'FF_ROE',
+    'FF_ROTC': 'FF_ROTC',
+    'FF_ENTRPR_VAL': 'FF_ENTRPR_VAL',
+    'FF_MKT_VAL_PUBLIC': 'FF_MKT_VAL_PUBLIC',
+    'FF_DIV_YLD': 'FF_DIV_YLD',
+    'FF_PBK': 'FF_PBK',
+    'FF_EBIT_OPER_INT_COVG': 'FF_EBIT_OPER_INT_COVG',
+    'FF_CLAIMS_NET_PREM': 'FF_CLAIMS_NET_PREM',
+    'FF_OPER_INC_PREM_EARN': 'FF_OPER_INC_PREM_EARN',
+    'FF_OPER_INC_PREM_WRITTEN': 'FF_OPER_INC_PREM_WRITTEN',
+    'FF_PREM_WRITTEN_COM_EQ': 'FF_PREM_WRITTEN_COM_EQ'
+
+
   };
 
   const currentDate = new Date();
