@@ -7,7 +7,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 //   AssetMetricsEntity,
 //   AssetSegmentsEntity,
 // } from 'lib-typeorm';
-import { AssetOwnershipEntity, AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm-pro';
 
 
 export const getOrmConfig = () =>
@@ -32,7 +32,7 @@ export const getOrmConfig = () =>
     //   AssetMetricsEntity,
     // ],
     entities: [AssetOwnershipEntity, AssetDetailsEntity, AssetSegmentsEntity, AssetMetricsEntity, AssetFundamentalsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetMetricsEntity],
-    logging: process.env.NODE_ENV === 'development',
+    logging: true,
     synchronize: false,
     migrationsRun: process.env.NODE_ENV === 'test',
     dropSchema: process.env.NODE_ENV === 'test',

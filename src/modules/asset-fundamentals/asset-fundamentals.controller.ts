@@ -15,7 +15,7 @@ import {
   AssetFundamentalsDto,
   AssetFundamentalsEntity,
   AssetMetricsEntity,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 import {
   ApiTags,
   ApiQuery,

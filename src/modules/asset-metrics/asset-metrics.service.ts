@@ -5,7 +5,7 @@ import {
   AssetFundamentalsEntity,
   AssetMetricsDto,
   AssetMetricsEntity,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 import { In } from 'typeorm';
 
 @Injectable()

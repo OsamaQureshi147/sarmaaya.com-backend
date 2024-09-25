@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Delete, NotFoundException,Post,Body } from '@nestjs/common';
 import { AssetOwnershipsService } from './asset-ownerships.service';
-import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm-pro';
 
 @Controller('asset-ownerships')
 export class AssetOwnershipsController {

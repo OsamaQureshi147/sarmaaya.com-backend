@@ -6,7 +6,7 @@ import {
   AssetMetricsEntity,
   AssetFundamentalsDto,
   AssetDetailsEntity,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
 import axios from 'axios';
@@ -224,6 +224,7 @@ async getRatios(isin: string) {
   
 async getCompanySnapshot(isin: string) {
   const metrics = ['FF_PAR_PS', 'FF_EPS_RPT_DATE', 'FF_PRICE_HIGH_52WK', 'FF_FREQ_CODE', 'FF_PRICE_LOW_52WK', 'FF_PBK', 'FF_DIV_YLD', 'FF_EBIT_OPER_INT_COVG', 'FF_DPS_LTM', 'FF_GROSS_MGN', 'FF_COM_SHS_OUT', 'FF_SHS_FLOAT'];
+  
   const metricDisplayNames = {
     'FF_PAR_PS': 'Face Value',
     'FF_EPS_RPT_DATE': 'EPS',

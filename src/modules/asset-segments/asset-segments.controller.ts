@@ -11,7 +11,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AssetSegmentsService } from './asset-segments.service';
-import { AssetSegmentsDto, AssetSegmentsEntity } from 'lib-typeorm';
+import { AssetSegmentsDto, AssetSegmentsEntity } from 'lib-typeorm-pro';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('asset-segments')

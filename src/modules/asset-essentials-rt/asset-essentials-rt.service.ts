@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, Between} from 'typeorm';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity,  AssetEssentialsWithoutRealTimeEntity} from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity,  AssetEssentialsWithoutRealTimeEntity} from 'lib-typeorm-pro';
+import { AssetEssentialsQueryEnum } from './enums/query.enum';
 
 
 
@@ -133,15 +134,30 @@ export class AssetEssentialsRtService {
     return combinedData;
   }
 
-  async findLatestDataOfIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
-    const query = `
-      SELECT DISTINCT ON (isin) *
-      FROM asset_essentials_rt
-      ORDER BY isin, created_at DESC;
-    `;
+  async findLatestDataOfIsins(field = 'volume', order = 'desc', type= 'stock'): Promise<AssetEssentialsRealTimeEntity[]> {
+    // let order = AssetEssentialsQueryEnum.order;
+    // let field = AssetEssentialsQueryEnum.field;
+    // const query = `
+    //   SELECT DISTINCT ON (isin) *
+    //   FROM asset_essentials_rt
+    //   ORDER BY isin ${field} ${order};
+    // `;
+
+    const sortedQuery = `
+    WITH asset AS (
+        SELECT isin, MAX(created_at) AS max_created_at
+        FROM asset_essentials_rt
+        GROUP BY isin
+    )
+    SELECT asset.*, asset_essentials_rt.*
+    FROM asset
+    LEFT JOIN asset_essentials_rt 
+    ON asset.isin = asset_essentials_rt.isin 
+    AND asset.max_created_at = asset_essentials_rt.created_at order by "${field}" ${order};
+    `
 
     const latestIsinsData =
-      await this.assetEssentialsRealTimeRepository.query(query);
+      await this.assetEssentialsRealTimeRepository.query(sortedQuery);
 
     return latestIsinsData;
   }

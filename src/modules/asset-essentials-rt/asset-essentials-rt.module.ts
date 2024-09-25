@@ -5,7 +5,7 @@ import { AssetEssentialsRtController } from './asset-essentials-rt.controller';
 import {
   AssetEssentialsRealTimeEntity,
   AssetEssentialsWithoutRealTimeEntity,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
 
 @Module({

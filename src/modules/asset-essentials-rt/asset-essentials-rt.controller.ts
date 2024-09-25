@@ -12,8 +12,9 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm-pro';
 import { ApiTags } from '@nestjs/swagger';
+import { AssetEssentialsQueryEnum } from './enums/query.enum';
 
 @ApiTags('asset-essentials-rt')
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -42,7 +43,8 @@ export class AssetEssentialsRtController {
 
   @Get('latest-isin-data')
   async getDataofLatestIsin(
-    @Query('isin') isin: string,
+    @Query('isin') 
+    isin: string,
   ): Promise<AssetEssentialsRealTimeEntity> {
     if (!isin) {
       throw new BadRequestException('ISIN is required as a query parameter');
@@ -51,8 +53,15 @@ export class AssetEssentialsRtController {
   }
 
   @Get('latest-data-of-isins')
-  async getLatestDataByIsins(): Promise<AssetEssentialsRealTimeEntity[]> {
-    return this.assetEssentialsService.findLatestDataOfIsins();
+  async getLatestDataByIsins(
+    @Query() 
+    query: {
+      field: 'volume' | 'change_percent';
+      order: 'asc' | 'desc';
+      type: 'stocks' | 'indexes';
+    },
+  ): Promise<AssetEssentialsRealTimeEntity[]> {
+    return this.assetEssentialsService.findLatestDataOfIsins(query.field, query.order, query.type);
   }
 
   @Get(':id')
