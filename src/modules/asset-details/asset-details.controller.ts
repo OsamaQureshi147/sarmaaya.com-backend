@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, Valid
 import { AssetDetailsService } from './asset-details.service';
 import { AssetDetailsDto, AssetDetailsEntity } from 'lib-typeorm';
 import {  ApiTags } from '@nestjs/swagger';
+import { SupabaseAuth } from 'src/auth/supabase-auth.decorator';
 
 @ApiTags('asset-details')
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -15,6 +16,7 @@ export class AssetDetailsController {
   }
 
   @Get()
+  //@SupabaseAuth()
   async findAll(@Query() query:AssetDetailsEntity): Promise<AssetDetailsEntity[]> {
     return this.assetDetailsService.findAll(query);
   }

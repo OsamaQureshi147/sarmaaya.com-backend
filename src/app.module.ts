@@ -14,6 +14,8 @@ import { CompanyReportsService } from './company-reports/company-reports.service
 import { CompanyReportsController } from './company-reports/company-reports.controller';
 import { AssetOwnershipsModule } from './modules/asset-ownerships/asset-ownerships.module';
 
+import { SupabaseAuthGuard } from './auth/supabase-auth.guard';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,7 +31,6 @@ import { AssetOwnershipsModule } from './modules/asset-ownerships/asset-ownershi
     CompanyReportsModule,
     AssetOwnershipsModule,
   ],
-  // providers: [CompanyReportsService],
-  // controllers: [CompanyReportsController],
+   providers: [SupabaseAuthGuard],
 })
 export class AppModule {}
