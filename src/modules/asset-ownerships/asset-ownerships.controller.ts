@@ -1,11 +1,16 @@
 import { Controller, Get, Query, Delete, NotFoundException,Post,Body } from '@nestjs/common';
 import { AssetOwnershipsService } from './asset-ownerships.service';
-import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm-pro';
 
 @Controller('asset-ownerships')
 export class AssetOwnershipsController {
   constructor(private readonly assetOwnershipsService: AssetOwnershipsService) {}
 
+@Post('update')
+async updateAssetOwnerships() {
+  await this.assetOwnershipsService.updateAssetOwnerships();
+  return { message: 'Asset ownerships updated successfully' };
+  }
 
 @Post()
 async create(@Body() assetOwnershipDto: AssetOwnershipDto): Promise<AssetOwnershipEntity> {

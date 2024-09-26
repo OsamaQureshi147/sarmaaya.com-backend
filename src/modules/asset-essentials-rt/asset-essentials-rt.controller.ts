@@ -12,7 +12,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
-import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsRealTimeEntity } from 'lib-typeorm-pro';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('asset-essentials-rt')

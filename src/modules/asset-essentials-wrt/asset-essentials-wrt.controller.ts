@@ -14,7 +14,7 @@ import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
 import {
   AssetEssentialsWithoutRealTimeEntity,
   AssetEssentialsDto,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('asset-essentials-wrt')

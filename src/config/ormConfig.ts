@@ -1,13 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-// import {
-//   AssetDetailsEntity,
-//   AssetEssentialsRealTimeEntity,
-//   AssetEssentialsWithoutRealTimeEntity,
-//   AssetFundamentalsEntity,
-//   AssetMetricsEntity,
-//   AssetSegmentsEntity,
-// } from 'lib-typeorm';
-import { AssetOwnershipEntity, AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm-pro';
 
 
 export const getOrmConfig = () =>
@@ -22,15 +14,6 @@ export const getOrmConfig = () =>
     ssl: {
       rejectUnauthorized: false,
     },
-    // entities: [
-    //   AssetDetailsEntity,
-    //   AssetSegmentsEntity,
-    //   AssetMetricsEntity,
-    //   AssetFundamentalsEntity,
-    //   AssetEssentialsRealTimeEntity,
-    //   AssetEssentialsWithoutRealTimeEntity,
-    //   AssetMetricsEntity,
-    // ],
     entities: [AssetOwnershipEntity, AssetDetailsEntity, AssetSegmentsEntity, AssetMetricsEntity, AssetFundamentalsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetMetricsEntity],
     logging: process.env.NODE_ENV === 'development',
     synchronize: false,

@@ -6,7 +6,7 @@ import {
   AssetMetricsEntity,
   AssetFundamentalsDto,
   AssetDetailsEntity,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
 import axios from 'axios';

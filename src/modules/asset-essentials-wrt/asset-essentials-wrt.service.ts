@@ -9,7 +9,7 @@ import {
   AssetEssentialsDto,
   AssetEssentialsWithoutRealTimeEntity,
   AssetFundamentalsDto,
-} from 'lib-typeorm';
+} from 'lib-typeorm-pro';
 
 @Injectable()
 export class AssetEssentialsWrtService {
