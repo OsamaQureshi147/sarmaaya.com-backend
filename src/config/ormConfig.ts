@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { AssetOwnershipEntity, AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetDetailsEntity, AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsEntity, AssetMetricsEntity, AssetSegmentsEntity } from 'lib-typeorm-pro';
 
 
 export const getOrmConfig = () =>

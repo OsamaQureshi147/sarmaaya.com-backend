@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, NotFoundException } from '@nestjs/common';
 import { ApiClient, FundHoldingsApi, SecurityHoldersApi } from '@factset/sdk-factsetownership';
-import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm-pro';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository} from 'typeorm';
 @Injectable()

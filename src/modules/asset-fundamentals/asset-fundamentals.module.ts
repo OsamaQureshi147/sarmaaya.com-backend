@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AssetDetailsEntity, AssetFundamentalsEntity } from 'lib-typeorm';
-import { AssetMetricsEntity } from 'lib-typeorm';
+import { AssetDetailsEntity, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm-pro';
 import { AssetFundamentalsController } from './asset-fundamentals.controller';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
 
