@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { AssetEssentialsRtController } from './asset-essentials-rt.controller';
 import { AssetEssentialsRealTimeEntity, AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm-pro';
 import { AssetEssentialsRtService } from './asset-essentials-rt.service';
@@ -9,7 +8,7 @@ import { AssetEssentialsRtService } from './asset-essentials-rt.service';
   imports: [
     TypeOrmModule.forFeature([
       AssetEssentialsRealTimeEntity,
-      AssetEssentialsWithoutRealTimeEntity
+      AssetEssentialsWithoutRealTimeEntity,
     ]),
   ],
   controllers: [AssetEssentialsRtController],
