@@ -5,11 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, MoreThanOrEqual } from 'typeorm';
-import {
-  AssetEssentialsDto,
-  AssetEssentialsWithoutRealTimeEntity,
-  AssetFundamentalsDto,
-} from 'lib-typeorm';
+import { AssetEssentialsDto, AssetEssentialsWithoutRealTimeEntity, AssetFundamentalsDto } from 'lib-typeorm-pro';
 
 @Injectable()
 export class AssetEssentialsWrtService {

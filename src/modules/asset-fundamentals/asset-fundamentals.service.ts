@@ -1,12 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
-import {
-  AssetFundamentalsEntity,
-  AssetMetricsEntity,
-  AssetFundamentalsDto,
-  AssetDetailsEntity,
-} from 'lib-typeorm';
+import { AssetFundamentalsEntity, AssetMetricsEntity, AssetFundamentalsDto, AssetDetailsEntity} from 'lib-typeorm-pro';
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
 import axios from 'axios';

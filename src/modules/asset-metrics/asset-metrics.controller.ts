@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AssetMetricsService } from './asset-metrics.service';
-import { AssetMetricsDto, AssetMetricsEntity } from 'lib-typeorm';
+import { AssetMetricsDto, AssetMetricsEntity} from 'lib-typeorm-pro';
 import { ApiTags, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('asset-metrics')

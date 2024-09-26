@@ -1,16 +1,23 @@
 import { Controller, Get, Query, Delete, NotFoundException,Post,Body } from '@nestjs/common';
 import { AssetOwnershipsService } from './asset-ownerships.service';
-import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm-pro';
 
 @Controller('asset-ownerships')
 export class AssetOwnershipsController {
   constructor(private readonly assetOwnershipsService: AssetOwnershipsService) {}
+
+  @Get('equity-holders')
+  async getequityHolders(@Query('isin') isin: string) {
+    const ownershipData = await this.assetOwnershipsService.getEquityHolders(isin);
+    return ownershipData;
+  } 
 
 
 @Post()
 async create(@Body() assetOwnershipDto: AssetOwnershipDto): Promise<AssetOwnershipEntity> {
   return this.assetOwnershipsService.create(assetOwnershipDto);
 }
+
 
   @Get('security-holder')
   async getSecurityHolder(
@@ -35,17 +42,7 @@ async create(@Body() assetOwnershipDto: AssetOwnershipDto): Promise<AssetOwnersh
   }
 
 
-//   @Delete('fund-holding')
-//   async deleteFundHolding(
-//     @Query('fundId') fundId: string,
-//     @Query('date') date: string
-//   ): Promise<{ message: string }> {
-//     try {
-//       return await this.assetOwnershipsService.removeFundHolding(fundId, date);
-//     } catch (error) {
-//       throw new NotFoundException(`Fund holding with ID ${fundId} cannot be deleted.`);
-//     }
-//   }
+
 
   @Delete('security-holder')
   async deleteSecurityHolder(

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {AssetOwnershipEntity} from 'lib-typeorm';
+import {AssetOwnershipEntity} from 'lib-typeorm-pro';
 import { AssetOwnershipsController } from './asset-ownerships.controller';
 import { AssetOwnershipsService } from './asset-ownerships.service';
 import { ApiClient } from '@factset/sdk-factsetownership';

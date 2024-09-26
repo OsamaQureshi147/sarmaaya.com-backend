@@ -1,8 +1,9 @@
 import { Injectable, OnModuleInit, NotFoundException } from '@nestjs/common';
 import { ApiClient, FundHoldingsApi, SecurityHoldersApi } from '@factset/sdk-factsetownership';
-import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm';
+import { AssetOwnershipEntity, AssetOwnershipDto } from 'lib-typeorm-pro';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository} from 'typeorm';
+
 @Injectable()
 export class AssetOwnershipsService implements OnModuleInit {
   private fundHoldingsApi: FundHoldingsApi;
@@ -60,12 +61,20 @@ async findSecurityHolders(query: any): Promise<AssetOwnershipEntity[]> {
     throw new NotFoundException(`Security holder with ID ${securityId} cannot be deleted.`);
   }
 
-  //   async findOneFundHolding(fundId: string, date: string): Promise<AssetOwnershipEntity> {
-//     const result = await this.findFundHoldings({ fundId, date });
-//     if (!result || result.length === 0) {
-//       throw new NotFoundException(`Fund holding with ID ${fundId} not found.`);
-//     }
-//     return result[0]; // Assuming the API returns an array
-//   }
+  async getEquityHolders(isin: string): Promise<{ companyName: string; percentOutstanding: number; adjMarketValue: number }[]> {
+    const results = await this.assetOwnershipRepository.createQueryBuilder('ownership')
+   .select([
+            'ownership.holderName AS companyName',         
+            'ownership.date AS date',                       
+            'ownership.adjMarketValue AS adjMarketValue',   
+            'ownership.percentageOutstanding AS percentOutstanding' 
+        ])
+        .where('ownership.holderType = :holderType', { holderType: 'Institution' }) 
+        .andWhere('ownership.isin = :isin', { isin }) 
+        .getRawMany(); 
+
+    return results;
+}
 
 }
+

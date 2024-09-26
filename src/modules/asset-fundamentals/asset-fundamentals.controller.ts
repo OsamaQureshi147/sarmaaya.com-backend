@@ -11,11 +11,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
-import {
-  AssetFundamentalsDto,
-  AssetFundamentalsEntity,
-  AssetMetricsEntity,
-} from 'lib-typeorm';
+import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm-pro';
+import { ApiTags, ApiQuery, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
+
 import {
   ApiTags,
   ApiQuery,

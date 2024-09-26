@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AssetDetailsEntity } from 'lib-typeorm';
+import { AssetDetailsEntity } from 'lib-typeorm-pro';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 

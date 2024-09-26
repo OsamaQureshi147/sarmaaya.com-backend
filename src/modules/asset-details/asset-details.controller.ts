@@ -11,8 +11,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AssetDetailsService } from './asset-details.service';
-import { AssetDetailsDto, AssetDetailsEntity } from 'lib-typeorm';
-import { ApiTags } from '@nestjs/swagger';
+import { AssetDetailsDto, AssetDetailsEntity } from 'lib-typeorm-pro';
+import {  ApiTags } from '@nestjs/swagger';
 
 @ApiTags('asset-details')
 @UsePipes(new ValidationPipe({ transform: true }))

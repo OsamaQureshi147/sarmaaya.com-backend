@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
-import { AssetSegmentsEntity, AssetSegmentsDto } from 'lib-typeorm';
+import { AssetSegmentsEntity, AssetSegmentsDto } from 'lib-typeorm-pro';
 
 @Injectable()
 export class AssetSegmentsService {

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AssetEssentialsWrtController } from './asset-essentials-wrt.controller';
-import { AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm';
+import { AssetEssentialsWithoutRealTimeEntity } from 'lib-typeorm-pro'
 import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
 
 @Module({

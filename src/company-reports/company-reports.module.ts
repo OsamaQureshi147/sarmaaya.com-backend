@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CompanyReportsService } from './company-reports.service';
-import { AssetDetailsEntity } from 'lib-typeorm';
+import { AssetDetailsEntity } from 'lib-typeorm-pro';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { CompanyReportsController } from './company-reports.controller';

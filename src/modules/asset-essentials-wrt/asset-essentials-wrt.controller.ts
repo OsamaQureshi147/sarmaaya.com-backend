@@ -11,10 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AssetEssentialsWrtService } from './asset-essentials-wrt.service';
-import {
-  AssetEssentialsWithoutRealTimeEntity,
-  AssetEssentialsDto,
-} from 'lib-typeorm';
+import {  AssetEssentialsWithoutRealTimeEntity, AssetEssentialsDto } from 'lib-typeorm-pro';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('asset-essentials-wrt')
