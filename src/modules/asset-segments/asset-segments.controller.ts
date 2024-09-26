@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, ValidationPipe, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  ValidationPipe,
+  UsePipes,
+} from '@nestjs/common';
 import { AssetSegmentsService } from './asset-segments.service';
 import { AssetSegmentsDto, AssetSegmentsEntity } from 'lib-typeorm-pro';
 import { ApiTags } from '@nestjs/swagger';
@@ -19,12 +30,16 @@ export class AssetSegmentsController {
   }
 
   @Post()
-  async create(@Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
+  async create(
+    @Body() assetSegmentsDto: AssetSegmentsDto,
+  ): Promise<AssetSegmentsEntity> {
     return this.assetSegmentsService.create(assetSegmentsDto);
   }
 
   @Get()
-  async findAll(@Query() query: AssetSegmentsEntity): Promise<AssetSegmentsEntity[]> {
+  async findAll(
+    @Query() query: AssetSegmentsEntity,
+  ): Promise<AssetSegmentsEntity[]> {
     return this.assetSegmentsService.findAllSegments(query);
   }
 
@@ -34,13 +49,15 @@ export class AssetSegmentsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() assetSegmentsDto: AssetSegmentsDto): Promise<AssetSegmentsEntity> {
+  async update(
+    @Param('id') id: number,
+    @Body() assetSegmentsDto: AssetSegmentsDto,
+  ): Promise<AssetSegmentsEntity> {
     return this.assetSegmentsService.update(id, assetSegmentsDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<{ message: string }> {
     return this.assetSegmentsService.remove(id);
-}
-
+  }
 }

@@ -1,9 +1,27 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
 import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm-pro';
 import { ApiTags, ApiQuery, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
+
+import {
+  ApiTags,
+  ApiQuery,
+  ApiExtraModels,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { PartialType } from '@nestjs/swagger';
-import {  FundamentalsPeriodicity } from 'src/common/interfaces';
+import { FundamentalsPeriodicity } from 'src/common/interfaces';
 import { Res } from '@nestjs/common';
 
 @ApiTags('asset-fundamentals')
@@ -11,10 +29,12 @@ import { Res } from '@nestjs/common';
 @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('asset-fundamentals')
 export class AssetFundamentalsController {
-  constructor(private readonly assetFundamentalsService: AssetFundamentalsService) {}
+  constructor(
+    private readonly assetFundamentalsService: AssetFundamentalsService,
+  ) {}
 
   //FUNDAMENTALS CONTROLLERS
-  
+
   @Get('company-details')
   @ApiQuery({
     name: 'isin',
@@ -47,7 +67,8 @@ export class AssetFundamentalsController {
     description: 'The ISIN of the asset',
   })
   async getCompanySnapshot(@Query('isin') isin: string) {
-    const snapshot = await this.assetFundamentalsService.getCompanySnapshot(isin);
+    const snapshot =
+      await this.assetFundamentalsService.getCompanySnapshot(isin);
     return snapshot;
   }
 
@@ -75,9 +96,10 @@ export class AssetFundamentalsController {
     return about;
   }
 
-
   @Post()
-  async createFundamental(@Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
+  async createFundamental(
+    @Body() dto: AssetFundamentalsDto,
+  ): Promise<AssetFundamentalsEntity> {
     return this.assetFundamentalsService.createFundamental(dto);
   }
 
@@ -91,7 +113,7 @@ export class AssetFundamentalsController {
   @ApiQuery({
     name: 'periodicity',
     required: false,
-    enum: FundamentalsPeriodicity, 
+    enum: FundamentalsPeriodicity,
     description: 'The periodicity of the data',
   })
   @ApiQuery({
@@ -131,23 +153,30 @@ export class AssetFundamentalsController {
     description: 'The value of the asset',
   })
   async findAllFundamentals(
-    @Query() query: Partial<AssetFundamentalsDto>, 
+    @Query() query: Partial<AssetFundamentalsDto>,
   ): Promise<AssetFundamentalsEntity[]> {
     return this.assetFundamentalsService.findAllFundamentals(query);
   }
 
   @Get(':id')
-  async findOneFundamental(@Param('id') id: number): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
+  async findOneFundamental(
+    @Param('id') id: number,
+  ): Promise<AssetFundamentalsEntity | AssetMetricsEntity> {
     return this.assetFundamentalsService.findOneFundamental(id);
   }
 
   @Put(':id')
-  async updateFundamental(@Param('id') id: number, @Body() dto: AssetFundamentalsDto): Promise<AssetFundamentalsEntity> {
-    return this.assetFundamentalsService.updateFundamental(id,dto);
+  async updateFundamental(
+    @Param('id') id: number,
+    @Body() dto: AssetFundamentalsDto,
+  ): Promise<AssetFundamentalsEntity> {
+    return this.assetFundamentalsService.updateFundamental(id, dto);
   }
 
   @Delete(':id')
-  async removeFundamental(@Param('id') id: string): Promise<{message : string}> {
+  async removeFundamental(
+    @Param('id') id: string,
+  ): Promise<{ message: string }> {
     return this.assetFundamentalsService.removeFundamental(id);
   }
 }

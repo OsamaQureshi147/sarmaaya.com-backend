@@ -6,7 +6,11 @@ import { AssetFundamentalsService } from './asset-fundamentals.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AssetFundamentalsEntity, AssetMetricsEntity, AssetDetailsEntity]),
+    TypeOrmModule.forFeature([
+      AssetFundamentalsEntity,
+      AssetMetricsEntity,
+      AssetDetailsEntity,
+    ]),
   ],
   providers: [AssetFundamentalsService],
   controllers: [AssetFundamentalsController],
