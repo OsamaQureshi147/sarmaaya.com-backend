@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AssetFundamentalsService } from './asset-fundamentals.service';
-import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm';
+import { AssetFundamentalsDto, AssetFundamentalsEntity, AssetMetricsEntity } from 'lib-typeorm-pro';
 import { ApiTags, ApiQuery, ApiExtraModels, getSchemaPath } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/swagger';
 import {  FundamentalsPeriodicity } from 'src/common/interfaces';
