@@ -37,6 +37,55 @@ export class AssetFundamentalsController {
 
   //FUNDAMENTALS CONTROLLERS
 
+  @Get('financial-summary/ratios')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async Ratios(@Query('isin') isin: string) {
+    const details = await this.assetFundamentalsService.Ratios(isin);
+    return details;
+  }
+
+  
+  @Get('financial-summary/cashflow')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async CashFlows(@Query('isin') isin: string) {
+    const details = await this.assetFundamentalsService.CashFlows(isin);
+    return details;
+  }
+
+  @Get('financial-summary/income-statement')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async IncomeStatement(@Query('isin') isin: string) {
+    const details = await this.assetFundamentalsService.IncomeStatement(isin);
+    return details;
+  }
+
+  @Get('financial-summary/balance-sheet')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async BalanceSheet(@Query('isin') isin: string) {
+    const details = await this.assetFundamentalsService.BalanceSheet(isin);
+    return details;
+  }
+
   @Get('company-details')
   @ApiQuery({
     name: 'isin',
