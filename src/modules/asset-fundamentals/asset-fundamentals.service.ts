@@ -422,7 +422,7 @@ async fetchProfile(isin: string): Promise<any> {
 }
 
 async getDividendData (isin:string) {
-  const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO','FF_PAY_OUT_RATIO','FF_EPS_BASIC_GR'];
+  const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO','FF_PAY_OUT_RATIO','FF_EPS_BASIC_GR', 'FF_DPS_DDATE', 'FF_DPS_EXDATE'];
   const metricDisplayNames = {
     'FF_DPS_LTM' : 'Dividend Yield',
     'FF_STK_SPLIT_RATIO': 'Dividend Amount',
