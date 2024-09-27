@@ -193,17 +193,16 @@ async getRatios(isin: string) {
     'FF_OPER_INC_PREM_EARN',
     'FF_OPER_INC_PREM_WRITTEN',
     'FF_PREM_WRITTEN_COM_EQ'
-
   ];
 
   const metricDisplayNames = {
     'FF_EPS_BASIC_GR': 'EPS',
     'FF_PE': 'P/E',
-    'FF_DEBT_EQ': 'Debt to Equity',
+    'FF_DEBT_EQ': 'FF_DEBT_EQ',
     'FF_ROIC': 'ROI',
     'FF_ROCE': 'ROE',
     'FF_ROA': 'ROA',
-    'FF_CURR_RATIO': 'Current Ratio',
+    'FF_CURR_RATIO': 'FF_CURR_RATIO',
     'FF_COM_EQ_ASSETS': 'FF_COM_EQ_ASSETS',
     'FF_PAY_OUT_RATIO': 'FF_PAY_OUT_RATIO',
     'FF_TOT_DEBT_TCAP_STD': 'FF_TOT_DEBT_TCAP_STD',
@@ -227,10 +226,9 @@ async getRatios(isin: string) {
     'FF_OPER_INC_PREM_EARN': 'FF_OPER_INC_PREM_EARN',
     'FF_OPER_INC_PREM_WRITTEN': 'FF_OPER_INC_PREM_WRITTEN',
     'FF_PREM_WRITTEN_COM_EQ': 'FF_PREM_WRITTEN_COM_EQ'
-
-
   };
 
+  
   const currentDate = new Date();
   const fiveYearsAgo = new Date();
   fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
