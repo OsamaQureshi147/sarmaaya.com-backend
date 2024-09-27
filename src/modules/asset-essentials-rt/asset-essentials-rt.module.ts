@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { AssetEssentialsRtController } from './asset-essentials-rt.controller';
 import {
   AssetEssentialsRealTimeEntity,

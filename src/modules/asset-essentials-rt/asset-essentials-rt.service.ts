@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, Between} from 'typeorm';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity,  AssetEssentialsWithoutRealTimeEntity} from 'lib-typeorm-pro';
-import { AssetEssentialsQueryEnum } from './enums/query.enum';
 
 
 
