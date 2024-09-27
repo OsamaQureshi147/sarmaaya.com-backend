@@ -52,6 +52,15 @@ export class AssetEssentialsRtController {
     return this.assetEssentialsService.findLatestDataofIsin(isin);
   }
 
+  @Get('isins-data')
+  async getDataofMultipleIsin(
+    @Query('isin') isin: string[]) {
+    if (!isin) {
+      throw new BadRequestException('ISIN is required as a query parameter');
+    }
+    return this.assetEssentialsService.getDataByListOfIsins(isin);
+  }
+
   @Get('latest-data-of-isins')
   async getLatestDataByIsins(
     @Query() 

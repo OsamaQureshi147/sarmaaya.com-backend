@@ -22,7 +22,7 @@ export class AssetFundamentalsService {
     @InjectRepository(AssetDetailsEntity)
     private readonly assetDetailsRepository: Repository<AssetDetailsEntity>,
     private readonly configService: ConfigService
-  ) {}
+  ) { }
 
   //FUNDAMENTALS SERVICES
 
@@ -46,7 +46,7 @@ export class AssetFundamentalsService {
   }
 
   async findAllFundamentals(
-    query: Partial<AssetFundamentalsDto> & { startDate?: string, endDate?: string }, 
+    query: Partial<AssetFundamentalsDto> & { startDate?: string, endDate?: string },
   ): Promise<AssetFundamentalsEntity[]> {
     const where: FindOptionsWhere<AssetFundamentalsEntity> = {};
 
@@ -94,7 +94,7 @@ export class AssetFundamentalsService {
     });
 
     if (!fundamental) {
-      throw new NotFoundException  ('Fundamental not found');
+      throw new NotFoundException('Fundamental not found');
     }
 
     return {
@@ -112,7 +112,7 @@ export class AssetFundamentalsService {
     });
 
     if (!fundamental) {
-      throw new NotFoundException  ('Fundamental not found');
+      throw new NotFoundException('Fundamental not found');
     }
 
     const metric = await this.assetMetricsRepository.findOne({
@@ -144,11 +144,11 @@ export class AssetFundamentalsService {
       message: `Fundamental with ID ${id} has been deleted successfully.`,
     };
   }
-  
 
-async getCompanyDetails(isin: string) {
-  const metrics =   ['FF_CO_NAME',   'FF_PE',   'FF_PBK',   'FF_MKT_VAL_PUBLIC',   'FF_ENTRPR_VAL',   'FF_VOLUME_TRADE',   'FF_VOLUME_WK_AVG'];
-  const metricDisplayNames = {
+
+  async getCompanyDetails(isin: string) {
+    const metrics = ['FF_CO_NAME', 'FF_PE', 'FF_PBK', 'FF_MKT_VAL_PUBLIC', 'FF_ENTRPR_VAL', 'FF_VOLUME_TRADE', 'FF_VOLUME_WK_AVG'];
+    const metricDisplayNames = {
       'FF_CO_NAME': 'Company Name',
       'FF_PE': 'Price to Earning (P/E)',
       'FF_PBK': 'Price to Book (P/B)',
@@ -156,85 +156,20 @@ async getCompanyDetails(isin: string) {
       'FF_ENTRPR_VAL': 'Enterprise Value',
       'FF_VOLUME_TRADE': 'Volume',
       'FF_VOLUME_WK_AVG': 'Avg Vol'
-  };
+    };
 
-  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
-}
+    return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+  }
 
-async getRatios(isin: string) {
-  const metrics = [
-<<<<<<< HEAD
-    'FF_EPS_BASIC_GR',  
-    'FF_PE',   
-    'FF_DEBT_EQ', 
-    'FF_ROIC', 
-    'FF_ROCE',
-    'FF_ROA',
-    'FF_CURR_RATIO', 
-    'FF_COM_EQ_ASSETS',
-    'FF_PAY_OUT_RATIO',
-    'FF_TOT_DEBT_TCAP_STD',
-    'FF_BPS_GR',
-    'FF_COM_EQ_GR',
-    'FF_DPS_GR',
-    'FF_NONPERF_LOAN_PCT',
-    'FF_QUICK_RATIO',
-    'FF_EBIT_OPER_MGN',
-    'FF_GROSS_MGN',
-    'FF_INT_MGN',
-    'FF_NET_MGN',
-    'FF_ROE',
-    'FF_ROTC',
-    'FF_ENTRPR_VAL',
-    'FF_MKT_VAL_PUBLIC',
-    'FF_DIV_YLD',
-    'FF_PBK',
-    'FF_EBIT_OPER_INT_COVG',
-    'FF_CLAIMS_NET_PREM',
-    'FF_OPER_INC_PREM_EARN',
-    'FF_OPER_INC_PREM_WRITTEN',
-    'FF_PREM_WRITTEN_COM_EQ'
-  ];
-
-  const metricDisplayNames = {
-    'FF_EPS_BASIC_GR': 'EPS',
-    'FF_PE': 'P/E',
-    'FF_DEBT_EQ': 'FF_DEBT_EQ',
-    'FF_ROIC': 'ROI',
-    'FF_ROCE': 'ROE',
-    'FF_ROA': 'ROA',
-    'FF_CURR_RATIO': 'FF_CURR_RATIO',
-    'FF_COM_EQ_ASSETS': 'FF_COM_EQ_ASSETS',
-    'FF_PAY_OUT_RATIO': 'FF_PAY_OUT_RATIO',
-    'FF_TOT_DEBT_TCAP_STD': 'FF_TOT_DEBT_TCAP_STD',
-    'FF_BPS_GR': 'FF_BPS_GR',
-    'FF_COM_EQ_GR': 'FF_COM_EQ_GR',
-    'FF_DPS_GR': 'FF_DPS_GR',
-    'FF_NONPERF_LOAN_PCT': 'FF_NONPERF_LOAN_PCT',
-    'FF_QUICK_RATIO': 'FF_QUICK_RATIO',
-    'FF_EBIT_OPER_MGN': 'FF_EBIT_OPER_MGN',
-    'FF_GROSS_MGN': 'FF_GROSS_MGN',
-    'FF_INT_MGN': 'FF_INT_MGN',
-    'FF_NET_MGN': 'FF_NET_MGN',
-    'FF_ROE': 'FF_ROE',
-    'FF_ROTC': 'FF_ROTC',
-    'FF_ENTRPR_VAL': 'FF_ENTRPR_VAL',
-    'FF_MKT_VAL_PUBLIC': 'FF_MKT_VAL_PUBLIC',
-    'FF_DIV_YLD': 'FF_DIV_YLD',
-    'FF_PBK': 'FF_PBK',
-    'FF_EBIT_OPER_INT_COVG': 'FF_EBIT_OPER_INT_COVG',
-    'FF_CLAIMS_NET_PREM': 'FF_CLAIMS_NET_PREM',
-    'FF_OPER_INC_PREM_EARN': 'FF_OPER_INC_PREM_EARN',
-    'FF_OPER_INC_PREM_WRITTEN': 'FF_OPER_INC_PREM_WRITTEN',
-    'FF_PREM_WRITTEN_COM_EQ': 'FF_PREM_WRITTEN_COM_EQ'
-=======
-      'FF_EPS_BASIC_GR',  
-      'FF_PE',   
-      'FF_DEBT_EQ', 
-      'FF_ROIC', 
+  async getRatios(isin: string) {
+    const metrics = [
+      'FF_EPS_BASIC_GR',
+      'FF_PE',
+      'FF_DEBT_EQ',
+      'FF_ROIC',
       'FF_ROCE',
       'FF_ROA',
-      'FF_CURR_RATIO', 
+      'FF_CURR_RATIO',
       'FF_COM_EQ_ASSETS',
       'FF_PAY_OUT_RATIO',
       'FF_TOT_DEBT_TCAP_STD',
@@ -259,9 +194,9 @@ async getRatios(isin: string) {
       'FF_OPER_INC_PREM_WRITTEN',
       'FF_PREM_WRITTEN_COM_EQ'
 
-  ];
+    ];
 
-  const metricDisplayNames = {
+    const metricDisplayNames = {
       'FF_EPS_BASIC_GR': 'EPS',
       'FF_PE': 'P/E',
       'FF_DEBT_EQ': 'Debt to Equity',
@@ -269,84 +204,78 @@ async getRatios(isin: string) {
       'FF_ROCE': 'ROE',
       'FF_ROA': 'ROA',
       'FF_CURR_RATIO': 'Current Ratio',
-      'FF_COM_EQ_ASSETS':   'FF_COM_EQ_ASSETS',
-      'FF_PAY_OUT_RATIO':   'FF_PAY_OUT_RATIO',
-      'FF_TOT_DEBT_TCAP_STD':   'FF_TOT_DEBT_TCAP_STD',
-      'FF_BPS_GR':   'FF_BPS_GR',
-      'FF_COM_EQ_GR':   'FF_COM_EQ_GR',
-      'FF_DPS_GR':   'FF_DPS_GR',
-      'FF_NONPERF_LOAN_PCT':   'FF_NONPERF_LOAN_PCT',
-      'FF_QUICK_RATIO':   'FF_QUICK_RATIO',
-      'FF_EBIT_OPER_MGN':   'FF_EBIT_OPER_MGN',
-      'FF_GROSS_MGN':   'FF_GROSS_MGN',
-      'FF_INT_MGN':   'FF_INT_MGN',
-      'FF_NET_MGN':   'FF_NET_MGN',
-      'FF_ROE':   'FF_ROE',
-      'FF_ROTC':   'FF_ROTC',
-      'FF_ENTRPR_VAL':   'FF_ENTRPR_VAL',
-      'FF_MKT_VAL_PUBLIC':   'FF_MKT_VAL_PUBLIC',
-      'FF_DIV_YLD':   'FF_DIV_YLD',
-      'FF_PBK':   'FF_PBK',
-      'FF_EBIT_OPER_INT_COVG':   'FF_EBIT_OPER_INT_COVG',
-      'FF_CLAIMS_NET_PREM':   'FF_CLAIMS_NET_PREM',
-      'FF_OPER_INC_PREM_EARN':   'FF_OPER_INC_PREM_EARN',
-      'FF_OPER_INC_PREM_WRITTEN':   'FF_OPER_INC_PREM_WRITTEN',
-      'FF_PREM_WRITTEN_COM_EQ':   'FF_PREM_WRITTEN_COM_EQ'
+      'FF_COM_EQ_ASSETS': 'FF_COM_EQ_ASSETS',
+      'FF_PAY_OUT_RATIO': 'FF_PAY_OUT_RATIO',
+      'FF_TOT_DEBT_TCAP_STD': 'FF_TOT_DEBT_TCAP_STD',
+      'FF_BPS_GR': 'FF_BPS_GR',
+      'FF_COM_EQ_GR': 'FF_COM_EQ_GR',
+      'FF_DPS_GR': 'FF_DPS_GR',
+      'FF_NONPERF_LOAN_PCT': 'FF_NONPERF_LOAN_PCT',
+      'FF_QUICK_RATIO': 'FF_QUICK_RATIO',
+      'FF_EBIT_OPER_MGN': 'FF_EBIT_OPER_MGN',
+      'FF_GROSS_MGN': 'FF_GROSS_MGN',
+      'FF_INT_MGN': 'FF_INT_MGN',
+      'FF_NET_MGN': 'FF_NET_MGN',
+      'FF_ROE': 'FF_ROE',
+      'FF_ROTC': 'FF_ROTC',
+      'FF_ENTRPR_VAL': 'FF_ENTRPR_VAL',
+      'FF_MKT_VAL_PUBLIC': 'FF_MKT_VAL_PUBLIC',
+      'FF_DIV_YLD': 'FF_DIV_YLD',
+      'FF_PBK': 'FF_PBK',
+      'FF_EBIT_OPER_INT_COVG': 'FF_EBIT_OPER_INT_COVG',
+      'FF_CLAIMS_NET_PREM': 'FF_CLAIMS_NET_PREM',
+      'FF_OPER_INC_PREM_EARN': 'FF_OPER_INC_PREM_EARN',
+      'FF_OPER_INC_PREM_WRITTEN': 'FF_OPER_INC_PREM_WRITTEN',
+      'FF_PREM_WRITTEN_COM_EQ': 'FF_PREM_WRITTEN_COM_EQ'
 
 
->>>>>>> 0ad70092ef9651e4f164e06935bd00e7ce3d18e5
-  };
-
-  
-  const currentDate = new Date();
-  const fiveYearsAgo = new Date();
-  fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
-
-  const result = await this.assetFundamentalsRepository
-    .createQueryBuilder('cd')
-    .leftJoinAndSelect('cd.metric', 'metric')
-    .select([
-      'metric.metric', 
-      'cd.value',
-      'cd.epsReportDate',  
-    ])
-    .where('cd.isin = :isin', { isin })
-    .andWhere('metric.metric IN (:...metrics)', { metrics })
-    .andWhere('cd.epsReportDate BETWEEN :start AND :end', {
-      start: fiveYearsAgo,
-      end: currentDate,
-    })
-    .orderBy('cd.epsReportDate', 'DESC')
-    .getMany();
-
-  const formattedResponse = metrics.reduce((acc, metric) => {
-    const displayName = metricDisplayNames[metric];
-    acc[displayName] = [];  
-    return acc;
-  }, {} as Record<string, any>);
+    };
 
 
-  for (const record of result) {
-    const displayName = metricDisplayNames[record.metric.metric];
-    formattedResponse[displayName].push({
-      value: record.value,
-      date: record.epsReportDate,  
-    });
+    const currentDate = new Date();
+    const fiveYearsAgo = new Date();
+    fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
+
+    const result = await this.assetFundamentalsRepository
+      .createQueryBuilder('cd')
+      .leftJoinAndSelect('cd.metric', 'metric')
+      .select([
+        'metric.metric',
+        'cd.value',
+        'cd.epsReportDate',
+      ])
+      .where('cd.isin = :isin', { isin })
+      .andWhere('metric.metric IN (:...metrics)', { metrics })
+      .andWhere('cd.epsReportDate BETWEEN :start AND :end', {
+        start: fiveYearsAgo,
+        end: currentDate,
+      })
+      .orderBy('cd.epsReportDate', 'DESC')
+      .getMany();
+
+    const formattedResponse = metrics.reduce((acc, metric) => {
+      const displayName = metricDisplayNames[metric];
+      acc[displayName] = [];
+      return acc;
+    }, {} as Record<string, any>);
+
+
+    for (const record of result) {
+      const displayName = metricDisplayNames[record.metric.metric];
+      formattedResponse[displayName].push({
+        value: record.value,
+        date: record.epsReportDate,
+      });
+    }
+
+    return formattedResponse;
   }
 
-  return formattedResponse;
-}
 
-  
-async getCompanySnapshot(isin: string) {
-<<<<<<< HEAD
-  const metrics = ['FF_PAR_PS', 'FF_EPS_RPT_DATE', 'FF_PRICE_HIGH_52WK', 'FF_FREQ_CODE', 'FF_PRICE_LOW_52WK', 'FF_PBK', 'FF_DIV_YLD', 'FF_EBIT_OPER_INT_COVG', 'FF_DPS_LTM', 'FF_GROSS_MGN', 'FF_COM_SHS_OUT', 'FF_SHS_FLOAT'];
-  
-=======
-  const metrics =   ['FF_PAR_PS',   'FF_EPS_RPT_DATE',   'FF_PRICE_HIGH_52WK',   'FF_FREQ_CODE',   'FF_PRICE_LOW_52WK',   'FF_PBK',   'FF_DIV_YLD',   'FF_EBIT_OPER_INT_COVG',   'FF_DPS_LTM',   'FF_GROSS_MGN',   'FF_COM_SHS_OUT',   'FF_SHS_FLOAT'];
->>>>>>> 0ad70092ef9651e4f164e06935bd00e7ce3d18e5
-  const metricDisplayNames = {
-      'FF_PAR_PS':   'Face Value',
+  async getCompanySnapshot(isin: string) {
+    const metrics = ['FF_PAR_PS', 'FF_EPS_RPT_DATE', 'FF_PRICE_HIGH_52WK', 'FF_FREQ_CODE', 'FF_PRICE_LOW_52WK', 'FF_PBK', 'FF_DIV_YLD', 'FF_EBIT_OPER_INT_COVG', 'FF_DPS_LTM', 'FF_GROSS_MGN', 'FF_COM_SHS_OUT', 'FF_SHS_FLOAT'];
+    const metricDisplayNames = {
+      'FF_PAR_PS': 'Face Value',
       'FF_EPS_RPT_DATE': 'EPS',
       'FF_PRICE_HIGH_52WK': '52 Week High',
       'FF_FREQ_CODE': 'Earnings Report Frequency',
@@ -357,17 +286,17 @@ async getCompanySnapshot(isin: string) {
       'FF_DPS_LTM': 'Last Dividend (RS)',
       'FF_GROSS_MGN': 'Gross Income Margin',
       'FF_COM_SHS_OUT': 'Outstanding Shares',
-      'FF_SHS_FLOAT':   'Free Float Share'
-  };
+      'FF_SHS_FLOAT': 'Free Float Share'
+    };
 
-  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
-}
+    return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+  }
 
-async getCompanyAbout(isin: string) {
-  const metrics =   ['FF_PHONE',   'FF_BUS_DESC_EXT',   'FF_URL',   'FF_ADDRESS2',   'FF_CITY',   'FF_COUNTRY'];
-  const employeeMetrics =   ['FF_EMP_NUM'];
+  async getCompanyAbout(isin: string) {
+    const metrics = ['FF_PHONE', 'FF_BUS_DESC_EXT', 'FF_URL', 'FF_ADDRESS2', 'FF_CITY', 'FF_COUNTRY'];
+    const employeeMetrics = ['FF_EMP_NUM'];
 
-  const metricDisplayNames = {
+    const metricDisplayNames = {
       'FF_PHONE': 'Phone Number',
       'FF_BUS_DESC_EXT': 'About Company',
       'FF_URL': 'Website',
@@ -375,263 +304,327 @@ async getCompanyAbout(isin: string) {
       'FF_ADDRESS2': 'Address',
       'FF_CITY': 'City',
       'FF_COUNTRY': 'Country'
-  };
+    };
 
-  const currentDate = new Date();
-  const fiveYearsAgo = new Date();
-  fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
+    const currentDate = new Date();
+    const fiveYearsAgo = new Date();
+    fiveYearsAgo.setFullYear(currentDate.getFullYear() - 5);
 
-  const nonEmployeeData = await getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+    const nonEmployeeData = await getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
 
-  const employeeData = await this.assetFundamentalsRepository
-    .createQueryBuilder('cd')
-    .leftJoinAndSelect('cd.metric', 'metric')
-    .select(['metric.metric', 'cd.value', 'cd.epsReportDate'])
-    .where('cd.isin = :isin', { isin })
-    .andWhere('metric.metric IN (:...metrics)', { metrics: employeeMetrics })
-    .andWhere('cd.epsReportDate BETWEEN :start AND :end', { start: fiveYearsAgo, end: currentDate })
-    .orderBy('cd.epsReportDate', 'DESC')
-    .getMany();
+    const employeeData = await this.assetFundamentalsRepository
+      .createQueryBuilder('cd')
+      .leftJoinAndSelect('cd.metric', 'metric')
+      .select(['metric.metric', 'cd.value', 'cd.epsReportDate'])
+      .where('cd.isin = :isin', { isin })
+      .andWhere('metric.metric IN (:...metrics)', { metrics: employeeMetrics })
+      .andWhere('cd.epsReportDate BETWEEN :start AND :end', { start: fiveYearsAgo, end: currentDate })
+      .orderBy('cd.epsReportDate', 'DESC')
+      .getMany();
 
-  const formattedResponse = {
-    ...nonEmployeeData,
-    'No of Employees': [],
-  };
+    const formattedResponse = {
+      ...nonEmployeeData,
+      'No of Employees': [],
+    };
 
-  for (const record of employeeData) {
-    const displayName = metricDisplayNames[record.metric.metric];
-    formattedResponse[displayName].push({
-      value: record.value || null,
-      date: record.epsReportDate,
-    });
-  }
-
-  const profile = await this.fetchProfile(isin);
-
-  if (profile && profile.data && profile.data.length > 0) {
-    const { ceo, address, sector, industry } = profile.data[0];
-    formattedResponse['Industry'] = industry;
-    formattedResponse['Sector'] = sector;
-    formattedResponse['CEO'] = ceo;
-
-  }
-
-  return formattedResponse;
-}
-
-async fetchProfile(isin: string): Promise<any> {
-  const apiUrl = `https://api.factset.com/content/factset-fundamentals/v2/company-reports/profile`;
-
-  try {
-    const response = await axios.get(apiUrl, {
-      params: {
-        ids: isin,
-      },
-      auth: {
-        username: this.configService.get  ('FACTSET_USERNAME'),
-        password: this.configService.get  ('FACTSET_PASSWORD'),
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    if (error.response) {
-      console.error(`Error fetching profile for ISIN ${isin}:`, error.response.data);
-    } else {
-      console.error(`Error fetching profile for ISIN ${isin}:`, error.message);
+    for (const record of employeeData) {
+      const displayName = metricDisplayNames[record.metric.metric];
+      formattedResponse[displayName].push({
+        value: record.value || null,
+        date: record.epsReportDate,
+      });
     }
-    return null;
-  }
-}
 
-async getDividendData (isin:string) {
-<<<<<<< HEAD
-  const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO','FF_PAY_OUT_RATIO','FF_EPS_BASIC_GR', 'FF_DPS_DDATE', 'FF_DPS_EXDATE'];
-=======
-  const metrics =   ['FF_DPS_LTM',   'FF_STK_SPLIT_RATIO'  ,'FF_PAY_OUT_RATIO'  ,'FF_EPS_BASIC_GR'];
->>>>>>> 0ad70092ef9651e4f164e06935bd00e7ce3d18e5
-  const metricDisplayNames = {
-      'FF_DPS_LTM' : 'Dividend Yield',
+    const profile = await this.fetchProfile(isin);
+
+    if (profile && profile.data && profile.data.length > 0) {
+      const { ceo, address, sector, industry } = profile.data[0];
+      formattedResponse['Industry'] = industry;
+      formattedResponse['Sector'] = sector;
+      formattedResponse['CEO'] = ceo;
+
+    }
+
+    return formattedResponse;
+  }
+
+  async fetchProfile(isin: string): Promise<any> {
+    const apiUrl = `https://api.factset.com/content/factset-fundamentals/v2/company-reports/profile`;
+
+    try {
+      const response = await axios.get(apiUrl, {
+        params: {
+          ids: isin,
+        },
+        auth: {
+          username: this.configService.get('FACTSET_USERNAME'),
+          password: this.configService.get('FACTSET_PASSWORD'),
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        console.error(`Error fetching profile for ISIN ${isin}:`, error.response.data);
+      } else {
+        console.error(`Error fetching profile for ISIN ${isin}:`, error.message);
+      }
+      return null;
+    }
+  }
+
+  async getDividendData(isin: string) {
+    const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO', 'FF_PAY_OUT_RATIO', 'FF_EPS_BASIC_GR', 'FF_DPS_EXDATE', 'FF_DPS_DDATE'];
+    const metricDisplayNames = {
+      'FF_DPS_LTM': 'Dividend Yield',
       'FF_STK_SPLIT_RATIO': 'Dividend Amount',
       'FF_PAY_OUT_RATIO': 'Payout Ratio',
       'FF_EPS_BASIC_GR': 'EPS'
-  };
+    };
 
-  return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+    return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
 
+
+  }
+
+  async getPeersRatioComparison(isin: string) {
+    const query = `select * from asset_details ad where sector = (select sector from public.asset_details ad where isin='${isin}') limit 3`
+    const peers = await this.assetDetailsRepository.query(query);
+    let isins = peers.map(peer => peer.isin);
+    let metrics = ['FF_EPS', 'FF_PBK', 'FF_PE', 'FF_MKT_VAL_PUBLIC', 'FF_PAR_PS', 'FF_DIV_YLD']
+    const peersData = await getMetricsDataAgainstListOfIsins(isins,this.assetFundamentalsRepository, metrics);
+    const peersDataWithIsin = peersData.map(peer => {
+      const peerData = peers.find(p => p.isin === peer.isin);
+      return {
+        isin: peer.isin,
+        company_name: peerData.company_name,
+        symbol: peerData.symbol,
+        sector: peerData.sector,
+        ...peer
+      };
+    });
+
+    return peersDataWithIsin.reduce((acc, item) => {
+      const transformedItem = {
+        ...item,
+        metric: item?.metric?.metric,
+      };
+
+      if (!acc[transformedItem.isin]) {
+        acc[transformedItem.isin] = [];
+      }
+      acc[transformedItem.isin].push(transformedItem);
+      return acc;
+    }, {});
+  }
+
+  async Ratios(isin: string) {
+    const metrics = ['FF_ROE', 'FF_ROA', 'FF_ROTC', 'FF_ROCE', 'FF_ROIC', 'FF_EFF_INT_RATE', 'FF_GROSS_MGN', 'FF_OPER_MGN', 'FF_NET_MGN', 'FF_EBITDA_OPER_MGN', 'FF_DEBT_EQ', 'FF_COM_EQ_ASSETS', 'FF_DEBT_ASSETS', 'FF_INVEST_ASSETS_LIABS', 'FF_SALES_FIX_ASSETS', 'FF_ASSET_TURN', 'FF_PAY_OUT_RATIO', 'FF_RECEIV_TURN_DAYS', 'FF_PAY_TURN_DAYS', 'FF_INVEN_DAYS', 'FF_CASH_CONV_CYCLE', 'FF_INVEN_TURN', 'FF_COGS_SALES', 'FF_SALES_INVEN_TURN', 'FF_CAPEX_SALES', 'FF_PE', 'FF_PBK', 'FF_PBK_TANG', 'FF_PFCF', 'FF_PSALES', 'FF_ENTRPR_VAL_SALES', 'FF_ENTRPR_VAL_EBITDA_OPER', 'FF_CURR_RATIO', 'FF_DEBT_EQ', 'FF_EBIT_OPER_INT_COVG', 'FF_OPER_MGN', 'FF_NET_MGN', 'FF_ROA', 'FF_ROE', 'FF_EPS_BASIC', 'FF_FREE_PS_CF']
+    const metricDisplayNames = {
+      'FF_ROE': 'FF_ROE',
+      'FF_ROA': 'FF_ROA',
+      'FF_ROTC': 'FF_ROTC',
+      'FF_ROCE': 'FF_ROCE',
+      'FF_ROIC': 'FF_ROIC',
+      'FF_EFF_INT_RATE': 'FF_EFF_INT_RATE',
+      'FF_GROSS_MGN': 'FF_GROSS_MGN',
+      'FF_OPER_MGN': 'FF_OPER_MGN',
+      'FF_NET_MGN': 'FF_NET_MGN',
+      'FF_EBITDA_OPER_MGN': 'FF_EBITDA_OPER_MGN',
+      'FF_DEBT_EQ': 'FF_DEBT_EQ',
+      'FF_COM_EQ_ASSETS': 'FF_COM_EQ_ASSETS',
+      'FF_DEBT_ASSETS': 'FF_DEBT_ASSETS',
+      'FF_INVEST_ASSETS_LIABS': 'FF_INVEST_ASSETS_LIABS',
+      'FF_SALES_FIX_ASSETS': 'FF_SALES_FIX_ASSETS',
+      'FF_ASSET_TURN': 'FF_ASSET_TURN',
+      'FF_PAY_OUT_RATIO': 'FF_PAY_OUT_RATIO',
+      'FF_RECEIV_TURN_DAYS': 'FF_RECEIV_TURN_DAYS',
+      'FF_PAY_TURN_DAYS': 'FF_PAY_TURN_DAYS',
+      'FF_INVEN_DAYS': 'FF_INVEN_DAYS',
+      'FF_CASH_CONV_CYCLE': 'FF_CASH_CONV_CYCLE',
+      'FF_INVEN_TURN': 'FF_INVEN_TURN',
+      'FF_COGS_SALES': 'FF_COGS_SALES',
+      'FF_SALES_INVEN_TURN': 'FF_SALES_INVEN_TURN',
+      'FF_CAPEX_SALES': 'FF_CAPEX_SALES',
+      'FF_PE': 'FF_PE',
+      'FF_PBK': 'FF_PBK',
+      'FF_PBK_TANG': 'FF_PBK_TANG',
+      'FF_PFCF': 'FF_PFCF',
+      'FF_PSALES': 'FF_PSALES',
+      'FF_ENTRPR_VAL_SALES': 'FF_ENTRPR_VAL_SALES',
+      'FF_ENTRPR_VAL_EBITDA_OPER': 'FF_ENTRPR_VAL_EBITDA_OPER',
+      'FF_CURR_RATIO': 'FF_CURR_RATIO',
+      'FF_EBIT_OPER_INT_COVG': 'FF_EBIT_OPER_INT_COVG',
+      'FF_EPS_BASIC': 'FF_EPS_BASIC',
+      'FF_FREE_PS_CF': 'FF_FREE_PS_CF'
+
+
+    };
+
+    return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
+
+  }
+
+  async CashFlows(isin: string) {
+    const metrics = ['FF_INVEST_CF', 'FF_STK_PURCH_CF', 'FF_DEBT_CF', 'FF_DIV_CF', 'FF_FIN_ACTIV_OTH_CF', 'FF_FIN_CF', 'FF_FOR_EXCH_CF', 'FF_CHG_CASH_CF', 'FF_CAPEX', 'FF_FREE_CF', 'FF_NET_INC_CF', 'FF_DEP_EXP_CF', 'FF_RECEIV_CF', 'FF_INVEN_CF', 'FF_PAY_ACCT_CF', 'FF_WKCAP_ASSETS_OTH', 'FF_WKCAP_CHG', 'FF_DFD_TAX_CF', 'FF_OPER_CF', 'FF_ACQ_BUS_CF', 'FF_SALE_ASSETS_BUS_CF', 'FF_INVEST_PURCH_CF', 'FF_INVEST_SALE_CF']
+    const metricDisplayNames = {
+      'FF_INVEST_CF': 'FF_INVEST_CF',
+      'FF_STK_PURCH_CF': 'FF_STK_PURCH_CF',
+      'FF_DEBT_CF': 'FF_DEBT_CF',
+      'FF_DIV_CF': 'FF_DIV_CF',
+      'FF_FIN_ACTIV_OTH_CF': 'FF_FIN_ACTIV_OTH_CF',
+      'FF_FIN_CF': 'FF_FIN_CF',
+      'FF_FOR_EXCH_CF': 'FF_FOR_EXCH_CF',
+      'FF_CHG_CASH_CF': 'FF_CHG_CASH_CF',
+      'FF_CAPEX': 'FF_CAPEX',
+      'FF_FREE_CF': 'FF_FREE_CF',
+      'FF_NET_INC_CF': 'FF_NET_INC_CF',
+      'FF_DEP_EXP_CF': 'FF_DEP_EXP_CF',
+      'FF_RECEIV_CF': 'FF_RECEIV_CF',
+      'FF_INVEN_CF': 'FF_INVEN_CF',
+      'FF_PAY_ACCT_CF': 'FF_PAY_ACCT_CF',
+      'FF_WKCAP_ASSETS_OTH': 'FF_WKCAP_ASSETS_OTH',
+      'FF_WKCAP_CHG': 'FF_WKCAP_CHG',
+      'FF_DFD_TAX_CF': 'FF_DFD_TAX_CF',
+      'FF_OPER_CF': 'FF_OPER_CF',
+      'FF_ACQ_BUS_CF': 'FF_ACQ_BUS_CF',
+      'FF_SALE_ASSETS_BUS_CF': 'FF_SALE_ASSETS_BUS_CF',
+      'FF_INVEST_PURCH_CF': 'FF_INVEST_PURCH_CF',
+      'FF_INVEST_SALE_CF': 'FF_INVEST_SALE_CF'
+    };
+
+    return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
+
+  }
+
+  async IncomeStatement(isin: string) {
+    const metrics = ['FF_SALES', 'FF_COGS', 'FF_GROSS_INC', 'FF_SGA', 'FF_RD_EXP', 'FF_OPER_EXP_OTH', 'FF_OPER_EXP', 'FF_OPER_INC', 'FF_OPER_MGN', 'FF_INT_INC', 'FF_INT_EXP_NET', 'FF_INT_INC_NET', 'FF_PTX_INC', 'FF_TAX_RATE', 'FF_NET_INC', 'FF_DIV_PFD', 'FF_EPS_BASIC', 'FF_EPS_DIL', 'FF_COM_SHS_OUT_EPS_DIL', 'FF_EBIT_OPER', 'FF_DEP_AMORT_EXP', 'FF_EBITDA_OPER']
+    const metricDisplayNames = {
+      'FF_SALES': 'FF_SALES',
+      'FF_COGS': 'FF_COGS',
+      'FF_GROSS_INC': 'FF_GROSS_INC',
+      'FF_SGA': 'FF_SGA',
+      'FF_RD_EXP': 'FF_RD_EXP',
+      'FF_OPER_EXP_OTH': 'FF_OPER_EXP_OTH',
+      'FF_OPER_EXP': 'FF_OPER_EXP',
+      'FF_OPER_INC': 'FF_OPER_INC',
+      'FF_OPER_MGN': 'FF_OPER_MGN',
+      'FF_INT_INC': 'FF_INT_INC',
+      'FF_INT_EXP_NET': 'FF_INT_EXP_NET',
+      'FF_INT_INC_NET': 'FF_INT_INC_NET',
+      'FF_PTX_INC': 'FF_PTX_INC',
+      'FF_TAX_RATE': 'FF_TAX_RATE',
+      'FF_NET_INC': 'FF_NET_INC',
+      'FF_DIV_PFD': 'FF_DIV_PFD',
+      'FF_EPS_BASIC': 'FF_EPS_BASIC',
+      'FF_EPS_DIL': 'FF_EPS_DIL',
+      'FF_COM_SHS_OUT_EPS_DIL': 'FF_COM_SHS_OUT_EPS_DIL',
+      'FF_EBIT_OPER': 'FF_EBIT_OPER',
+      'FF_DEP_AMORT_EXP': 'FF_DEP_AMORT_EXP',
+      'FF_EBITDA_OPER': 'FF_EBITDA_OPER'
+
+
+
+    };
+
+    return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
+
+  }
+
+  async BalanceSheet(isin: string) {
+    const metrics = ['FF_CASH_GENERIC', 'FF_RECEIV_NET', 'FF_RECEIV_ST_OTH', 'FF_INVEN_MATL', 'FF_INVEN_WIP', 'FF_INVEN_FG', 'FF_INVEN', 'FF_ASSETS_CURR_OTH', 'FF_ASSETS_CURR', 'FF_INVEST_ADV', 'FF_PPE_GROSS_LAND', 'FF_PPE_GROSS_BLDG', 'FF_PPE_GROSS_EQUIP', 'FF_PPE_GROSS_CONSTR', 'FF_PPE_GROSS_OTH', 'FF_PPE_GROSS', 'FF_PPE_DEP', 'FF_PPE_NET', 'FF_INTANG', 'FF_GW', 'FF_ASSETS', 'FF_PAY_ACCT', 'FF_DEBT_ST', 'FF_DFD_TAX', 'FF_LIABS_CURR', 'FF_LIABS_LEASE', 'FF_LIABS', 'FF_DEBT_EQ', 'FF_PENS_BNFIT_RETIR_POST', 'FF_LIABS_PS', 'FF_PFD_STK', 'FF_COM_EQ_RETAIN_EARN', 'FF_COM_EQ_APIC', 'FF_TREAS_STK', 'FF_SHLDRS_EQ', 'FF_MIN_INT_ACCUM'
+    ]
+    const metricDisplayNames = {
+      'FF_CASH_GENERIC': 'FF_CASH_GENERIC',
+      'FF_RECEIV_NET': 'FF_RECEIV_NET',
+      'FF_RECEIV_ST_OTH': 'FF_RECEIV_ST_OTH',
+      'FF_INVEN_MATL': 'FF_INVEN_MATL',
+      'FF_INVEN_WIP': 'FF_INVEN_WIP',
+      'FF_INVEN_FG': 'FF_INVEN_FG',
+      'FF_INVEN': 'FF_INVEN',
+      'FF_ASSETS_CURR_OTH': 'FF_ASSETS_CURR_OTH',
+      'FF_ASSETS_CURR': 'FF_ASSETS_CURR',
+      'FF_INVEST_ADV': 'FF_INVEST_ADV',
+      'FF_PPE_GROSS_LAND': 'FF_PPE_GROSS_LAND',
+      'FF_PPE_GROSS_BLDG': 'FF_PPE_GROSS_BLDG',
+      'FF_PPE_GROSS_EQUIP': 'FF_PPE_GROSS_EQUIP',
+      'FF_PPE_GROSS_CONSTR': 'FF_PPE_GROSS_CONSTR',
+      'FF_PPE_GROSS_OTH': 'FF_PPE_GROSS_OTH',
+      'FF_PPE_GROSS': 'FF_PPE_GROSS',
+      'FF_PPE_DEP': 'FF_PPE_DEP',
+      'FF_PPE_NET': 'FF_PPE_NET',
+      'FF_INTANG': 'FF_INTANG',
+      'FF_GW': 'FF_GW',
+      'FF_ASSETS': 'FF_ASSETS',
+      'FF_PAY_ACCT': 'FF_PAY_ACCT',
+      'FF_DEBT_ST': 'FF_DEBT_ST',
+      'FF_DFD_TAX': 'FF_DFD_TAX',
+      'FF_LIABS_CURR': 'FF_LIABS_CURR',
+      'FF_LIABS_LEASE': 'FF_LIABS_LEASE',
+      'FF_LIABS': 'FF_LIABS',
+      'FF_DEBT_EQ': 'FF_DEBT_EQ',
+      'FF_PENS_BNFIT_RETIR_POST': 'FF_PENS_BNFIT_RETIR_POST',
+      'FF_LIABS_PS': 'FF_LIABS_PS',
+      'FF_PFD_STK': 'FF_PFD_STK',
+      'FF_COM_EQ_RETAIN_EARN': 'FF_COM_EQ_RETAIN_EARN',
+      'FF_COM_EQ_APIC': 'FF_COM_EQ_APIC',
+      'FF_TREAS_STK': 'FF_TREAS_STK',
+      'FF_SHLDRS_EQ': 'FF_SHLDRS_EQ',
+      'FF_MIN_INT_ACCUM': 'FF_MIN_INT_ACCUM'
+
+
+
+    };
+
+    return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
+
+  }
 
 }
+export async function getMetricsDataAgainstListOfIsins(
+  isins: string[],
+  assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
+  metrics: string[],
+  dateRange?: { start: Date, end: Date }
+): Promise<Record<string, any>> {
 
-async Ratios (isin:string) {
-  const metrics =   ['FF_ROE',   'FF_ROA',   'FF_ROTC',   'FF_ROCE',   'FF_ROIC',   'FF_EFF_INT_RATE',   'FF_GROSS_MGN',   'FF_OPER_MGN',   'FF_NET_MGN',   'FF_EBITDA_OPER_MGN',   'FF_DEBT_EQ',   'FF_COM_EQ_ASSETS',   'FF_DEBT_ASSETS',   'FF_INVEST_ASSETS_LIABS',   'FF_SALES_FIX_ASSETS',   'FF_ASSET_TURN',   'FF_PAY_OUT_RATIO',   'FF_RECEIV_TURN_DAYS',   'FF_PAY_TURN_DAYS',   'FF_INVEN_DAYS',   'FF_CASH_CONV_CYCLE',   'FF_INVEN_TURN',   'FF_COGS_SALES',   'FF_SALES_INVEN_TURN',   'FF_CAPEX_SALES',   'FF_PE',   'FF_PBK',   'FF_PBK_TANG',   'FF_PFCF',   'FF_PSALES',   'FF_ENTRPR_VAL_SALES',   'FF_ENTRPR_VAL_EBITDA_OPER',   'FF_CURR_RATIO',   'FF_DEBT_EQ',   'FF_EBIT_OPER_INT_COVG',   'FF_OPER_MGN',   'FF_NET_MGN',   'FF_ROA',   'FF_ROE',   'FF_EPS_BASIC',   'FF_FREE_PS_CF']
-  const metricDisplayNames = {
-    'FF_ROE' :   'FF_ROE',
-    'FF_ROA' :   'FF_ROA',
-    'FF_ROTC' :   'FF_ROTC',
-    'FF_ROCE' :   'FF_ROCE',
-    'FF_ROIC' :   'FF_ROIC',  
-    'FF_EFF_INT_RATE' :   'FF_EFF_INT_RATE',  
-    'FF_GROSS_MGN' :   'FF_GROSS_MGN',  
-    'FF_OPER_MGN' :   'FF_OPER_MGN',  
-    'FF_NET_MGN' :   'FF_NET_MGN',  
-    'FF_EBITDA_OPER_MGN' :   'FF_EBITDA_OPER_MGN',  
-    'FF_DEBT_EQ' :   'FF_DEBT_EQ',  
-    'FF_COM_EQ_ASSETS' :   'FF_COM_EQ_ASSETS',  
-    'FF_DEBT_ASSETS' :   'FF_DEBT_ASSETS',  
-    'FF_INVEST_ASSETS_LIABS' :   'FF_INVEST_ASSETS_LIABS',  
-    'FF_SALES_FIX_ASSETS' :   'FF_SALES_FIX_ASSETS',  
-    'FF_ASSET_TURN' :   'FF_ASSET_TURN',  
-    'FF_PAY_OUT_RATIO' :   'FF_PAY_OUT_RATIO',  
-    'FF_RECEIV_TURN_DAYS' :   'FF_RECEIV_TURN_DAYS',  
-    'FF_PAY_TURN_DAYS' :   'FF_PAY_TURN_DAYS',  
-    'FF_INVEN_DAYS' :   'FF_INVEN_DAYS',  
-    'FF_CASH_CONV_CYCLE' :   'FF_CASH_CONV_CYCLE',  
-    'FF_INVEN_TURN' :   'FF_INVEN_TURN',  
-    'FF_COGS_SALES' :   'FF_COGS_SALES',  
-    'FF_SALES_INVEN_TURN' :   'FF_SALES_INVEN_TURN',  
-    'FF_CAPEX_SALES' :   'FF_CAPEX_SALES',  
-    'FF_PE' :   'FF_PE',  
-    'FF_PBK' :   'FF_PBK',  
-    'FF_PBK_TANG' :   'FF_PBK_TANG',  
-    'FF_PFCF' :   'FF_PFCF',  
-    'FF_PSALES' :   'FF_PSALES',  
-    'FF_ENTRPR_VAL_SALES' :   'FF_ENTRPR_VAL_SALES',  
-    'FF_ENTRPR_VAL_EBITDA_OPER' :   'FF_ENTRPR_VAL_EBITDA_OPER',  
-    'FF_CURR_RATIO' :   'FF_CURR_RATIO',  
-    'FF_EBIT_OPER_INT_COVG' :   'FF_EBIT_OPER_INT_COVG',  
-    'FF_EPS_BASIC' :   'FF_EPS_BASIC',  
-    'FF_FREE_PS_CF' :   'FF_FREE_PS_CF'
+  const queryBuilder = assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select([
+      'metric.metric',
+      'metric.name',
+      'cd.value',
+      'cd.isin',
+      'cd.fiscalYear',
+      'cd.fiscalPeriod',
+      'cd.fiscalEndDate',
+      'cd.epsReportDate',
+    ])
+    .where('cd.isin IN (:...isins)', { isins })
+    .andWhere('metric.metric IN (:...metrics)', { metrics });
 
- 
-  };
+  if (dateRange) {
+    queryBuilder.andWhere('cd.eps_report_date BETWEEN :start AND :end', {
+      start: dateRange.start,
+      end: dateRange.end,
+    });
+  } else {
+    queryBuilder.andWhere(
+      'cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)'
+    );
+  }
 
-  return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
+  const result = await queryBuilder.getMany();
 
+  return result;
 }
-
-async CashFlows (isin:string) {
-  const metrics =   ['FF_INVEST_CF', 'FF_STK_PURCH_CF', 'FF_DEBT_CF', 'FF_DIV_CF', 'FF_FIN_ACTIV_OTH_CF', 'FF_FIN_CF', 'FF_FOR_EXCH_CF', 'FF_CHG_CASH_CF', 'FF_CAPEX', 'FF_FREE_CF', 'FF_NET_INC_CF', 'FF_DEP_EXP_CF', 'FF_RECEIV_CF', 'FF_INVEN_CF', 'FF_PAY_ACCT_CF', 'FF_WKCAP_ASSETS_OTH', 'FF_WKCAP_CHG', 'FF_DFD_TAX_CF', 'FF_OPER_CF', 'FF_ACQ_BUS_CF', 'FF_SALE_ASSETS_BUS_CF', 'FF_INVEST_PURCH_CF', 'FF_INVEST_SALE_CF']
-  const metricDisplayNames = {
-    'FF_INVEST_CF' : 'FF_INVEST_CF',
-    'FF_STK_PURCH_CF' : 'FF_STK_PURCH_CF',
-    'FF_DEBT_CF' : 'FF_DEBT_CF',
-    'FF_DIV_CF' : 'FF_DIV_CF',
-    'FF_FIN_ACTIV_OTH_CF' : 'FF_FIN_ACTIV_OTH_CF',
-    'FF_FIN_CF' : 'FF_FIN_CF',
-    'FF_FOR_EXCH_CF' : 'FF_FOR_EXCH_CF',
-    'FF_CHG_CASH_CF' : 'FF_CHG_CASH_CF',
-    'FF_CAPEX' : 'FF_CAPEX',
-    'FF_FREE_CF' : 'FF_FREE_CF',
-    'FF_NET_INC_CF' : 'FF_NET_INC_CF',
-    'FF_DEP_EXP_CF' : 'FF_DEP_EXP_CF',
-    'FF_RECEIV_CF' : 'FF_RECEIV_CF',
-    'FF_INVEN_CF' : 'FF_INVEN_CF',
-    'FF_PAY_ACCT_CF' : 'FF_PAY_ACCT_CF',
-    'FF_WKCAP_ASSETS_OTH' : 'FF_WKCAP_ASSETS_OTH',
-    'FF_WKCAP_CHG' : 'FF_WKCAP_CHG',
-    'FF_DFD_TAX_CF' : 'FF_DFD_TAX_CF',
-    'FF_OPER_CF' : 'FF_OPER_CF',
-    'FF_ACQ_BUS_CF' : 'FF_ACQ_BUS_CF',
-    'FF_SALE_ASSETS_BUS_CF' : 'FF_SALE_ASSETS_BUS_CF',
-    'FF_INVEST_PURCH_CF' : 'FF_INVEST_PURCH_CF',
-    'FF_INVEST_SALE_CF' : 'FF_INVEST_SALE_CF'
-};
-
-  return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
-
-}
-
-async IncomeStatement (isin:string) {
-  const metrics =   ['FF_SALES', 'FF_COGS', 'FF_GROSS_INC', 'FF_SGA', 'FF_RD_EXP', 'FF_OPER_EXP_OTH', 'FF_OPER_EXP', 'FF_OPER_INC', 'FF_OPER_MGN', 'FF_INT_INC', 'FF_INT_EXP_NET', 'FF_INT_INC_NET', 'FF_PTX_INC', 'FF_TAX_RATE', 'FF_NET_INC', 'FF_DIV_PFD', 'FF_EPS_BASIC', 'FF_EPS_DIL', 'FF_COM_SHS_OUT_EPS_DIL', 'FF_EBIT_OPER', 'FF_DEP_AMORT_EXP', 'FF_EBITDA_OPER']
-  const metricDisplayNames = {
-    'FF_SALES' : 'FF_SALES',
-    'FF_COGS' : 'FF_COGS',
-    'FF_GROSS_INC' : 'FF_GROSS_INC',
-    'FF_SGA' : 'FF_SGA',
-    'FF_RD_EXP' : 'FF_RD_EXP',
-    'FF_OPER_EXP_OTH' : 'FF_OPER_EXP_OTH',
-    'FF_OPER_EXP' : 'FF_OPER_EXP',
-    'FF_OPER_INC' : 'FF_OPER_INC',
-    'FF_OPER_MGN' : 'FF_OPER_MGN',
-    'FF_INT_INC' : 'FF_INT_INC',
-    'FF_INT_EXP_NET' : 'FF_INT_EXP_NET',
-    'FF_INT_INC_NET' : 'FF_INT_INC_NET',
-    'FF_PTX_INC' : 'FF_PTX_INC',
-    'FF_TAX_RATE' : 'FF_TAX_RATE',
-    'FF_NET_INC' : 'FF_NET_INC',
-    'FF_DIV_PFD' : 'FF_DIV_PFD',
-    'FF_EPS_BASIC' : 'FF_EPS_BASIC',
-    'FF_EPS_DIL' : 'FF_EPS_DIL',
-    'FF_COM_SHS_OUT_EPS_DIL' : 'FF_COM_SHS_OUT_EPS_DIL',
-    'FF_EBIT_OPER' : 'FF_EBIT_OPER',
-    'FF_DEP_AMORT_EXP' : 'FF_DEP_AMORT_EXP',
-    'FF_EBITDA_OPER' : 'FF_EBITDA_OPER'
-
-
- 
-  };
-
-  return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
-
-}
-
-async BalanceSheet (isin:string) {
-  const metrics =   ['FF_CASH_GENERIC', 'FF_RECEIV_NET', 'FF_RECEIV_ST_OTH', 'FF_INVEN_MATL', 'FF_INVEN_WIP', 'FF_INVEN_FG', 'FF_INVEN', 'FF_ASSETS_CURR_OTH', 'FF_ASSETS_CURR', 'FF_INVEST_ADV', 'FF_PPE_GROSS_LAND', 'FF_PPE_GROSS_BLDG', 'FF_PPE_GROSS_EQUIP', 'FF_PPE_GROSS_CONSTR', 'FF_PPE_GROSS_OTH', 'FF_PPE_GROSS', 'FF_PPE_DEP', 'FF_PPE_NET', 'FF_INTANG', 'FF_GW', 'FF_ASSETS', 'FF_PAY_ACCT', 'FF_DEBT_ST', 'FF_DFD_TAX', 'FF_LIABS_CURR', 'FF_LIABS_LEASE', 'FF_LIABS', 'FF_DEBT_EQ', 'FF_PENS_BNFIT_RETIR_POST', 'FF_LIABS_PS', 'FF_PFD_STK', 'FF_COM_EQ_RETAIN_EARN', 'FF_COM_EQ_APIC', 'FF_TREAS_STK', 'FF_SHLDRS_EQ', 'FF_MIN_INT_ACCUM'
-]
-  const metricDisplayNames = {
-    'FF_CASH_GENERIC' : 'FF_CASH_GENERIC',
-    'FF_RECEIV_NET' : 'FF_RECEIV_NET',
-    'FF_RECEIV_ST_OTH' : 'FF_RECEIV_ST_OTH',
-    'FF_INVEN_MATL' : 'FF_INVEN_MATL',
-    'FF_INVEN_WIP' : 'FF_INVEN_WIP',
-    'FF_INVEN_FG' : 'FF_INVEN_FG',
-    'FF_INVEN' : 'FF_INVEN',
-    'FF_ASSETS_CURR_OTH' : 'FF_ASSETS_CURR_OTH',
-    'FF_ASSETS_CURR' : 'FF_ASSETS_CURR',
-    'FF_INVEST_ADV' : 'FF_INVEST_ADV',
-    'FF_PPE_GROSS_LAND' : 'FF_PPE_GROSS_LAND',
-    'FF_PPE_GROSS_BLDG' : 'FF_PPE_GROSS_BLDG',
-    'FF_PPE_GROSS_EQUIP' : 'FF_PPE_GROSS_EQUIP',
-    'FF_PPE_GROSS_CONSTR' : 'FF_PPE_GROSS_CONSTR',
-    'FF_PPE_GROSS_OTH' : 'FF_PPE_GROSS_OTH',
-    'FF_PPE_GROSS' : 'FF_PPE_GROSS',
-    'FF_PPE_DEP' : 'FF_PPE_DEP',
-    'FF_PPE_NET' : 'FF_PPE_NET',
-    'FF_INTANG' : 'FF_INTANG',
-    'FF_GW' : 'FF_GW',
-    'FF_ASSETS' : 'FF_ASSETS',
-    'FF_PAY_ACCT' : 'FF_PAY_ACCT',
-    'FF_DEBT_ST' : 'FF_DEBT_ST',
-    'FF_DFD_TAX' : 'FF_DFD_TAX',
-    'FF_LIABS_CURR' : 'FF_LIABS_CURR',
-    'FF_LIABS_LEASE' : 'FF_LIABS_LEASE',
-    'FF_LIABS' : 'FF_LIABS',
-    'FF_DEBT_EQ' : 'FF_DEBT_EQ',
-    'FF_PENS_BNFIT_RETIR_POST' : 'FF_PENS_BNFIT_RETIR_POST',
-    'FF_LIABS_PS' : 'FF_LIABS_PS',
-    'FF_PFD_STK' : 'FF_PFD_STK',
-    'FF_COM_EQ_RETAIN_EARN' : 'FF_COM_EQ_RETAIN_EARN',
-    'FF_COM_EQ_APIC' : 'FF_COM_EQ_APIC',
-    'FF_TREAS_STK' : 'FF_TREAS_STK',
-    'FF_SHLDRS_EQ' : 'FF_SHLDRS_EQ',
-    'FF_MIN_INT_ACCUM' : 'FF_MIN_INT_ACCUM'
-
-
- 
-  };
-
-  return getYearlyData(this.assetFundamentalsRepository, isin, metrics, metricDisplayNames);
-
-}
-
-}
-
 
 export async function getMetricsData(
-  isin: string, 
+  isin: string,
   assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
   metrics: string[],
   metricDisplayNames: Record<string, string>,
@@ -642,7 +635,7 @@ export async function getMetricsData(
     .createQueryBuilder('cd')
     .leftJoinAndSelect('cd.metric', 'metric')
     .select([
-      'metric.metric', 
+      'metric.metric',
       'metric.name',
       'cd.value',
       'cd.eps_report_date',
@@ -667,7 +660,7 @@ export async function getMetricsData(
   return result.reduce((acc, curr) => {
     acc[curr.metric.metric] = curr.value;
     return acc;
-}, {} as Record<string, string>);
+  }, {} as Record<string, string>);
 }
 
 export async function getYearlyData(
@@ -689,7 +682,7 @@ export async function getYearlyData(
     .createQueryBuilder('cd')
     .leftJoinAndSelect('cd.metric', 'metric')
     .select([
-      'metric.metric', 
+      'metric.metric',
       'cd.value',
       'cd.epsReportDate',
     ])
@@ -701,7 +694,7 @@ export async function getYearlyData(
 
   const formattedResponse = metrics.reduce((acc, metric) => {
     const displayName = metricDisplayNames[metric];
-    acc[displayName] = [];  
+    acc[displayName] = [];
     return acc;
   }, {} as Record<string, any>);
 

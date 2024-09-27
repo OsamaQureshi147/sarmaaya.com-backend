@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, Between} from 'typeorm';
+import { Repository, FindOptionsWhere, Between, In} from 'typeorm';
 import { AssetEssentialsDto, AssetEssentialsRealTimeEntity,  AssetEssentialsWithoutRealTimeEntity} from 'lib-typeorm-pro';
 
 
@@ -159,6 +159,25 @@ export class AssetEssentialsRtService {
       await this.assetEssentialsRealTimeRepository.query(sortedQuery);
 
     return latestIsinsData;
+  }
+
+  async getDataByListOfIsins(isins: string[]){
+
+    const latestIsinsData = await this.assetEssentialsRealTimeRepository.find({
+      where: {
+        isin: In(isins),
+      },
+    });
+
+    const groupedByIsin = latestIsinsData.reduce((acc, item) => {
+      if (!acc[item.isin]) {
+        acc[item.isin] = [];
+      }
+      acc[item.isin].push(item);
+      return acc;
+    }, {});
+    
+    return groupedByIsin;
   }
 
   ///////////////////////////////////////////////////////////////////////////

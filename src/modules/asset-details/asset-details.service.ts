@@ -40,6 +40,14 @@ export class AssetDetailsService {
     return asset;
   }
 
+  async findPeers(isin: string): Promise<AssetDetailsEntity[]> {
+    const query = `
+      select * from asset_details ad where sector = (select sector from public.asset_details ad where isin='${isin}')
+    `
+    const peers =await this.assetDetailsRepository.query(query);
+    return peers
+  }
+
   async update(
     isin: string,
     assetDetailsDto: AssetDetailsDto,

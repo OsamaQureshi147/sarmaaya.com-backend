@@ -147,6 +147,18 @@ export class AssetFundamentalsController {
     return about;
   }
 
+  @Get('peers-ratio-comparison')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async getPeersRatioComparison(@Query('isin') isin: string){
+    const about = await this.assetFundamentalsService.getPeersRatioComparison(isin);
+    return about;
+  }
+
   @Post()
   async createFundamental(
     @Body() dto: AssetFundamentalsDto,

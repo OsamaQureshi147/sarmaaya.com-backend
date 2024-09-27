@@ -39,6 +39,11 @@ export class AssetDetailsController {
     return this.assetDetailsService.findOne(isin);
   }
 
+  @Get('/peers/:isin')
+  async findPeers(@Param('isin') isin: string): Promise<AssetDetailsEntity[]> {
+    return this.assetDetailsService.findPeers(isin);
+  }
+
   @Put(':isin')
   async update(
     @Param('isin') isin: string,
