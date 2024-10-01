@@ -170,10 +170,10 @@ export class AssetEssentialsRtService {
     });
 
     const groupedByIsin = latestIsinsData.reduce((acc, item) => {
-      if (!acc[item.isin]) {
-        acc[item.isin] = [];
+      if (!acc[item.symbol]) {
+        acc[item.symbol] = [];
       }
-      acc[item.isin].push(item);
+      acc[item.symbol].push(item);
       return acc;
     }, {});
     

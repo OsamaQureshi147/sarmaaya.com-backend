@@ -413,10 +413,10 @@ export class AssetFundamentalsService {
         metric: item?.metric?.metric,
       };
 
-      if (!acc[transformedItem.isin]) {
-        acc[transformedItem.isin] = [];
+      if (!acc[transformedItem.symbol]) {
+        acc[transformedItem.symbol] = [];
       }
-      acc[transformedItem.isin].push(transformedItem);
+      acc[transformedItem.symbol].push(transformedItem);
       return acc;
     }, {});
   }
