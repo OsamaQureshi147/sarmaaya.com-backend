@@ -10,6 +10,7 @@ import {
 import { FindOptionsWhere } from 'typeorm';
 import { In, Between } from 'typeorm';
 import axios from 'axios';
+import { parseISO, format } from 'date-fns';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -386,8 +387,21 @@ export class AssetFundamentalsService {
     };
 
     return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
+  }
 
-
+  async getPayoutHistory(isin: string) {
+    const metrics = ['FF_DPS_LTM', 'FF_STK_SPLIT_RATIO', 'FF_PAY_OUT_RATIO', 'FF_EPS_BASIC_GR', 'FF_DPS_EXDATE', 'FF_DPS_DDATE'];
+    const metricDisplayNames = {
+      'FF_DPS_LTM': 'Dividend Yield',
+      'FF_STK_SPLIT_RATIO': 'Dividend Amount',
+      'FF_PAY_OUT_RATIO': 'Payout Ratio',
+      'FF_EPS_BASIC_GR': 'EPS'
+    };
+    let startDate = new Date('2019-01-01');
+    let endDate = Date.now();
+    const formattedStartDate = format(startDate, 'yyyy-MM-dd HH:mm:ss.SSS');
+    const formattedendDateDate = format(endDate, 'yyyy-MM-dd HH:mm:ss.SSS');
+    return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames,{start: formattedStartDate, end: formattedendDateDate});
   }
 
   async getPeersRatioComparison(isin: string) {
@@ -628,7 +642,7 @@ export async function getMetricsData(
   assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
   metrics: string[],
   metricDisplayNames: Record<string, string>,
-  dateRange?: { start: Date, end: Date }
+  dateRange?: { start: string, end: string }
 ): Promise<Record<string, any>> {
 
   const queryBuilder = assetFundamentalsRepository
@@ -639,6 +653,10 @@ export async function getMetricsData(
       'metric.name',
       'cd.value',
       'cd.eps_report_date',
+      'cd.fiscalYear',
+      'cd.fiscalPeriod',
+      'cd.fiscalEndDate',
+      'cd.epsReportDate',
     ])
     .where('cd.isin = :isin', { isin })
     .andWhere('metric.metric IN (:...metrics)', { metrics });
@@ -655,12 +673,12 @@ export async function getMetricsData(
   }
 
   const result = await queryBuilder.getMany();
+  return result;
 
-
-  return result.reduce((acc, curr) => {
-    acc[curr.metric.metric] = curr.value;
-    return acc;
-  }, {} as Record<string, string>);
+  // return result.reduce((acc, curr) => {
+  //   acc[curr.metric.metric] = curr.value;
+  //   return acc;
+  // }, {} as Record<string, string>);
 }
 
 export async function getYearlyData(

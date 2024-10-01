@@ -147,6 +147,18 @@ export class AssetFundamentalsController {
     return about;
   }
 
+  @Get('payout-history')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async getHistoricDividendData(@Query('isin') isin: string){
+    const about = await this.assetFundamentalsService.getPayoutHistory(isin);
+    return about;
+  }
+
   @Get('peers-ratio-comparison')
   @ApiQuery({
     name: 'isin',
