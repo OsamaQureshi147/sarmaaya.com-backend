@@ -272,7 +272,6 @@ export class AssetFundamentalsService {
     return formattedResponse;
   }
 
-
   async getCompanySnapshot(isin: string) {
     const metrics = ['FF_PAR_PS', 'FF_EPS_RPT_DATE', 'FF_PRICE_HIGH_52WK', 'FF_FREQ_CODE', 'FF_PRICE_LOW_52WK', 'FF_PBK', 'FF_DIV_YLD', 'FF_EBIT_OPER_INT_COVG', 'FF_DPS_LTM', 'FF_GROSS_MGN', 'FF_COM_SHS_OUT', 'FF_SHS_FLOAT'];
     const metricDisplayNames = {
@@ -401,7 +400,7 @@ export class AssetFundamentalsService {
     let endDate = Date.now();
     const formattedStartDate = format(startDate, 'yyyy-MM-dd HH:mm:ss.SSS');
     const formattedendDateDate = format(endDate, 'yyyy-MM-dd HH:mm:ss.SSS');
-    return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames,{start: formattedStartDate, end: formattedendDateDate});
+    return getDetailedMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames,{start: formattedStartDate, end: formattedendDateDate});
   }
 
   async getPeersRatioComparison(isin: string) {
@@ -598,6 +597,7 @@ export class AssetFundamentalsService {
   }
 
 }
+
 export async function getMetricsDataAgainstListOfIsins(
   isins: string[],
   assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
@@ -638,6 +638,50 @@ export async function getMetricsDataAgainstListOfIsins(
 }
 
 export async function getMetricsData(
+  isin: string,
+  assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
+  metrics: string[],
+  metricDisplayNames: Record<string, string>,
+  dateRange?: { start: string, end: string }
+): Promise<Record<string, any>> {
+
+  const queryBuilder = assetFundamentalsRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndSelect('cd.metric', 'metric')
+    .select([
+      'metric.metric',
+      'metric.name',
+      'cd.value',
+      'cd.eps_report_date',
+      'cd.fiscalYear',
+      'cd.fiscalPeriod',
+      'cd.fiscalEndDate',
+      'cd.epsReportDate',
+    ])
+    .where('cd.isin = :isin', { isin })
+    .andWhere('metric.metric IN (:...metrics)', { metrics });
+
+  if (dateRange) {
+    queryBuilder.andWhere('cd.eps_report_date BETWEEN :start AND :end', {
+      start: dateRange.start,
+      end: dateRange.end,
+    });
+  } else {
+    queryBuilder.andWhere(
+      'cd.eps_report_date = (SELECT MAX(sub_cd.eps_report_date) FROM asset_fundamentals sub_cd WHERE sub_cd.isin = cd.isin AND sub_cd.metric = cd.metric)'
+    );
+  }
+
+  const result = await queryBuilder.getMany();
+  // return result;
+
+  return result.reduce((acc, curr) => {
+    acc[curr.metric.metric] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
+}
+
+export async function getDetailedMetricsData(
   isin: string,
   assetFundamentalsRepository: Repository<AssetFundamentalsEntity>,
   metrics: string[],
