@@ -162,6 +162,39 @@ export class AssetFundamentalsService {
     return getMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames);
   }
 
+  async getUpcomingPayouts() {
+
+    const query = `
+      SELECT *,
+      (SELECT ad.symbol FROM asset_details ad WHERE ad.isin = afs.isin) AS symbol,
+          (SELECT ad.company_name FROM asset_details ad WHERE ad.isin = afs.isin) AS company_name,
+              (SELECT another_metric.value FROM asset_fundamentals another_metric WHERE another_metric.isin = afs.isin AND another_metric.metric = 'FF_DPS_LTM' LIMIT 1) AS dps_ltm
+      FROM 
+          asset_fundamentals afs
+      JOIN (
+          SELECT 
+              isin, 
+              MAX(value) AS ex_date
+          FROM 
+              asset_fundamentals
+          WHERE 
+              metric = 'FF_DPS_EXDATE'
+          GROUP BY 
+              isin
+      ) max_afs ON afs.isin = max_afs.isin AND afs.value = max_afs.ex_date
+      WHERE 
+          afs.metric = 'FF_DPS_EXDATE'
+      ORDER BY 
+          max_afs.ex_date DESC;
+
+    `
+
+    const latestIsinsData =
+      await this.assetFundamentalsRepository.query(query);
+
+    return latestIsinsData;
+  }
+
   async getRatios(isin: string) {
     const metrics = [
       'FF_EPS_BASIC_GR',
@@ -400,7 +433,7 @@ export class AssetFundamentalsService {
     let endDate = Date.now();
     const formattedStartDate = format(startDate, 'yyyy-MM-dd HH:mm:ss.SSS');
     const formattedendDateDate = format(endDate, 'yyyy-MM-dd HH:mm:ss.SSS');
-    return getDetailedMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames,{start: formattedStartDate, end: formattedendDateDate});
+    return getDetailedMetricsData(isin, this.assetFundamentalsRepository, metrics, metricDisplayNames, { start: formattedStartDate, end: formattedendDateDate });
   }
 
   async getPeersRatioComparison(isin: string) {
@@ -408,7 +441,7 @@ export class AssetFundamentalsService {
     const peers = await this.assetDetailsRepository.query(query);
     let isins = peers.map(peer => peer.isin);
     let metrics = ['FF_EPS', 'FF_PBK', 'FF_PE', 'FF_MKT_VAL_PUBLIC', 'FF_PAR_PS', 'FF_DIV_YLD']
-    const peersData = await getMetricsDataAgainstListOfIsins(isins,this.assetFundamentalsRepository, metrics);
+    const peersData = await getMetricsDataAgainstListOfIsins(isins, this.assetFundamentalsRepository, metrics);
     const peersDataWithIsin = peersData.map(peer => {
       const peerData = peers.find(p => p.isin === peer.isin);
       return {

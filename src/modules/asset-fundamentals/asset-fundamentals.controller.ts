@@ -98,6 +98,18 @@ export class AssetFundamentalsController {
     return details;
   }
 
+  @Get('upcoming-payouts')
+  @ApiQuery({
+    name: 'isin',
+    required: false,
+    type: String,
+    description: 'The ISIN of the asset',
+  })
+  async getUpcomingPayouts() {
+    const details = await this.assetFundamentalsService.getUpcomingPayouts();
+    return details;
+  }
+
   @Get('ratios')
   @ApiQuery({
     name: 'isin',
