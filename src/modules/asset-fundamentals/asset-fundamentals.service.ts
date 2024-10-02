@@ -79,6 +79,7 @@ export class AssetFundamentalsService {
       relations: ['metric'],
     });
   }
+  
 
   async findOneFundamental(
     id: number,

@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { AssetDetailsEntity, AssetDetailsDto } from 'lib-typeorm-pro';
+import * as fs from 'fs';
+import * as csv from 'fast-csv';
 
 @Injectable()
 export class AssetDetailsService {
@@ -67,4 +69,32 @@ export class AssetDetailsService {
       message: `Asset with ISIN ${isin} has been deleted successfully.`,
     };
   }
+  
+  async importCSVAndUpdateTradingNames(filePath: string): Promise<void> {
+    const fileStream = fs.createReadStream(filePath);
+
+    fileStream.pipe(csv.parse({ headers: true }))
+      .on('data', async (row) => {
+        const { isin, trading_name } = row;
+
+        // Find the asset by ISIN
+        const asset = await this.assetDetailsRepository.findOne({ where: { isin } });
+
+        if (asset) {
+          // Update the trading_name for the found ISIN
+          asset.tradingName = trading_name;
+          await this.assetDetailsRepository.save(asset);
+        } else {
+          // Handle case where ISIN is not found (Optional)
+          console.warn(`ISIN ${isin} not found in the database.`);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed and database updated');
+      })
+      .on('error', (error) => {
+        console.error('Error processing CSV file', error);
+      });
+  }
+  
 }

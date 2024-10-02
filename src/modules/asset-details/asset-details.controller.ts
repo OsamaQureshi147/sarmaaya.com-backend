@@ -51,4 +51,10 @@ export class AssetDetailsController {
   async remove(@Param('isin') isin: string): Promise<{ message: string }> {
     return this.assetDetailsService.remove(isin);
   }
+
+  @Post('import-trading-names')
+  async importTradingNames(): Promise<void> {
+    const filePath = 'symbols.csv'; // Update this to your actual file path
+    await this.assetDetailsService.importCSVAndUpdateTradingNames(filePath);
+  }
 }
